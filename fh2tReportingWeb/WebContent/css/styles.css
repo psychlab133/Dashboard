@@ -1,0 +1,288 @@
+.row-header {
+  margin: 0px auto;
+  padding: 0px 0px; }
+
+.row-content {
+  margin: 0px auto;
+  padding: 10px 0px;
+  border-bottom: 1px ridge;
+}
+
+body {
+  font-size: 16px;
+  color: #fff;
+  background-color: lightgray;
+  font-family: 'Oxygen', sans-serif;
+}
+
+#login-body {
+  font-size: 16px;
+  color: #fff;
+  background-color: lightblue;
+  font-family: 'Oxygen', sans-serif;
+}
+
+/** HEADER **/
+#header-nav {
+  background-color: lightblue;
+  border-radius: 0;
+  border: 0;
+}
+
+#logon-img {
+  background: url('../images/loginScreen.png') no-repeat;
+  width: 600px;
+  height: 250px;
+  margin: 10px 15px 10px 0;
+}
+
+#logo-img {
+  background: url('../images/loginScreen.png') no-repeat;
+  width: 500px;
+  height: 100px;
+  margin: 10px 15px 10px 0;
+}
+
+#view-img {
+  background: url('../images/loginScreen.png') no-repeat;
+  width: 300px;
+  height: 100px;
+  margin: 10px 15px 10px 0;
+}
+
+.navbar-brand {
+  padding-top: 5px;
+}
+
+.selection-header h4 {
+  color: black; 
+}
+#gridHeader {
+  background: lightwhite;
+  color: black; 
+	
+}
+#rptHeader {
+  background: lightblue;
+  color: black; 
+	
+}
+.copyright {
+  color: black; 	
+}
+.measuresTable {
+  background: lightblue;
+  color: blue; 
+  margin-bottom: 5px;
+}
+.navbar-brand h4 { 
+  font-family: 'Lora', serif;
+  color: blue;
+  font-size: 1.5em;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #222;
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: .75;
+}
+.navbar-brand a:hover, .navbar-brand a:focus {
+  text-decoration: none;
+}
+.navbar-brand p { 
+  color: #000;
+  font-size: 1.2em;
+  margin-top: 15px;
+}
+.navbar-brand p span { /* Star-K */
+  vertical-align: middle;
+}
+
+#nav-list {
+  margin-top: 0;
+}
+#nav-list a {
+  color: black;
+  background: lightblue;
+  text-align: center;
+}
+#nav-list a:hover {
+  background: #E7E7E7;
+}
+#nav-list a span {
+  font-size: 1.8em;
+}
+
+#nav-list.nav.navbar-nav.navbar {
+	height:40;
+}
+.modal-header {
+  background: blue;
+  color: floralwhite; 
+}
+  
+  .modal-header button {
+    color: yellow; }
+
+.modal-body {
+  background: lightblue; 
+}
+
+.navbar-header button.navbar-toggle, .navbar-header .icon-bar {
+  border: 1px solid #61122f;
+}
+.navbar-header button.navbar-toggle {
+  clear: both;
+  margin-top: -30px;
+}
+/* END HEADER */
+
+/* HOME PAGE */
+.container .jumbotron {
+  box-shadow: 0 0 50px #3F0C1F;
+  border: 5px solid #ff0000;
+}
+
+.selectionPanel {
+  border-bottom: 1px solid black;
+  margin-left: 4px;
+  background-color: lightgray ;
+}
+#right-panel {
+  background-color: lightgray ;
+}
+#left-panel {
+	
+}
+.login {
+	color:black;
+	background-color: lightblue ;
+}
+#loginMsgRsp {
+	color:#d9534f;
+	background-color: lightblue ;
+}
+
+.visheader {
+	
+	text-align: center;
+	color: black;
+	background-color: white ;
+	border: 1px solid #61122f;	
+}
+.selection-table {
+  	color: blue;
+  	background: red;	
+}
+.custom-select {
+  	background-color: gold ;
+  	color: black; }
+}
+hr { 
+  display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: inset;
+  border-width: 1px;
+}
+
+/********** Large devices only **********/
+@media (min-width: 1200px) {
+  .container .jumbotron {
+    background: url('../images/loginScreen.png') no-repeat;
+    height: 500px;
+  }
+}
+
+/********** Medium devices only **********/
+@media (min-width: 992px) and (max-width: 1199px) {
+  /* Header */
+  #view-img {
+    background: url('../images/loginScreen.png') no-repeat;
+    width: 100px;
+    height: 100px;
+    margin: 5px 5px 5px 0;
+  }  
+  #Logo-img {
+    background: url('../images/loginScreen.png') no-repeat;
+    width: 100px;
+    height: 100px;
+    margin: 5px 5px 5px 0;
+  }  
+  #logon-img {
+    background: url('../images/loginScreen.png') no-repeat;
+    width: 500px;
+    height: 250px;
+    margin: 5px 5px 5px 0;
+  }
+  /* End Header */
+
+  /* Home Page */
+  .container .jumbotron {
+    background: url('../images/loginScreen.png') no-repeat;
+    height: 500px;
+  }
+  /* End Home Page */
+}
+
+/********** Small devices only **********/
+@media (min-width: 768px) and (max-width: 991px) {
+  /* Home Page */
+  .container .jumbotron {
+    height: 200px;
+  }
+  
+  /* End Home Page */
+
+}
+
+/********** Extra small devices only **********/
+@media (max-width: 767px) {
+  /* Header */
+  .navbar-brand {
+    padding-top: 10px;
+    height: 80px;
+  }
+  .navbar-brand h1 { 
+    padding-top: 10px;
+    font-size: 5vw; /* 1vw = 1% of viewport width */
+  }
+  .navbar-brand p {
+    font-size: .6em;
+    margin-top: 12px;
+  }
+  .navbar-brand p img { 
+    height: 20px;
+  }
+
+  #collapsable-nav a { 
+    font-size: 1.2em;
+  }
+  #collapsable-nav a span { 
+    font-size: 1em;
+    margin-right: 5px;
+  }
+
+  /* End Header */
+
+  /* Home Page */
+  .container .jumbotron {
+    margin-top: 30px;
+    padding: 0;
+  }
+
+}
+
+
+/********** Super extra small devices Only :-) (e.g., iPhone 4) **********/
+@media (max-width: 479px) {
+  /* Header */
+  .navbar-brand h1 {
+    padding-top: 5px;
+    font-size: 6vw;
+  }
+  /* End Header */
+  
+}

@@ -1,0 +1,295 @@
+html, body { margin: 0; padding: 0 }
+
+#gm-version-tag {
+  position: fixed;
+  right: 25px;
+  bottom: 5px;
+  font-size: 10px;
+  color: #aaa;
+  z-index: 10;
+}
+
+.flex-container-columns {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  -webkit-flex-direction: column;
+}
+
+.gm-main-toolbar {
+  padding: 10px;
+  border-bottom: 1px solid silver;
+}
+
+div.gm-math, div.gm-shadow, div.gm-smooshed {
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.gm-area {
+  position: absolute;
+  border-width: 1px;
+  border-style: solid;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+.gm-area.gm-target {
+  border-color: lightpink;
+}
+.gm-area.gm-source {
+  border-color: steelblue;
+}
+.gm-area.gm-destination {
+  border-width: 2px;
+  border-color: steelblue;
+  background-color: skyblue;
+}
+.gm-area.gm-drop {
+  border-width: 2px;
+  border-color: steelblue;
+  background-color: skyblue;
+}
+
+div.gm-homework-play-btn {
+  position: absolute;
+  right: 25px;
+  top: 14px;
+  border: 1px solid transparent;
+  border-radius: 100%;
+  width: 1.7em;
+  height: 1.7em;
+  text-align: center;
+  line-height: 1.7em;
+  font-size: 1.5em;
+  background: lightskyblue;
+  color: white;
+  cursor: pointer;
+}
+
+div.gm-homework-play-btn:hover {
+  box-shadow: 2px 2px 4px 0px rgba(0,0,0,0.5);
+}
+
+.gm-clear-after:after {
+  clear: both;
+  content: '';
+  display: table;
+}
+
+div#gm-load-dropdown {
+  padding: 10px;
+  width: 400px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+/* material design radio buttons */
+/* from https://codepen.io/hansmaad/pen/zBdzxp ; using https://www.sassmeister.com/ */
+
+@keyframes ripple {
+  0% {
+    box-shadow: 0px 0px 0px 1px transparent;
+  }
+  50% {
+    box-shadow: 0px 0px 0px 20px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    box-shadow: 0px 0px 0px 20px transparent;
+  }
+}
+.md-radio {
+  margin: 16px 0;
+}
+.md-radio.md-radio-inline {
+  display: inline-block;
+}
+.md-radio input[type="radio"] {
+  display: none;
+}
+.md-radio input[type="radio"]:checked + label:before {
+  border-color: #337ab7;
+  animation: ripple 0.2s linear forwards;
+}
+.md-radio input[type="radio"]:checked + label:after {
+  transform: scale(1);
+}
+.md-radio p {
+  margin: 1rem;
+  color: #555;
+}
+.md-radio label {
+  display: inline-block;
+  height: 25px;
+  position: relative;
+  padding: 0 40px;
+  margin-bottom: 0;
+  cursor: pointer;
+  vertical-align: bottom;
+
+  line-height: 23px;
+  font-size: 18px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+}
+.md-radio label:before, .md-radio label:after {
+  position: absolute;
+  content: '';
+  border-radius: 50%;
+  transition: all .3s ease;
+  transition-property: transform, border-color;
+}
+.md-radio label:before {
+  left: 0;
+  top: 0;
+  width: 25px;
+  height: 25px;
+  border: 2px solid rgba(0, 0, 0, 0.54);
+}
+.md-radio label:after {
+  top: 5px;
+  left: 5px;
+  width: 15px;
+  height: 15px;
+  transform: scale(0);
+  background: #337ab7;
+}
+.md-radio, .md-radio *, .md-radio *:before, .md-radio *:after {
+  box-sizing: border-box;
+}
+
+/* GM load menu */
+
+div#gm-load-dropdown div.gm-load-append {
+  text-align: right;
+  color: gray;
+}
+
+div#gm-load-dropdown div.gm-load-append label {
+  font-weight: 400;
+}
+
+div.gm-load .gm-load-list {
+  border: 1px solid silver;
+  border-radius: 4px;
+}
+
+div.gm-load .block {
+  display: flex;
+  justify-content: center;
+  user-select: none;
+  padding-left: 15px;
+  text-decoration: none;
+  background-color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-bottom: 1px solid silver;
+}
+
+div.gm-load .block:hover {
+  background-color: whitesmoke;
+}
+
+div.gm-load .block:last-child {
+  border: none;
+}
+
+div.gm-load .block p {
+  flex-grow: 1;
+  margin: 0;
+}
+
+span.gm-load-title {
+  font-size: 1.1em;
+}
+
+span.gm-load-time {
+  font-size: 0.9em;
+  color: gray;
+}
+
+span.gm-load-delete {
+  font-size: 1.6em;
+  line-height: 1.6em;
+  padding: 0.05em 0.5em 0 0.5em;
+  color: #aaa;
+}
+
+span.gm-load-undo {
+  font-size: 1em;
+  border: 1px solid silver;
+  border-radius: 4px;
+  height: 2.2em;
+  margin-top: 0.3em;
+  line-height: 2em;
+  background: white;
+}
+
+span.gm-load-delete:hover {
+  color: #a94442;
+}
+
+span.gm-load-undo:hover {
+  color: #aaa;
+  background: #eee;
+}
+
+div.gm-help .block {
+  user-select: none;
+  padding-left: 15px;
+  text-decoration: none;
+  display: table;
+  background-color: white;
+  cursor: pointer;
+}
+
+div.gm-help .block span {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+div.gm-help .block:nth-child(even) {
+  background-color: whitesmoke;
+}
+
+div.share_link {
+  border: 1px solid #dcdcdc;
+  padding: 8px 4px;
+  margin-bottom: 10px;
+}
+
+div.share_link input {
+  width: 100%;
+  border: none;
+  box-shadow: none;
+  color: #777;
+  font-size: 14px;
+  height: 16px;
+  line-height: 16px;
+  margin: 0;
+  outline: none;
+  overflow: auto;
+  padding: 0;
+  resize: none;
+  vertical-align: middle;
+  white-space: pre;
+  width: 100%;
+}
+
+.input-xs {
+  padding: 2px 8px;
+  font-size: 12px;
+  line-height: 1.4em;
+  border-radius: 3px;
+}
+
+/** for older GM versions only */
+.graph .axis { stroke: black; shape-rendering: crispEdges; opacity: 0.4; }
+.graph .axis text { fill: black; stroke: none; font-size: 10px; font-family: 'Lato', sans-serif;}
+svg text { -webkit-font-smoothing: antialiased; -webkit-user-select: none; }
+.graph .line { stroke-width: 2.5px}
+.graph .border { stroke: #ddd; shape-rendering: crispEdges; fill: none; }
+
+#gm-canvas-css-finished-loading {
+  display: none;
+}

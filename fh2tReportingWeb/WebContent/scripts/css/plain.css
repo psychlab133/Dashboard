@@ -1,0 +1,668 @@
+@import url(https://fonts.googleapis.com/css?family=Kalam:400);
+@charset "UTF-8";
+body {
+	background-color: #FFF;
+	background-repeat: no-repeat;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	text-align: center;
+	color: #000;
+	height: unset;
+}
+.hoverButton {
+	opacity: 0.8;
+}
+
+#mainContent {
+	position:relative;
+	min-height: 700px;
+	height: 100%;
+}
+#goalPanel {
+	margin-top: 15px;
+	height: 133px;
+	background-color: #FFFFFF;
+	border-radius: 10px;
+	/*border: thick solid rgb(77, 59, 55);*/
+	margin-left: auto;
+	margin-right: auto;
+	right: 50px;
+	bottom: 0px;
+	position: relative;
+	float: right;
+}
+
+#goalFooter {	
+	position: absolute; 
+	bottom:0; 
+	width: 100%; 
+	height: 40px; 
+	background-color: #CCC;
+	color: #000;
+	font-family: Helvetica;
+	font-size: 20px;
+}
+
+#goalLabels{
+    position: absolute;
+    bottom: 10px;
+    left: 75px;
+    font-size: large;
+    font-family: Helvetica;
+}
+
+#goalDivider {
+	border-left: 3px solid #CCC;
+	height: 127px; 
+	left: 150; 
+	position:absolute;	
+}
+
+#stepLabel {
+}
+
+#goalLabel {
+	margin-left: 100px; 
+}
+
+
+#goalState {
+	color: #FF9000;
+}
+
+#stepCount {
+	color: #000;
+	position:absolute;
+	left:80px;
+	top:22px;
+	font-size:50px;
+	font-family: Kalam;
+}
+
+#minimumGoal {
+	font-face: Kalam;
+	color:#777;
+}
+#skipButton {
+	display:none;
+}
+.hoverButton:hover{
+	opacity: 1.0;
+	cursor: pointer;
+}
+div#canvas-outer-container {
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+}
+#timedCountdownContainer {
+	width: 80%; 
+	margin-bottom: 30px; 
+	left:0; 
+	right:0; 
+	margin-left: auto; 
+	margin-right: auto; 
+	display:none;
+}
+
+#timedCountdownSeconds {
+	font size:20px;
+}
+
+#timedCountdownBar {
+	margin-top: 15px;
+	float:right; 
+	height: 15px; 
+	background-color: green; 
+	width: 100%;
+}
+
+#problemContainer {
+	margin:auto;
+	left: 0px;
+	right:0px;
+	top:125px;
+	bottom:0px;
+	width:80vw;
+	min-height:550px;
+	position:relative;
+	min-width: 700px;
+	color: #000;
+}
+
+#problemText {
+	margin-top: -25px;
+	margin-bottom: 25px;
+	color: #000;
+	font-family: Kalam;
+	font-size: 30px;
+	min-height: 50px;
+}
+
+#problemText2 {
+	color: #000;
+	font-family: Kalam;
+	font-size: 30px;
+	position: relative;
+	float: right;
+	margin-top: 30px;
+}
+
+#resetPanel {
+	float:left; 
+	margin-top: 50px; 
+	margin-left: 25px; 
+	z-index: 2; 
+}
+
+#dialogContainer {
+	width:100%;
+	height:100%;
+	background: rgba(0,0,0,.8);
+	position:absolute;
+	z-index:100;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	margin:auto;
+}
+
+#dialogBox {
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	margin:auto;
+	position:absolute;
+	background: url(../../images/woodFrame.png);
+	width:600px;
+	height:598px;
+	padding: 1px 0;
+}
+
+#dialogButtons {
+	margin-top:125px;
+	margin-left: 10px;
+}
+
+#dialogButtons a:hover{
+	cursor: pointer;
+}
+	
+
+#rewardContainer {
+	width:100%;
+	height:100%;
+	background: rgba(0,0,0,.8);
+	z-index:100;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	margin:auto;
+	position:absolute;
+}
+
+#rewardBox {
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	margin:auto;
+	position:absolute;
+	background: url(../../images/woodFrame.png);
+	width:600px;
+	height:598px;
+	padding: 1px 0;
+}
+
+#rewardButtons {
+	cursor: pointer;
+	position:absolute;
+	bottom: 25px;
+	left:0px;
+	right:0px;
+	margin:auto;
+}
+
+#rewardText {
+	margin: 175px auto;
+	width: 275px;
+}
+
+#starBox {
+	margin-top: 15px;
+	text-align: left;
+	margin-left: 200px;
+}
+
+#achievementBox {
+	margin-top: 175px;
+}
+
+#loginContainer {
+	width: 400px;
+	height: 250px;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
+	margin:auto;
+	position:absolute;
+}
+
+#loginModal {
+	display: none;
+	width: 400px;
+	height: 250px;
+	position:relative;
+	background: rgba(238,238,238,0.9);
+	border: 1px solid rgba(192, 192, 192, 1);
+	padding: 1px 0;	
+}
+
+#headerContainer {
+	position: absolute;
+	top:0px;
+	height: 25px;
+	background: rgba(238,238,238,1);
+	width: 100vw;	
+}
+
+#worldInfo {
+	float: left;
+	top: 5px;
+	margin-left: 5px;
+	width: 400px;	
+}
+#userInfo {
+	float: right;
+	top: 5px;
+	margin-right: 5px;
+	width: 250px;	
+}
+
+#hintPanel {
+	display:none;
+	color: #000;
+	font-family: Kalam;
+	font-size: 30px;
+	position: relative;
+	float: left;
+	bottom: 0px;
+	min-height: 100px;
+	width: 600px;
+	margin: 25px;
+}
+#stepPanel {
+	float: right;
+	bottom: 75px;
+	margin-right: 5px;
+	width: 250px;
+	font-weight: 100;	
+}
+
+#footerContainer {
+	position: absolute;
+	bottom: 0px;
+	height: 75px;
+	background: rgba(238,238,238,1);
+	width: 100vw;	
+}
+
+.overStepLimit {
+
+}
+
+.largeChoice button {
+	margin-top: 25px;
+}
+
+
+#outer {
+  margin: auto;
+  margin-bottom: 40px;
+  margin-top: 35px;
+  width: 780px;
+  padding: 0 10px;
+}
+
+#content {
+	width: 500px;
+	margin: auto;
+	float: left;
+}
+
+.largeChoice {
+	/*border: 1px solid silver;*/
+	border-radius: 4px;
+	background: rgba(255,255,255,0);
+	height: 200px;
+	width: 100%;
+	margin: 0px;
+	position: relative;
+	color: #000;
+}
+
+.choice span.label, .choice2 span.label, .largeChoice span.label {
+	left: 0;
+	text-align: center;
+	width: 120px;
+	height: 100%;
+	background: rgba(0,0,0,0.15);
+	position: absolute;
+	border-radius: 3px 0 0 3px;
+	font-size: 20px;
+	font-family: Lato;
+	color: black;
+	display: inline-block;
+	line-height: 120px;
+	font-style: italic;
+}
+
+.choice span.smallLabel, .largeChoice span.smallLabel {
+	left: 0;
+	text-align: center;
+	width: 120px;
+	height: 50%;
+	background: rgba(0,0,0,0.15);
+	position: absolute;
+	border-radius: 3px 0 0 3px;
+	font-size: 20px;
+	font-family: Lato;
+	color: black;
+	display: inline-block;
+	line-height: 0px;
+	font-style: italic;
+}
+
+.choice div.smallLabel, .largeChoice div.smallLabel {
+	left: 0;
+	text-align: center;
+	width: 120px;
+	height: 50%;
+	background: rgba(0,0,0,0.15);
+	position: absolute;
+	border-radius: 3px 0 0 3px;
+	font-size: 20px;
+	font-family: Lato;
+	color: black;
+	display: inline-block;
+	line-height: 30px;
+	font-style: italic;
+}
+
+.choice span.label.light, .choice2 span.label.light, .largeChoice span.smallLabel.light, .largeChoice div.smallLabel.light {
+	background: none;
+	/*color: #85C042;*/
+}
+
+.interactive {
+  cursor: pointer;
+}
+
+.anchorGoal {
+	position: fixed !important;
+	top: 25px !important;
+}
+
+	
+/*
+g.math text {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  dominant-baseline: alphabetic;
+}
+
+body {
+	margin: 0;
+}
+
+g.math {
+	pointer-events: all;
+}
+
+#menus {
+  float: left;
+}
+
+.menu {
+  margin-top: 21px;
+  margin-left: 50px;
+  margin-bottom: 21px;
+}
+
+.menu .menu-item, #prev, #next {
+	font-family: Lato;
+	text-decoration: none;
+  color: gray;
+  font-size: 15px;
+  display: block;
+  padding: 8px 8px;
+  border-radius: 4px;
+  border: 1px rgba(0,0,0,0) solid;
+  cursor: pointer;
+}
+
+#prev, #next {
+	display: inline;
+	cursor: default;
+}
+
+.menu .menu-item:hover {
+	display: inline-block;
+	border: silver 1px solid;
+	color: #666;
+	cursor: pointer;
+}
+
+#prev.active:hover, #next.active:hover {
+	border: silver 1px solid;
+	cursor: pointer;
+}
+
+.menu .menu-item.active, #prev.active, #next.active {
+	margin: 0px;
+  color: #85C042;
+}
+
+div.middle {
+  margin: 0;
+  margin-bottom: 40px;
+  background-color: #84BF41;
+  border-bottom: rgba(69, 70, 67, 0.5) 1px solid;
+  padding: 7px 8px 0px 10px;
+}
+
+h1 a {
+	text-decoration: none;
+	color: white;
+}
+
+div.middle h1 {
+  font-weight: 300;
+  font-size: 22px;
+  color: #4D4D4C;
+  line-height: 25px;
+  font-family: 'Lato', helvetica, arial, sans-serif;
+  margin-top: 0px;
+  width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 8px;
+}
+
+h1 img {
+	padding-right: 3px;
+  vertical-align: -6px;
+  width: 40px;
+}
+
+h2 {
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 24px;
+  margin-bottom: 0;
+  font-weight: normal;
+  color: #333;
+}
+
+p.tutorial-instructions {
+	font-size: 19px;
+	font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+	color: #555;
+	font-weight: 300;
+	margin-top: 1em;
+}
+
+.tutorial {
+	margin-bottom: 3em;
+}
+
+.tutorial .choice {
+	margin: 10px 0;
+}
+
+
+.interactive {
+  cursor: pointer;
+}
+
+.instructions {
+	margin: auto;
+	text-align: left;
+	font-size: 18px;
+}
+
+div.choices {
+	width: 45%;
+	float: left;
+}
+
+.choice {
+	border: 1px solid silver;
+	border-radius: 4px;
+	background: #eee;
+}
+
+.choice svg {
+	overflow: visible;
+}
+
+.animation {
+	width: 100%;
+	height: 100%;
+}
+
+.choice {
+	height: 120px;
+	width: 500px;
+	margin: 20px auto;
+	position: relative;
+}
+
+.choice2 {
+	height: 250px;
+	width: 500px;
+	margin: 20px auto;
+	position: relative;
+	border: 1px solid silver;
+}
+
+.choice span.label, .choice2 span.label {
+	left: 0;
+	text-align: center;
+	width: 120px;
+	height: 100%;
+	background: rgba(0,0,0,0.15);
+	position: absolute;
+	border-radius: 3px 0 0 3px;
+	font-size: 20px;
+	font-family: Lato;
+	color: black;
+	display: inline-block;
+	line-height: 120px;
+	font-style: italic;
+}
+
+.choice span.label.light, .choice2 span.label.light {
+	background: none;
+	color: #85C042;
+}
+
+.largeChoice {
+	border: 1px solid silver;
+	border-radius: 4px;
+	background: rgba(255,255,255,.1);
+	height: 200px;
+	width: 100%;
+	margin: 0px;
+	position: relative;
+	color: #FFF;
+}
+
+.choice span.label, .choice2 span.label, .largeChoice span.label {
+	left: 0;
+	text-align: center;
+	width: 120px;
+	height: 100%;
+	background: rgba(0,0,0,0.15);
+	position: absolute;
+	border-radius: 3px 0 0 3px;
+	font-size: 20px;
+	font-family: Lato;
+	color: black;
+	display: inline-block;
+	line-height: 120px;
+	font-style: italic;
+}
+
+.choice span.smallLabel, .largeChoice span.smallLabel {
+	left: 0;
+	text-align: center;
+	width: 120px;
+	height: 50%;
+	background: rgba(0,0,0,0.15);
+	position: absolute;
+	border-radius: 3px 0 0 3px;
+	font-size: 20px;
+	font-family: Lato;
+	color: black;
+	display: inline-block;
+	line-height: 0px;
+	font-style: italic;
+}
+
+.choice div.smallLabel, .largeChoice div.smallLabel {
+	left: 0;
+	text-align: center;
+	width: 120px;
+	height: 50%;
+	background: rgba(0,0,0,0.15);
+	position: absolute;
+	border-radius: 3px 0 0 3px;
+	font-size: 20px;
+	font-family: Lato;
+	color: black;
+	display: inline-block;
+	line-height: 30px;
+	font-style: italic;
+}
+
+
+.noBackground {
+	border: none;
+	background-color: transparent;
+	background: none;	
+}
+
+.choice span.label.light, .choice2 span.label.light, .largeChoice span.smallLabel.light, .largeChoice div.smallLabel.light {
+	background: none;
+	color: #85C042;
+}
+*/

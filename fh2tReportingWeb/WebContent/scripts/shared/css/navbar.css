@@ -1,0 +1,68 @@
+nav.navbar-gm {
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #8cc63E;
+}
+
+nav.navbar-gm.gm-dark {
+  background-color: #84BF41;
+  border-bottom: rgba(69, 70, 67, 0.5) 1px solid;
+}
+
+.navbar-gm a.navbar-brand {
+  font-size: 22px;
+  font-family: 'Lato', helvetica, arial, sans-serif;
+  text-decoration: none;
+}
+
+.navbar-nav>li>a:active, .navbar-nav>li>a.active {
+  color: #8cc63E;
+}
+
+.gm-dark .navbar-nav>li>a:active, .gm-dark .navbar-nav>li>a.active {
+  color: #fff;
+}
+
+.navbar-gm.gm-dark a.navbar-brand {
+  font-weight: 300;
+  color: white;
+}
+
+.navbar-gm a.navbar-brand {
+  font-weight: 400;
+}
+
+.navbar-gm a.navbar-brand img {
+	padding-right: 3px;
+  margin-right: 1px;
+  vertical-align: -6px;
+  width: 40px;
+  display: inline-block;
+  margin-top: -10px;
+}
+
+nav.navbar-gm a {
+  color: #727371;
+  font-weight: 300;
+}
+
+nav.navbar-gm.gm-dark a.navbar-btn {
+  color: #444642;
+  background: transparent;
+  border: 1px solid #444642;
+  padding: 6px 12px;
+}
+
+nav.navbar-gm.gm-dark button {
+  color: #444642;
+  background: transparent;
+  border: #444642 1px solid;
+  font-weight: 300;
+}
+
+nav.navbar-gm.gm-dark button:hover {
+  background: #7CB33D;
+}
+
+nav.navbar-gm.gm-dark a:focus, nav.navbar-gm.gm-dark a:hover {
+  background: #7CB33D;
+}

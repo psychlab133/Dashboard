@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                      http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+  
+  <context-param>
+        <param-name>loggingLevel</param-name>
+        <param-value>DEBUG</param-value>
+    </context-param>
+
+  <context-param>
+        <param-name>dbUrl</param-name>
+        <param-value>jdbc:mysql://graspablefh2t.c1s9301aopbb.us-east-2.rds.amazonaws.com:3306/fh2tdev</param-value>
+    </context-param>
+
+  <context-param>
+        <param-name>dbClass</param-name>
+        <param-value>com.mysql.jdbc.Driver</param-value>
+    </context-param>
+ 
+   <context-param>
+        <param-name>dbUser</param-name>
+        <param-value>graspablemaster</param-value>
+    </context-param>
+
+   <context-param>
+        <param-name>dbSchema</param-name>
+        <param-value>fh2tdev</param-value>
+    </context-param>
+
+   <context-param>
+        <param-name>dbPwd</param-name>
+        <param-value>gmw86d4nhie5ss</param-value>
+    </context-param>
+
+  <context-param>
+        <param-name>iesdbUrl</param-name>
+        <param-value>jdbc:mysql://iesfull.cuiolrtbmd5l.us-east-2.rds.amazonaws.com:3306/iesfull</param-value>
+    </context-param>
+
+  <context-param>
+        <param-name>iesdbClass</param-name>
+        <param-value>com.mysql.jdbc.Driver</param-value>
+    </context-param>
+
+   <context-param>
+        <param-name>iesdbName</param-name>
+        <param-value>iesfull</param-value>
+    </context-param>
+
+   <context-param>
+        <param-name>iesdbPwd</param-name>
+        <param-value>Generate1!</param-value>
+    </context-param>
+
+  
+  <servlet id="Servlet_S">
+  	<servlet-name>Startup</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.Startup</servlet-class>
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping id="Startup">
+  	<servlet-name>Startup</servlet-name>
+	<url-pattern>/Startup</url-pattern>
+  </servlet-mapping>
+  
+  <servlet id="Servlet_0">
+  	<servlet-name>GetColumns</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.getColumns</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="GetColumns">
+  	<servlet-name>GetColumns</servlet-name>
+	<url-pattern>/GetColumns</url-pattern>
+  </servlet-mapping>
+  
+  <servlet id="Servlet_1">
+  	<servlet-name>GetStudents</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.getStudents</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="GetStudents">
+  	<servlet-name>GetStudents</servlet-name>
+	<url-pattern>/GetStudents</url-pattern>
+  </servlet-mapping>
+  
+  <servlet id="Servlet_2">
+  	<servlet-name>GetProblems</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.getProblems</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="GetProblems">
+  	<servlet-name>GetProblems</servlet-name>
+	<url-pattern>/GetProblems</url-pattern>
+  </servlet-mapping>
+  
+  <servlet id="Servlet_3">
+  	<servlet-name>GetWorlds</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.getWorlds</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="GetWorlds">
+  	<servlet-name>GetWorlds</servlet-name>
+	<url-pattern>/GetWorlds</url-pattern>
+  </servlet-mapping>
+  
+  <servlet id="Servlet_4">
+  	<servlet-name>GetAttempts</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.getAttempts</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="GetAttempts">
+  	<servlet-name>GetAttempts</servlet-name>
+	<url-pattern>/GetAttempts</url-pattern>
+  </servlet-mapping>
+  
+  <servlet id="Servlet_10">
+  	<servlet-name>RunTestQuery</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.runTestQuery</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="RunTestQuery">
+  	<servlet-name>RunTestQuery</servlet-name>
+	<url-pattern>/RunTestQuery</url-pattern>
+  </servlet-mapping>
+
+  
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

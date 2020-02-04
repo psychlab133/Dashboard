@@ -1,0 +1,26 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:400,700);
+
+@font-face {
+  font-family: 'Kalam';
+  src: url(kalam-regular.ttf);
+}
+
+@font-face {
+  font-family: 'Crimson Text Italics';
+  src: url(crimson-italic-webfont.ttf);
+}
+
+@font-face {
+  font-family: 'Crimson Text';
+  src: url(crimson-roman-webfont.ttf);
+}
+
+g.math text {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  dominant-baseline: alphabetic;
+  cursor: default;
+}

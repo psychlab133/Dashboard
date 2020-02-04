@@ -1,0 +1,119 @@
+<html>
+  <meta charset="utf-8">
+  <title>GM Data Retrieval</title>
+  <style>
+  * {
+    font-family: Arial;
+    font-size: 16px;
+  }
+  body {
+    padding: 10px;
+  }
+  .column {
+    float: left;
+    margin: 10px;
+    width: 300px;
+  }
+  input, select, span, textarea {
+    margin-bottom: 10px;
+    width: 100%;
+    height: 25px;
+  }
+  span {
+    float: left;
+    display: block;
+    line-height: 25px;
+  }
+  span.left {
+    display: inline;
+    width: 50%;
+  }
+  span.right {
+    float: right;
+    width: 50%;
+    text-align: right;
+  }
+  textarea {
+    height: 95px; /* 25px * 3 + 10px * 2 */
+    resize: none;
+  }
+  textarea#warnings {
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow-x: scroll;
+    resize:both;
+    min-height: 600px;
+  }
+  </style>
+  <script src="../shared/libs/d3/d3.min.js"></script>
+  <script src="../shared/libs/FileSaver/FileSaver.min.js"></script>
+  <script src="../shared/libs/gmath/gmath-0.10.0.min.js"></script>
+  <script src="data-retrieval.js"></script>
+  <body onload="init()">
+    <div class="column">
+      <span>Select Server</span>
+      <select id="server" onchange="SERVER_API = this.value; init();">
+        <option value="http://127.0.0.1:7010/api/1.1/" selected>localhost</option>
+        <option value="https://ies.logging.graspablemath.com/api/1.1/">IES FH2T Logging</option>
+        <option value="https://graspablemath.com:7010/api/1.1/">graspable math server</option>
+      </select>
+      <span>Select Experiment By ID</span>
+      <select id="experiments"></select>
+      <span>Or, Create A New Experiment</span>
+      <input id="id" type="text">
+      <span>Name</span>
+      <input id="name" type="text">
+      <span>Description</span>
+      <textarea id="description"></textarea>
+      <span>Experimentors</span>
+      <textarea id="experimentors"></textarea>
+      <span>Contact</span>
+      <textarea id="contact"></textarea>
+      <span>Fields</span>
+      <textarea id="fields"></textarea>
+      <span>Created</span>
+      <input id="created" type="text" readonly>
+      <span>Last Updated</span>
+      <input id="updated" type="text" readonly>
+      <input id="create-experiment" type="button" disabled value="Create Experiment">
+      <input id="update-experiment" type="button" disabled value="Update Experiment">
+    </div>
+    <div class="column">
+      <span>Starting On</span>
+      <input id="start" type="date">
+      <span>Ending On (Inclusive)</span>
+      <input id="end" type="date">
+      <div>
+        <span class="left">Trials</span>
+        <span id="trials" class="right">0</span>
+      </div>
+      <div>
+        <span class="left">Interactions</span>
+        <span id="interactions" class="right">0</span>
+      </div>
+      <div>
+        <span class="left">Events</span>
+        <span id="events" class="right">0</span>
+      </div>
+      <div>
+        <span class="left">Custom Events</span>
+        <span id="custom" class="right">0</span>
+      </div>
+      <p>&nbsp;</p><p>Download:</p>
+      <input id="download-trials" type="button" disabled value="Trials as JSON">
+      <input id="download-data" type="button" disabled value="Trials & Events as JSON">
+      <input id="download-data-trajectories-csv" type="button" disabled value="Events as CSV">
+      <input id="download-data-csv" type="button" disabled value="Events as CSV (no trajectories)">
+      <input id="download-fh2t-data" type="button" value="My FH2T Aggregation">
+      <p>progress: <span id=progress>0%</span></p>
+    </div>
+    <div class="column">
+      <span>Warnings:</span><br><br>
+      <textarea id="warnings" readonly></textarea>
+    </div>
+
+    <script>
+      SERVER_API = 'http://127.0.0.1:7010/api/1.1/';
+    </script>
+  </body>
+</html>

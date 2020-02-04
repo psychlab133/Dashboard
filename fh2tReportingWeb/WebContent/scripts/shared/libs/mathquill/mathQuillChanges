@@ -1,0 +1,3 @@
+mathQuill Changes:
+
+In src/rootelements.js, commented lines 237 and 240, to prevent the spacebar from moving the cursor.

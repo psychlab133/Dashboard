@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<style>
+div#circle {
+	width: 20px;
+	height: 20px;
+	border: 10px solid black;
+	position: absolute;
+	border-radius: 20px;
+	background: steelblue;
+}
+div#circle:hover {
+	background: red;
+}
+div#eye {
+	width: 50px;
+	height: 50px;
+	border: 10px solid black;
+	position: absolute;
+	-webkit-transform-origin: 50% 50%;
+	-webkit-transform: translate(75px,75px) rotate(45deg);
+	border-radius: 50px 0px;
+	background: white;
+}
+div#line {
+	-webkit-transform: translate(100px,40px) rotate(25deg);
+	-webkit-transform-origin: 0px 0px;
+	width: 80px;
+	height: 0px;
+	border: 5px solid black;
+	border-radius: 10px;
+	position: absolute;
+	background: black;
+}
+div#line:hover {
+	border-color: red;
+	background: red;
+}
+body {
+	background: gray;
+}
+.text {
+	color: black;
+	font-size: 100px;
+	font-style: italic;
+	text-shadow: 0px 0px 10px white;
+}
+#text {
+	display: inline-block;
+	position: absolute;
+	-webkit-transform: translate(100px,0px);
+}
+</style>
+<body>
+Lessons learned:
+<ul>
+	<li>I can draw arbitraty lines and circles using divs, border-radius and -webkit-transform.</li>
+	<li>Moving around g's in an svg with italic text inside causes graphical artifacts (I need to insert an invisible rect of appropriate size to fix this)</li>
+	<li>Moving around divs or spans with italic text inside works fine</li>
+	<li>I can use text-shadow for svg and html elements (but box-shadow just for html elements(?))</li>
+</ul>
+The BIG question: What is more performant, using svg or just html?
+<div id="line"></div>
+<div id="eye"><div id="circle"></div></div>
+<svg height=200>
+	<g style="-webkit-transform: translate(200px,100px);">
+		<text class="text">f</text>
+	</g>
+</svg>
+<span id="text" class="text">f</span>
+</body>
+</html>
