@@ -60,8 +60,9 @@ public class loginRequest extends HttpServlet {
 		int DBrole = 0;
 		String strRoles = "";
 		String DBemail = "";
+		int DBid = 0;
 
-		String query = "select password as PWD, role as ROLE, email as EMAIL, ID from usernames where username = '" + username + "';";		
+		String query = "select username as DBNAME, password as PWD, role as ROLE, email as EMAIL, ID from usernames where username = '" + username + "';";		
 		logger.debug("query=" + query);
 		Connection con = null;
 		try {
@@ -70,15 +71,19 @@ public class loginRequest extends HttpServlet {
 			PreparedStatement pstmt = (PreparedStatement)con.prepareStatement(query);
 			ResultSet rs = pstmt.executeQuery(query);
 			while (rs.next()) {
-				logger.debug(username + " logging in");
-				DBpwd = rs.getString("PWD");
-				DBuserid = rs.getInt("ID");
-				DBemail = rs.getString("EMAIL");
-				DBrole = rs.getInt("ROLE");
+				if (username.equals(rs.getString("DBNAME"))) {
+					logger.debug(username + " logging in");
+					DBpwd = rs.getString("PWD");
+					DBuserid = rs.getInt("ID");
+					DBemail = rs.getString("EMAIL");
+					DBrole = rs.getInt("ROLE");
+					DBid = rs.getInt("ID");
+					break;
+				}
 			}
 			rs.close();
 
-			String roleQuery = "select userrole.userID as UID, roles.rolename as RNAME from userrole JOIN roles on userrole.roleID = roles.ID where userrole.userID = " + DBrole + ";";
+			String roleQuery = "select userrole.userID as UID, roles.rolename as RNAME from userrole JOIN roles on userrole.roleID = roles.ID where userrole.userID = " + DBid + ";";
 			logger.debug(roleQuery);
 			ResultSet role_rs = pstmt.executeQuery(roleQuery);
 			boolean first = true;
@@ -110,59 +115,44 @@ public class loginRequest extends HttpServlet {
 		}
 		String str = "";
 		if (pwd.trim().equals(DBpwd.trim())) {
-		
 			logger.debug("passwords match");
 			Person current = new Person(DBuserid,username,DBemail,strRoles);
-			session.setAttribute("currentUser",current);
-			session.setMaxInactiveInterval(30*60);
 			logger.debug(current.dump());
 				
-			String ExperimentID = "Forsythe 12-05-2019";
-			String ExperimentAbbr = "FS";
-			
-			str = "<form >";
-			str += "<div class='form-row'> <div class='col-sm-12'><h3>Select your Experiment and Role</h3></div></div>";
-
-			str += "<div class='form-group'><label>Experiment ID</label>";
-			str += "<div class='radio'><label><input type='radio' name='optradio' checked> " + ExperimentID + "</label></div>";
-			str += "<div class='radio'><label><input type='radio' name='optradio'>Worcester - Fall 2019</label></div>";
-			str += "</div>";
-
-			if (current.getRoles().length == 0) {
-				out.print("Sorry, No roles for this person");
+			if (strRoles.length() == 0) {
+				out.print("Error: " +rb.getString("no_roles"));
 			}
 			else {
-	  			session.setAttribute("ExperimentID", ExperimentID);
-	  			session.setAttribute("ExperimentAbbr", ExperimentAbbr);
-
-				str += "<div class='form-group' onChange=viewPageSelected()'><label>Roles</label>";
-				for (int i = 0; i <current.getRoles().length; i++) {
-					str += "<div class='custom-control custom-radio custom-control-inline'>";
-					if (i == 0) {
-					str += "<input type='radio' checked class='custom-control-input' id='" + current.getRole(i) + "' name='roleSelections' onclick='" + current.getRole(i) + "PageSelected()'>";
+				session.setAttribute("currentUser",current);
+				session.setMaxInactiveInterval(30*60);
+				if (current.getRoles().length > 1) {
+					str += "<form> ";  
+					str += "<div class='form-group' onChange=viewPageSelected()'><label>" + rb.getString("roles") + "</label>";
+					for (int i = 0; i <current.getRoles().length; i++) {
+						str += "<div class='custom-control custom-radio custom-control-inline'>";
+						if (i == 0) {
+							str += "<input type='radio' checked class='custom-control-input' id='" + current.getRole(i) + "' name='roleSelections' onclick='" + current.getRole(i) + "PageSelected()'>";
+						}
+						else {
+							str += "<input type='radio' class='custom-control-input' id='" + current.getRole(i) + "' name='roleSelections' onclick='" + current.getRole(i) + "PageSelected()'>";
+						}
+						str += "<label class='custom-control-label' for='" +  current.getRole(i) + "'>" + current.getRole(i) + "</label>";
+						str += "</div>";
 					}
-					else {
-						str += "<input type='radio' class='custom-control-input' id='" + current.getRole(i) + "' name='roleSelections' onclick='" + current.getRole(i) + "PageSelected()'>";
-					}
-					str += "<label class='custom-control-label' for='" +  current.getRole(i) + "'>" + current.getRole(i) + "</label>";
 					str += "</div>";
+					str += "</form> ";            
 				}
-				str += "</div>";
-            
-				str += "<div class='row'><div class='col-sm-12'>";
-				str += "<button id='selectorCancelButton' type='button' class='btn btn-danger btn-sm ml-auto' onclick='close()'>cancel</button>";
-				//str += "<a id='selectorContinueButton' href='" + viewPage + "' class='btn btn-primary btn-sm ml-1' role='button'>continue</a>";
-				str += "<a id='selectorContinueButton' href='/fh2tReportingWeb/fh2tResearcherView.jsp' class='btn btn-primary btn-sm ml-1' role='button'>continue</a>";
-				str += "</div></div>";
-				str += "</form> ";
+				else {
+					str = "defaultPage";
+				}
+
 				out.print(str);
 				System.out.println(str);
 			}
 		}
 		else {
 			logger.debug("incorrect password: " + pwd + " " + DBpwd);
-			str = "<h3>Unknown username or password</h3>";
-			out.print(str);
+			out.print("Error: " + rb.getString("unknown_username_or_password"));
 		}
 	}
 }

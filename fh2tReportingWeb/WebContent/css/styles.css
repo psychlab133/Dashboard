@@ -1,3 +1,30 @@
+.modal-dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+}
+
+.metricCell{ 
+    position: relative; 
+} 
+.metrictooltip{ 
+    display: none; 
+    position: absolute;  
+    z-index: 100; 
+    border: 1px; 
+    background-color: white; 
+    border: 1px solid green; 
+    padding: 3px; 
+    color: green;  
+    top: 20px;  
+    left: 20px; 
+    font-size: 12px;
+} 
+.metricCell:hover span.metrictooltip{ 
+    display:block; 
+} 
+
 .row-header {
   margin: 0px auto;
   padding: 0px 0px; }
@@ -22,6 +49,61 @@ body {
   font-family: 'Oxygen', sans-serif;
 }
 
+#ResearchPageHeader {
+  background-color: lightgray;
+	
+}
+#ResearchPageTitle h4 { 
+  font-family: 'Lora', serif;
+  color: blue;
+  background-color: lightgray;
+  font-size: 1.5em;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #222;
+  margin-bottom: 4px;
+  line-height: .75;
+}
+
+#ResearchPageExperiment h4 { 
+  font-family: 'Lora', serif;
+  color: white;
+  background-color: lightgray;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #222;
+  margin-bottom: 4px;
+  line-height: .75;
+
+}
+#ScreenshotPageStudent h5 { 
+  font-family: 'Lora', serif;
+  color: blue;
+  background-color: lightgray;
+  font-size: 1em;
+  text-shadow: 1px 1px 1px #222;
+  margin-bottom: 4px;
+  line-height: .75;
+}
+
+#ScreenshotPageTitle h5 { 
+  font-family: 'Lora', serif;
+  color: black;
+  background-color: lightgray;
+  font-size: 1em;
+  margin-bottom: 4px;
+  line-height: .75;
+
+}
+#ResearchPageSignoutButton { 
+  color: blue;
+  background-color: lightgray;
+}
+#AdminPageSignoutButton { 
+  color: blue;
+  background-color: lightgray;
+}
+
 /** HEADER **/
 #header-nav {
   background-color: lightblue;
@@ -31,22 +113,15 @@ body {
 
 #logon-img {
   background: url('../images/loginScreen.png') no-repeat;
-  width: 600px;
-  height: 250px;
-  margin: 10px 15px 10px 0;
-}
-
-#logo-img {
-  background: url('../images/loginScreen.png') no-repeat;
-  width: 500px;
-  height: 100px;
-  margin: 10px 15px 10px 0;
+  width: 480px;
+  height: 111px;
+  margin: 0 10px 0 0;
 }
 
 #view-img {
   background: url('../images/loginScreen.png') no-repeat;
   width: 300px;
-  height: 100px;
+  height: 111px;
   margin: 10px 15px 10px 0;
 }
 
@@ -67,6 +142,15 @@ body {
   color: black; 
 	
 }
+
+#tpad {
+  min-height: 100px;
+}
+
+#bpad {
+  min-height: 50px;
+}
+
 .copyright {
   color: black; 	
 }
@@ -82,10 +166,22 @@ body {
   text-transform: uppercase;
   font-weight: bold;
   text-shadow: 1px 1px 1px #222;
-  margin-top: 0;
+  margin-top: 30px;
   margin-bottom: 0;
   line-height: .75;
 }
+
+.navbar-brand h5 { 
+  font-family: 'Lora', serif;
+  color: #8080ff;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #222;
+  margin-top: 30px;
+  margin-bottom: 0;
+  line-height: .75;
+}
+
 .navbar-brand a:hover, .navbar-brand a:focus {
   text-decoration: none;
 }
@@ -117,15 +213,56 @@ body {
 	height:40;
 }
 .modal-header {
-  background: blue;
-  color: floralwhite; 
+  background: white;
+  color: black; 
+}
+.about-modal-header {
+  font-family: 'Lora', serif;
+  color: blue;
+  background-color: white;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #222;
+  margin-bottom: 4px;
+  line-height: .75;
+}
+.about-modal-body {
+  margin: 10px;
+  background: white;
+  color: black; 
+}
+
+.about-version {
+  background: white;
+  color: black; 
+}
+
+#loginForm {
+  background: white;
+  color: black; 
+	
 }
   
-  .modal-header button {
+#loginMsgHdr {
+  background: white;
+  color: black; 
+	
+}
+  
+#signupMsgHdr {
+  background: white;
+  color: black; 
+	
+}
+  
+.modal-header button {
     color: yellow; }
 
+#signinForm {
+  background: white; 
+}
 .modal-body {
-  background: lightblue; 
+  background: white; 
 }
 
 .navbar-header button.navbar-toggle, .navbar-header .icon-bar {
@@ -143,6 +280,14 @@ body {
   border: 5px solid #ff0000;
 }
 
+.select-student {
+  color:black;
+  background-color: white ;
+}
+.buttonPanel {
+  margin-left: 4px;
+  background-color: lightgray ;
+}
 .selectionPanel {
   border-bottom: 1px solid black;
   margin-left: 4px;
@@ -158,9 +303,27 @@ body {
 	color:black;
 	background-color: lightblue ;
 }
+.signup {
+	color:black;
+	background-color: lightblue ;
+}
 #loginMsgRsp {
 	color:#d9534f;
-	background-color: lightblue ;
+	background-color: white ;
+}
+#signupMsgRsp {
+	color:#d9534f;
+	background-color: white ;
+}
+
+#roles-panel {
+
+	border-radius: 25px;
+  	border: 2px solid black;
+	padding: 12px;
+	margin: 12px;
+	color: black;
+	background-color: wheat;
 }
 
 .visheader {
@@ -175,8 +338,8 @@ body {
   	background: red;	
 }
 .custom-select {
-  	background-color: gold ;
-  	color: black; }
+  	background-color: white ;
+  	color: black; 
 }
 hr { 
   display: block;
@@ -186,6 +349,15 @@ hr {
   margin-right: auto;
   border-style: inset;
   border-width: 1px;
+}
+.footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: lightgray;
+   color: black;
+   text-align: center;
 }
 
 /********** Large devices only **********/

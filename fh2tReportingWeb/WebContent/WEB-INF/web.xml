@@ -17,12 +17,22 @@
 
   <context-param>
         <param-name>gm-trials</param-name>
-        <param-value>wpi_ies_study_fall_19_trials</param-value>
+        <param-value>_trials</param-value>
     </context-param>
 
   <context-param>
         <param-name>gm-data</param-name>
-        <param-value>wpi_ies_study_fall_19_data</param-value>
+        <param-value>_data</param-value>
+    </context-param>
+
+  <context-param>
+        <param-name>gm-aggregation</param-name>
+        <param-value>_aggregation_table</param-value>
+    </context-param>
+
+  <context-param>
+        <param-name>gm-averages</param-name>
+        <param-value>_Sample_average</param-value>
     </context-param>
 
   <context-param>
@@ -272,6 +282,107 @@
   <servlet-mapping id="GetReport">
   	<servlet-name>GetReport</servlet-name>
 	<url-pattern>/GetReport</url-pattern>
+  </servlet-mapping>
+
+  <servlet id="Servlet_21">
+  	<servlet-name>GetSchools</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.getSchools</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="GetSchools">
+  	<servlet-name>GetSchools</servlet-name>
+	<url-pattern>/GetSchools</url-pattern>
+  </servlet-mapping>
+
+  
+  <servlet id="Servlet_22">
+  	<servlet-name>DownloadFile</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.downloadFile</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="DownloadFile">
+  	<servlet-name>DownloadFile</servlet-name>
+	<url-pattern>/DownloadFile</url-pattern>
+  </servlet-mapping>
+
+  <servlet id="Servlet_23">
+  	<servlet-name>GetProblemAvgs</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.getProblemAvgs</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="GetProblemAvgs">
+  	<servlet-name>GetProblemAvgs</servlet-name>
+	<url-pattern>/GetProblemAvgs</url-pattern>
+  </servlet-mapping>
+
+  <servlet id="Servlet_24">
+  	<servlet-name>GetProblemSankey</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.getProblemSankey</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="GetProblemSankey">
+  	<servlet-name>GetProblemSankey</servlet-name>
+	<url-pattern>/GetProblemSankey</url-pattern>
+  </servlet-mapping>
+
+  <servlet id="Servlet_25">
+  	<servlet-name>GetProblemTreeMap</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.getProblemTreeMap</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="GetProblemTreeMap">
+  	<servlet-name>GetProblemTreeMap</servlet-name>
+	<url-pattern>/GetProblemTreeMap</url-pattern>
+  </servlet-mapping>
+
+  <servlet id="Servlet_26">
+  	<servlet-name>GetExperiments</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.getExperiments</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="GetExperiments">
+  	<servlet-name>GetExperiments</servlet-name>
+	<url-pattern>/GetExperiments</url-pattern>
+  </servlet-mapping>
+
+  <servlet id="Servlet_27">
+  	<servlet-name>SaveExperimentInfo</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.saveExperimentInfo</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="SaveExperimentInfo">
+  	<servlet-name>SaveExperimentInfo</servlet-name>
+	<url-pattern>/SaveExperimentInfo</url-pattern>
+  </servlet-mapping>
+
+  <servlet id="Servlet_28">
+  	<servlet-name>GetDashboardUsers</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.getDashboardUsers</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="GetDashboardUsers">
+  	<servlet-name>GetDashboardUsers</servlet-name>
+	<url-pattern>/GetDashboardUsers</url-pattern>
+  </servlet-mapping>
+
+  <servlet id="Servlet_29">
+  	<servlet-name>ApproveUser</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.approveUser</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="ApproveUser">
+  	<servlet-name>ApproveUser</servlet-name>
+	<url-pattern>/ApproveUser</url-pattern>
+  </servlet-mapping>
+
+  <servlet id="Servlet_30">
+  	<servlet-name>SendPassword</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.sendPassword</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="SendPassword">
+  	<servlet-name>SendPassword</servlet-name>
+	<url-pattern>/SendPassword</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>

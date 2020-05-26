@@ -56,20 +56,14 @@ public class getProblems extends HttpServlet {
 			colorName = request.getParameter("tablecolor");
 		}
 
-		String level="";
-		if (request.getParameter("level") != null) {
-			level = request.getParameter("level");
-		}
-
 		logger.debug("getProblems servlet starting");			
-		
+		String str = "";
 //		out.print("<div class='row'><div class='col-4'><h4>" + rb.getString("problems") + "</h4></div></div><div class='row'><div class='col-2'><h4></h4></div><div class='col-8'><button type='button' class='btn btn-danger btn-sm ml-1 ' onclick='resetStudents()'>" + rb.getString("reset") + "</div><div class='col-2'><h4></h4></div></div><div class='row'><div class='col-4'>");	
 		out.print("<div class='row'><div class='col-4 selection-header'><h4>" + rb.getString("problems") + "</h4></div></div><div class='row'><div class='col-4'>");	
 
-		//out.print("<div class='row'><div class='col-4'><h2>" + rb.getString("problems") + "</h2></div></div><div class='row'><div class='col-2'><h2></h2></div><div class='col-8'><button type='button' class='btn btn-danger btn-lg ml-1 ' onclick='resetProblems()'>" + rb.getString("reset") + "</button><button type='button' class='btn btn-primary btn-lg ml-1 ' onclick='getColumns(" + level + ")'>" + rb.getString("columns") + "</button></div><div class='col-2'><h2></h2></div></div><div class='row'><div class='col-4'>");
-		out.print("<div class='col-4'><select id='problemsSelections' class='custom-select' size='8'  onchange=setProblem();>");
+		out.print("<div class='col-4'><select id='problemsSelections' class='custom-select' size='1'  onchange=setProblem();>");
 
-		String str = "";
+		str = "<option style='background-color:white;' value='Problem'>Select Problem</option>";
 	
 		String query = "select problem as PROBLEM, ID as id from problems;";		
 		logger.debug("query=" + query);

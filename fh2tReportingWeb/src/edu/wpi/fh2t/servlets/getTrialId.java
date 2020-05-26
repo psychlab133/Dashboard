@@ -72,6 +72,9 @@ public class getTrialId extends HttpServlet {
 			problemId = request.getParameter("problemId");			
 		}
 		
+		String trialsCollectionName = (String) session.getAttribute("expTrials");
+		logger.debug("trials collection  = " + trialsCollectionName);		
+
 		experimentID = "";
 		//studentId = "FS0601-117";
 		
@@ -121,7 +124,7 @@ public class getTrialId extends HttpServlet {
 		logger.debug("MongoClient created");
 		MongoDatabase gmDB = mongoClient.getDatabase((String) getServletContext().getInitParameter("gm-DBName"));
 		logger.debug("User database=" + gmDB.getName());
-		MongoCollection<Document> collection = (MongoCollection <Document>) gmDB.getCollection((String) getServletContext().getInitParameter("gm-trials"));
+		MongoCollection<Document> collection = (MongoCollection <Document>) gmDB.getCollection(trialsCollectionName);
 		logger.debug("search for " + student.getId());
 		BasicDBObject searchQuery = new BasicDBObject();
 		searchQuery.put("assistments_user_id", student.getId());
@@ -146,6 +149,12 @@ public class getTrialId extends HttpServlet {
 		mongoClient.close();
 		str = id + "," + start_state + "," + goal_state + "," + best_step;
 		out.print(str);
+		logger.debug("studentId=" + studentId);
+		session.setAttribute("currentStudent",studentId);		
+		session.setAttribute("currentProblem",problemId);		
+		session.setAttribute("start_state",start_state);		
+		session.setAttribute("goal_state",goal_state);		
+		session.setAttribute("best_step",best_step);
 		logger.debug(str);
 		logger.debug("end getTrialId()");
 				

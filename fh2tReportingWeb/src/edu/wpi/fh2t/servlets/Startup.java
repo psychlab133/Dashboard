@@ -44,6 +44,8 @@ import com.mongodb.MongoCredential;
 
 import org.apache.log4j.Level;
 
+import edu.wpi.fh2t.utils.*;
+
 /**
 
  * Servlet implementation class Startup
@@ -96,6 +98,9 @@ public class Startup extends HttpServlet {
 		
 		logger.setLevel(Level.DEBUG); 		
 
+		//DashboardEmail de = new DashboardEmail();
+		//de.sendmail();
+		
 		Enumeration<String> ae = ctx.getInitParameterNames();
 		if (ae.hasMoreElements()) {
 			while (ae.hasMoreElements()) {

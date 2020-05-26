@@ -52,29 +52,36 @@ public class getTrialMetrics extends HttpServlet {
 		Logger logger = (Logger) session.getAttribute("logger");
 		ResourceBundle rb = (ResourceBundle) session.getAttribute("rb");
 
-		logger.setLevel(Level.DEBUG);
+		//logger.setLevel(Level.DEBUG);
 		
 		logger.debug("getTrials servlet starting");			
 
+		String metrics[] = { 
+		"Completion (1 = Yes / 0 = No)~completed~Whether the student successfully reached the goal state at least once",  
+		"Number of steps~num_steps~The number of steps that the student took for ALL attempts (both completions and non-completions)",
+		"Number of go-backs~num_gobacks~The number of re-attempts the student has on this problem in addition to the initial completion (after successfully reaching the goal state)",
+		"Number of resets~num_reset~The number of times that student used the reset button to return the problem to the start state for ALL attempts (both completions and non-completions)",
+		"Step-efficiency_first~first_efficiency~Ranging between 1 (perfect efficiency) to 0 (worst possible efficiency) for the student's first attempt at reaching the goal state",
+		"Step-efficiency_last~last_efficiency~Ranging between 1 (perfect efficiency) to 0 (worst possible efficiency) for the student's final attempt at reaching the goal state",
+		"Time taken (sec)~time_interaction~The total amount of time (in seconds) that the problem appeared on the screen",
+		"Pause time - first (%)~time_interaction_first_percent~The proportion of the total time spent on the problem that was spent after opening the problem but before making the first step on the student's first attempt at reaching the goal state (pause time / total time)",
+		"Pause time - last (%)~time_interaction_last_percent~The proportion of the total time spent on the problem that was spent after opening the problem but before making the first step on the student's final attempt at reaching the goal state (pause time / total time)",
+		"Use of hints (1 = Yes / 0 = No)~use_hint~Whether the student requested a hint on this problem",
+		"Number of total errors~total_error~The total number of errors that student made",
+		"Number of keypad errors~keypad_error~The number of errors that the student made by attempting to enter an non-equivalent expression using the keypad",
+		"Number of shaking errors~shaking_error~The number of errors that the student made by attempting to incorrectly use existing operators",
+		"Number of snapping errors~snapping_error~The number of errors that the student made by attempting to incorrectly reorder terms"
+		};
+		 
+		  
+		String avgs[] = { "","","","","","","","","","","","","",""};
+		  
+		
 		String experimentID = "";
 		if (request.getParameter("experimentID") != null) {
 			experimentID = request.getParameter("experimentID");
 		}
 
-		String metricNames[] = { 
-				"num_steps",
-				"num_gobacks",
-				"num_reset",
-				"keypad_error",
-				"keypad_error",
-				"shaking_error",
-				"snapping_error",
-				"first_efficiency",
-				"use_hint",
-				"time_interaction",
-				"time_interaction_last_percent"
-		};
-		
 		String studentId = "";
 		if (request.getParameter("studentId") != null) {
 			studentId = request.getParameter("studentId");			
@@ -89,6 +96,11 @@ public class getTrialMetrics extends HttpServlet {
 		experimentID = "";
 		
 		Student student = new Student(studentId);
+		
+		String aggregationCollectionName = (String) session.getAttribute("expAggregation");
+		logger.debug("aggregation collection  = " + aggregationCollectionName);
+		String averagesCollectionName = (String) session.getAttribute("expAverages");
+		logger.debug("averages collection  = " + averagesCollectionName);		
 		
 		logger.debug("getTrialMetrics servlet starting");			
 		
@@ -130,29 +142,42 @@ public class getTrialMetrics extends HttpServlet {
 			}			
 		}
 	
-/* replacement code using gm-logs database
-		MongoClient mongoClient = new MongoClient("localhost", 7010);
-		logger.debug("MongoClient created");
-		MongoDatabase gmDB = mongoClient.getDatabase((String) getServletContext().getInitParameter("gm-DBName"));
-		logger.debug("User database=" + gmDB.getName());
-		MongoCollection<Document> collection = (MongoCollection <Document>) gmDB.getCollection((String) getServletContext().getInitParameter("gm-trials"));
-*/
-		
-		MongoIterable<String> temp;
+	
+		//MongoIterable<String> temp;
 		MongoClient mongoClient = new MongoClient("localhost", 7010);
 		logger.debug("MongoClient created");
 		MongoDatabase experimentDB = mongoClient.getDatabase("gm-logs");
 		logger.debug("User database=" + experimentDB.getName());
-		temp = experimentDB.listCollectionNames();
-		logger.debug("First experimentDB collection=" + temp.first());
+		//temp = experimentDB.listCollectionNames();
+		//logger.debug("First experimentDB collection=" + temp.first());
 	
-		MongoCollection<Document> collection = (MongoCollection <Document>) experimentDB.getCollection("wpi_ies_study_fall_19_aggregation_table");
-	
+
+		MongoCollection<Document> avgCollection = (MongoCollection <Document>) experimentDB.getCollection(averagesCollectionName);
+		
+		int count = metrics.length;
+		String avgLookup = "";
+		for (int i = 0; i < count; i++) {		
+			BasicDBObject avgQuery = new BasicDBObject();			
+			String theMetric[] = metrics[i].split("~");
+			avgLookup = problemPrefix + theMetric[1];
+			avgQuery.put("field", avgLookup);
+			
+		    FindIterable<Document> avgIterable = (FindIterable<Document>) avgCollection.find(avgQuery);
+		    Iterator<Document> iterator = avgIterable.iterator();
+		    if (iterator.hasNext()) {
+		        Document avgMetric = (Document) iterator.next();
+		        avgs[i] = (String) avgMetric.get("values");
+		    }
+		}
+
+
+		
+		MongoCollection<Document> collection = (MongoCollection <Document>) experimentDB.getCollection(aggregationCollectionName);
+		
 		logger.debug("search for " + student.getId());
 		BasicDBObject searchQuery = new BasicDBObject();
 		searchQuery.put("studentID", student.getId());
-		
-		int count = 0;
+
 		
 		String str = "{";
 		
@@ -161,14 +186,15 @@ public class getTrialMetrics extends HttpServlet {
 	    Iterator<Document> iterator = findIterable.iterator();
 	    while(iterator.hasNext()) {
 	        Document metric = (Document) iterator.next();
-	    	for (int n= 0; n < metricNames.length; n++) {
+	    	for (int n= 0; n < metrics.length; n++) {
 		        if (needsComma) { 
 		        	str += ", "; }
 		        else { 
 		        	needsComma = true; 
 		        }
-	    		String metricValue = (String) metric.get(problemPrefix + metricNames[n]);
-				str += "\"" + metricNames[n] + "\":\"" + metricValue + "\"";
+		        String theMetric[] = metrics[n].split("~");
+	    		String metricValue = (String) metric.get(problemPrefix + theMetric[1]);
+				str += "\"" + metrics[n] + "\":\"" + metricValue + "~" + avgs[n] + "\"";
 	    	}
 	    }
 	    str += "}";

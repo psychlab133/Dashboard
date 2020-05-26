@@ -86,13 +86,15 @@ public class registerUser extends HttpServlet {
 			if (rs.next()) {
 				logger.debug("Username is taken. Please choose another.");
 				str = "<h3>Error! Username is taken. Please choose another.</h3>";
-			}			
+			}
+			else {
+		    	String insertQuery = "INSERT into usernames (username,password,email,role) Values ('" + username + "', '" + pwd + "', '" + email + "', 0);";
+		    	logger.debug(insertQuery);
+		    	PreparedStatement insertPstmt = (PreparedStatement)con.prepareStatement(insertQuery);
+		    	insertPstmt.execute(insertQuery);
+			}
 			rs.close();
 		    pstmt.close();
-		    String insertQuery = "INSERT into usernames (username,password,email,role) Values ('" + username + "', '" + pwd + "', '" + email + "', 3);";
-		    logger.debug(insertQuery);
-		    PreparedStatement insertPstmt = (PreparedStatement)con.prepareStatement(insertQuery);
-			insertPstmt.execute(insertQuery);
 			con.close();
 		} //end try
 		catch (ClassNotFoundException e1) {
@@ -110,16 +112,16 @@ public class registerUser extends HttpServlet {
 		if (str.length() == 0) {
 			if (!(pwd.trim().equals(pwd2.trim()))) {
 				logger.debug("Passwords don't match: " + pwd.trim() + " " + pwd2.trim());
-				str = "<h3>Error! Passwords don't match. Please try again.</h3>";
+				str = "Error! Passwords don't match. Please try again.";
 			}
 			else {
 				if (email.indexOf("@") == -1) {
 					logger.debug("Error! Invalid email address. Please try again.");
-					str = "<h3>Error! Invalid email address. Please try again.</h3>";
+					str = "Error! Invalid email address. Please try again.";
 				}
 				else {
 					logger.debug("Add user to DB");
-					str = username + " was added to DB. You are now welcome to log in.";
+					str = "Your request to add the user name '" + username + "' has been entered. You will receive an email with instructions on how to accept the terms of usage for this application.";
 				}
 			}
 		}

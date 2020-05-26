@@ -55,32 +55,38 @@ public class getTeachers extends HttpServlet {
 			colorName = request.getParameter("tablecolor");
 		}
 
-		String level="";
-		if (request.getParameter("level") != null) {
-			level = request.getParameter("level");
-		}
-
 		String filter="";
 		if (request.getParameter("filter") != null) {
 			filter = request.getParameter("filter") + "%";
 		}
 		else {
-			filter = "FS06%";
+			filter = "FS%";
 		}
+		
+		String problemId = "121";
+		if (request.getParameter("problemId") != null) {
+			problemId = request.getParameter("problemId");			
+		}
+
+		String collectionName = (String) session.getAttribute("expAggregation");
+		logger.debug("collection  = " + collectionName);
 		
 		logger.debug("getTeachers servlet using filter: " + filter);			
 
-		
-		String strClassIDs = "";
 		String str = "";
-
-		
-//		str = "<div class='row'><div class='col-4'><h4>" + rb.getString("students") + "</h4></div></div><div class='row'><div class='col-2'><h4></h4></div><div class='col-8'><button type='button' class='btn btn-danger btn-sm ml-1 ' onclick='resetStudents()'>" + rb.getString("reset") + "</div><div class='col-2'><h4></h4></div></div><div class='row'><div class='col-4'>";	
+		 
 		str = "<div class='row'><div class='selection-header'><h4>" + rb.getString("teachers") + "</h4></div></div><div class='row'><div class='col-4'>";	
 		out.print(str);
-		out.print("<div><select id='teachersSelections' class='custom-select' size='8' min-width:90%; onchange=setTeacher();>");
+		out.print("<div><select id='teachersSelections' class='custom-select' size='0' min-width:90%; onchange=setTeacher();>");
+		
+		str = "<option style='background-color:white;' value='Teachers'>Select Teacher</option>";
 
-		str = "";
+		MongoClient mongoClient = new MongoClient("localhost", 7010);
+		logger.debug("MongoClient created");
+		MongoDatabase experimentDB = mongoClient.getDatabase("gm-logs");
+		logger.debug("User database=" + experimentDB.getName());
+		MongoCollection<Document> collection = (MongoCollection <Document>) experimentDB.getCollection(collectionName);
+
 //		String query = "select studentID as SID, username, currentClass as Class from usernames WHERE studentID like '" + filter + "' and not currentClass = '';";		
 		Connection con = null;
 		try {
@@ -88,7 +94,7 @@ public class getTeachers extends HttpServlet {
 			Class.forName((String) getServletContext().getInitParameter("dbClass"));
 			con = (Connection) DriverManager.getConnection ((String) getServletContext().getInitParameter("iesdbUrl"),(String) getServletContext().getInitParameter("iesdbUser"),(String) getServletContext().getInitParameter("iesdbPwd"));
 			
-			String query = "select distinct studentID from usernames where studentID like '" + filter + "' and not currentClass = '' order by studentID";
+			String query = "select distinct studentID, username as UNAME from usernames where studentID like '" + filter + "' and not currentClass = '' order by studentID";
 			logger.debug("query=" + query);
 			PreparedStatement pstmt = (PreparedStatement)con.prepareStatement(query);
 //			pstmt.setString(1, filter);
@@ -97,20 +103,31 @@ public class getTeachers extends HttpServlet {
 			String strTeacherIDs = "";
 			String teacherID = "";
 			while (rs.next()) {
-				teacherID = ((String) rs.getString("studentID")).substring(0,filter.length()+3);
-				//logger.debug("teacherID=" + teacherID);
-				//logger.debug("teacherIDs=" + strTeacherIDs);
-				if (strTeacherIDs.indexOf(teacherID) == -1) {
-					str += "<option style='background-color:" + colorName + ";' value='" + teacherID + "'> " + teacherID + "</option>;";
-					strTeacherIDs  += teacherID;
-					if (needsComma) {
-						strTeacherIDs  += ",";
-					}
-					else {
-						needsComma = true;
-					}
+				boolean studentCompletedProblem = false;
+				if (problemId.length() == 0) {
+					studentCompletedProblem = true;	
 				}
 				else {
+					// See if this student completed this problem
+					String username = rs.getString("UNAME");
+					studentCompletedProblem = didStudentSolveProblem(problemId,username,collection);
+				}
+				if (studentCompletedProblem) {
+					teacherID = ((String) rs.getString("studentID")).substring(0,6);
+					//logger.debug("teacherID=" + teacherID);
+					//logger.debug("teacherIDs=" + strTeacherIDs);
+					if (strTeacherIDs.indexOf(teacherID) == -1) {
+						str += "<option style='background-color:" + colorName + ";' value='" + teacherID + "'> " + teacherID + "</option>;";
+						strTeacherIDs  += teacherID;
+						if (needsComma) {
+							strTeacherIDs  += ",";
+						}
+						else {
+							needsComma = true;
+						}
+					}
+					else {
+					}
 				}
 		    }
 
@@ -145,4 +162,28 @@ public class getTeachers extends HttpServlet {
 		out.print("</select></div>");
 		out.print("</div></div>");
 	}
+	public boolean didStudentSolveProblem(String problemId, String username, MongoCollection<Document> collection) {
+		boolean result = false;
+		// See if this student completed this problem
+		String problemPrefix = "p" + problemId + "_";
+		//logger.debug("problemPrefix=" + problemPrefix);
+
+
+		BasicDBObject completedQuery = new BasicDBObject();
+		completedQuery.put("studentID", username);
+
+		FindIterable<Document> findIterable = (FindIterable<Document>) collection.find(completedQuery);
+		Iterator<Document> iterator = findIterable.iterator();
+		while(iterator.hasNext()) {
+			Document metric = (Document) iterator.next();
+			String completedValue = (String) metric.get(problemPrefix + "completed");
+			if (completedValue.equals("1")) {
+				result = true;
+			}
+		}
+
+		return result;
+		
+	}
+
 }

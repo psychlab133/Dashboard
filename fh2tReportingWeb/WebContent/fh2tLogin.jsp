@@ -11,8 +11,9 @@
 session = request.getSession();
 ResourceBundle rb = (ResourceBundle) session.getAttribute("rb");
 Logger logger = (Logger) session.getAttribute("logger");
-logger.setLevel(Level.INFO);
-//logger.setLevel(Level.DEBUG);
+//logger.setLevel(Level.INFO);
+logger.setLevel(Level.DEBUG);
+logger.debug("WTF" + rb.getString("title"));
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -57,27 +58,24 @@ else {
 %>
 
   <script>
-	function TeacherPageSelected(evt) {	
+	function TeacherPageSelected() {	
   	  var a_href = $('#selectorContinueButton').attr('href');
   	  $('#selectorContinueButton').attr('href','/fh2tReportingWeb/fh2tTeacherView.jsp');
   	}
-  	function ResearcherPageSelected(evt) {
+  	function ResearcherPageSelected() {
    	  var a_href = $('#selectorContinueButton').attr('href');
-   	  $('#selectorContinueButton').attr('href','/fh2tReportingWeb/fh2tResearcherView.jsp');
+   	  $('#selectorContinueButton').attr('href','/fh2tReportingWeb/fh2tExperiment.jsp');
    	}
-  	function AdminPageSelected(evt) {	
+  	function AdminPageSelected() {	
    	  var a_href = $('#selectorContinueButton').attr('href');
-   	  $('#selectorContinueButton').attr('href','/fh2tReportingWeb/fh2tAdmnView.jsp');
+   	  $('#selectorContinueButton').attr('href','/fh2tReportingWeb/fh2tAdminView.jsp');
    	}
-    function DeveloperPageSelected(evt) {
+    function DeveloperPageSelected() {
   	  var a_href = $('#selectorContinueButton').attr('href');
    	  $('#selectorContinueButton').attr('href','/fh2tReportingWeb/fh2tDeveloperView.jsp');
   	}
-  </script>
-
-
-  <script>
-    function loginRequest() {
+  
+  function loginRequest() {
       var username = document.getElementById("inputUsername");
       var txtUsername = username.value;
       var pwd = document.getElementById("inputPassword");
@@ -95,36 +93,91 @@ else {
           //alert("ready");
           var rsp = xmlhttp.responseText;
           if (rsp.indexOf("Error") > -1) {
-            document.getElementById("loginMsgRsp").innerHTML = xmlhttp.responseText;
+
+              document.getElementById("loginMsgRsp").innerHTML = xmlhttp.responseText;
           }
           else {
-              document.getElementById("userChoices").innerHTML = xmlhttp.responseText;
-              $('#loginModal').modal('hide');
-              document.getElementsById('loginContinueButton').focus();              
+        	  var result = xmlhttp.responseText;
+        	  //alert(result);
+        	  if (result == "defaultPage") {
+                  document.getElementById("selectorContinueButton").click();        		  
+        	  }
+        	  else {
+        		  
+	              document.getElementById("loginWindow").innerHTML = "";
+	        	  $('#selectorContinueButton').show();
+	        	  div = document.getElementById('userChoices')
+	        	  div.style.display="block";
+	              document.getElementById("userChoices").innerHTML = xmlhttp.responseText;
+	              document.getElementById("userChoices").show();
+	          }
           }
         }
       };
       
       if ((txtUsername.length > 0) && (txtPwd.length > 0 )) {	  
+
 	      var cmd = "LoginRequest?username=" + txtUsername + "&pwd=" + txtPwd;
       	  //alert(cmd);
           xmlhttp.open("GET", cmd, true);
           xmlhttp.send();
       }
       else {
-          document.getElementById("loginMsgRsp").innerHTML = "All fields must be entered";  
+          document.getElementById("loginMsgRsp").innerHTML = "<%= rb.getString("all_fields_must_be_entered")%>";  
+      }
+    }    
+  
+  function sendPassword() {
+	  //alert("sendPassword");
+      var username = document.getElementById("inputUsername");
+      var txtUsername = username.value;
+     
+      var xmlhttp;
+      if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp = new XMLHttpRequest();
+      }
+      else {// code for IE6, IE5
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          //alert("ready");
+          var rsp = xmlhttp.responseText;
+          if (rsp.indexOf("Error") > -1) {
+
+              document.getElementById("loginMsgRsp").innerHTML = xmlhttp.responseText;
+          }
+          else {
+        	  var result = xmlhttp.responseText;
+        	  alert(result);
+          }
+        }
+      };
+      
+      if (txtUsername.length > 0) {	  
+
+	      var cmd = "SendPassword?username=" + txtUsername;
+      	  //alert(cmd);
+          xmlhttp.open("GET", cmd, true);
+          xmlhttp.send();
+      }
+      else {
+          document.getElementById("loginMsgRsp").innerHTML = "username must be entered";  
       }
     }       
+       
+       
       function registerUser() {
-          var username = document.getElementById("inputUsername");
+    	  
+          var username = document.getElementById("signupUsername");
           var txtUsername = username.value;
-          var pwd = document.getElementById("inputPassword");
+          var pwd = document.getElementById("signupPassword");
           var txtPwd = pwd.value;
-          var pwd2 = document.getElementById("inputPassword2");
+          var pwd2 = document.getElementById("signupPassword2");
           var txtPwd2 = pwd2.value;
-          var email = document.getElementById("inputEmail");
+          var email = document.getElementById("signupEmail");
           var txtEmail = email.value;
-
+          
           var xmlhttp;
           if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
             xmlhttp = new XMLHttpRequest();
@@ -137,27 +190,46 @@ else {
               //alert("ready");
               var rsp = xmlhttp.responseText;
               if (rsp.indexOf("Error") > -1) {
-                document.getElementById("loginMsgRsp").innerHTML = xmlhttp.responseText;
+                document.getElementById("signupMsgRsp").innerHTML = xmlhttp.responseText;
               }
               else {
-			      document.getElementById("userChoices").innerHTML = xmlhttp.responseText;
-                  $('#loginModal').modal('hide');
-            	  alert(xmlhttp.responseText);
+                  $('#signupModal').modal('toggle');
+            	  //alert(xmlhttp.responseText);
+                  $('#loginModal').modal('toggle');
               }
             }
           };
-
-
-      var cmd = "RegisterUser?username=" + txtUsername + "&pwd=" + txtPwd + "&pwd2=" + txtPwd2 + "&email=" + txtEmail;
-      //alert(cmd);
-      xmlhttp.open("GET", cmd, true);
-
-      xmlhttp.send();
+      if ((txtUsername.length > 0) && (txtPwd.length > 0) && (txtPwd2.length > 0) && (txtEmail.length > 0 )) {	  
+		  if (txtPwd === txtPwd2) {
+	      		var cmd = "RegisterUser?username=" + txtUsername + "&pwd=" + txtPwd + "&pwd2=" + txtPwd2 + "&email=" + txtEmail;
+	      		//alert(cmd);
+	      		xmlhttp.open("GET", cmd, true);		
+	      		xmlhttp.send();
+		  }
+		  else {
+	          document.getElementById("signupMsgRsp").innerHTML = "<%= rb.getString("passwords_do_not_match")%>";  			  
+		  }
+      }
+      else {
+          document.getElementById("signupMsgRsp").innerHTML = "<%= rb.getString("all_fields_must_be_entered")%>";  
+      }
     }    
 
-    
-    </script>
+  	function registerUserCancel() {
 
+        document.getElementById("signupUsername").value = "";
+        document.getElementById("signupPassword").value = "";
+        document.getElementById("signupPassword2").value = "";
+        document.getElementById("signupEmail").value = "";
+
+		$('#signupModal').modal('toggle');
+//    	$('#loginModal').modal('toggle');
+	}
+
+  	function toggleAboutModal() {
+    	$('#aboutModal').modal('toggle');
+  	}
+    </script>
 
 </head>
 
@@ -165,14 +237,13 @@ else {
     <nav id="header-nav" class="navbar navbar-default">
       <div class="container">
         <div class="navbar-header">
-            <a href="index.jsp" class="pull-left visible-md visible-lg">
+            <a href="https://sites.google.com/view/from-here-to-there"  target="_blank" class="pull-left visible-md visible-lg">
               <div id="logon-img"></div>
             </a>
 
-
           <div class="navbar-brand">
             <a href="index.jsp">
-              <h2><%= rb.getString("title")%></h2>
+              <h4><%= rb.getString("researcher")%> <%= rb.getString("dashboard")%></h4>
             </a>
           </div>
 
@@ -186,13 +257,17 @@ else {
 
         <div id="collapsable-nav" class="collapse navbar-collapse">
           <ul id="nav-list" class="nav navbar-nav navbar-right">
-            <li onclick='toggleLoginModal()'>
+            <li >
               <a id="Button">
-                <span class="glyphicon glyphicon-log-in" id="loginButton"></span><br class="hidden-xs"><%= rb.getString("sign_in")%></a>
+                <span class="glyphicon glyphicon-log-in hidden" id="loginButton"></span><br class="hidden-xs"></a>
             </li>
-            <li onclick='getAbout()'>
-              <a>
-                <span class=" glyphicon glyphicon-info-sign"></span><br class="hidden-xs"><%= rb.getString("about")%></a>
+            <li >
+              <a href="https://graspablemath.com/projects/fh2t"  target="_blank" id="Button">
+                <span class="glyphicon glyphicon-play-circle" id="playButton"></span><br class="hidden-xs">Play</a>
+            </li>
+            <li>
+              <a id="aboutButton" data-toggle="modal" data-target="#aboutModal">
+                <span class="glyphicon glyphicon-info-sign glyphicon-info" id="aboutButton"></span><br class="hidden-xs"><%= rb.getString("about")%></a>
             </li>
           </ul><!-- #nav-list -->
         </div><!-- .collapse .navbar-collapse -->
@@ -201,29 +276,9 @@ else {
 
 
   <div id="loginInfo" class="container-fluid login">
-  	<div id="userChoices">
-    </div>
-  </div>
-
-  <div class="footer">
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12 text-center">
-          <p class="glyphicon glyphicon-copyright-mark copyright"><%= rb.getString("copyright")%></p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-    <div id="loginModal" class="modal fade" role="dialog">
-      <div class="modal-dialog modal-md" role="content">
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title"><%= rb.getString("sign_in")%></h4>
-            <button type="button" class="close btn-danger" data-dismiss="modal">&times;</button>
-          </div>
-          <div class="modal-body">
+	<div id="loginWindow">
+		<div class="col-md-4"></div>
+		<div id="loginForm" class="col-md-4 container">
             <form>
               <div class="form-row">          
                 <div class="form-group">
@@ -233,24 +288,12 @@ else {
                 </div>
               
                 <div class="form-group col-sm-12">
-                  <label class="login"><%= rb.getString("username")%>:</label>
                   <input type="text" class="form-control form-control-sm mr-1" id="inputUsername"
-                    placeholder="Enter username" tabindex="1" autofocus>
+                    placeholder="Enter username" tabindex="1">
                 </div>
                 <div class="form-group col-sm-12">
-                  <label class="login"><%= rb.getString("password")%>:</label>
                   <input type="text" class="form-control form-control-sm mr-1" id="inputPassword"
                     placeholder="Password" tabindex="2">
-                </div>
-                <div id="password2Entry" class="form-group col-sm-12">
-                  <label class="login"><%= rb.getString("confirm_password")%>:</label>
-                  <input type="text" class="form-control form-control-sm mr-1" id="inputPassword2"
-                    placeholder="Re-Enter Password" tabindex="2">
-                </div>
-                <div id="emailEntry" class="form-group col-sm-12">
-                  <label class="login"><%= rb.getString("email_address")%>:</label>
-                  <input type="text" class="form-control form-control-sm mr-1" id="inputEmail"
-                    placeholder="email address" tabindex="2">
                 </div>
              </div>
 
@@ -261,43 +304,138 @@ else {
               </div>       
               
               <div class="form-group">
-                <button id="loginCancelButton" type="button" class="btn btn-danger btn-sm ml-auto"  tabindex="5" onclick='toggleLoginModal()'><%= rb.getString("cancel")%></button>
-                <button id="loginSubmitButton" type="button" class="btn btn-primary btn-sm ml-1"  tabindex="3" onclick='loginRequest()'><%= rb.getString("sign_in")%></button>
-                <button id="addNewUserButton" type="button" class="btn btn-primary btn-sm ml-1"  tabindex="4" onclick='newUserEntry()'><%= rb.getString("add_new_user")%></button>
-                <button id="registerUserButton" type="button" class="btn btn-primary btn-sm ml-1"  tabindex="4" onclick='registerUser()'><%= rb.getString("register_new_user")%></button>
+                <button id="loginSubmitButton"  onclick="loginRequest();" type="button" class="btn btn-success btn-sm ml-1"  tabindex="3"><%= rb.getString("login")%></button>
+                <button id="forgotPasswordButton" onclick="sendPassword();" type="button" class="btn btn-default btn-sm ml-1 pull-right"  tabindex="4" ><%= rb.getString("forgot_password")%></button>
+                <button id="signupButton" type="button" class="btn btn-default btn-sm ml-1 pull-right"  tabindex="5" onclick='newUserEntry();'><%= rb.getString("sign_up")%></button>
+              </div>       
             </form>
-          </div>
         </div>
+		<div class="col-md-4"></div>
+
+	</div>
+  	<div id="userChoicesRow" class="row">
+  		<div class="col-md-4 pull-left"></div>
+  		<div class="col-md-5 border" style="border-width: thick; border: 10px solid white; display:none" id="userChoices"></div>
+  		<div class="col-md-3 pull-right"></div>
+  	  	<div class="col-md-12">
+  			<p id="bpad"> </p>
+  		</div>
+  	</div>
+            
+	<div class='row'>
+		<div class='col-md-5'></div>
+		<div class='col-sm-2'>
+			<a id='selectorContinueButton' href='/fh2tReportingWeb/fh2tExperiment.jsp' class='btn btn-primary btn-sm ml-1' role='button'><%= rb.getString("continue")%></a>
+		</div>
+		<div class='col-md-5'></div>
+	</div>
+  </div>
+
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+      	<div class="col-md-3"></div>
+        <div class="col-xs-12 col-md-6">
+          <p class="glyphicon glyphicon-copyright-mark copyright"><%= rb.getString("copyright")%></p>
+        </div>
+      	<div class="col-md-3"></div>
       </div>
     </div>
-    
+  </div>
+<!-- Modal -->
+<div class="modal fade" id="signupModal" tabindex="-1" role="dialog" >
+  <div class="modal-dialog modal-dialog-centered" role="content">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Sign Up</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>      
+      <div class="modal-body">
+            <form>
+              <div class="form-row">          
+              
+                <div class="form-group col-sm-12">
+                  <input type="text" class="form-control form-control-sm mr-1" id="signupUsername"
+                    placeholder="Enter username" tabindex="1" autofocus>
+                </div>
+                <div class="form-group col-sm-12">
+                  <input type="text" class="form-control form-control-sm mr-1" id="signupPassword"
+                    placeholder="Password" tabindex="2">
+                </div>
+                <div id="password2Entry" class="form-group col-sm-12">
+                  <input type="text" class="form-control form-control-sm mr-1" id="signupPassword2"
+                    placeholder="Re-Enter Password" tabindex="2">
+                </div>
+                <div id="emailEntry" class="form-group col-sm-12">
+                  <input type="text" class="form-control form-control-sm mr-1" id="signupEmail"
+                    placeholder="email address" tabindex="2">
+                </div>
+             </div>
+
+              <div class="form-group">
+                <div class="form-group col-sm-12 center-text">
+                    <div type=text id="signupMsgRsp" class="center-text signup"><span><h3></h3></span></div>
+                </div>
+              </div>       
+            </form>
+		</div>
+	    <div class="modal-footer">
+            <button id="registerUserButton" type="button" class="btn btn-primary btn-sm ml-1 pull-left"  tabindex="4" onclick='registerUser()'><%= rb.getString("register_new_user")%></button>
+            <button id="signupCancelButton" type="button" class="btn btn-danger btn-sm ml-1 pull-left"  tabindex="4" onclick='registerUserCancel()'><%= rb.getString("cancel")%></button>
+        </div>
+		
+      </div>
+  </div>
+</div>
+
+		<!-- Modal -->
+		<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" >
+		  <div class="modal-dialog modal-dialog-centered" role="content">
+		      <!-- Modal content-->
+		      <div class="modal-content">
+		        <div class="modal-header">
+		          <button type="button" class="close" data-dismiss="modal">&times;</button>
+		          <h4 class="about-modal-header text-center">About Researcher Dashboard</h4>
+		        </div>
+		        <div class="about-modal-body"">
+		          <p>If you wish to request access to the FH2T researcher dashboard, you will need to submit a data-sharing agreement form. For more information about this process, please fill out the google form below, or email Erin Ottmar at erottmar@wpi.edu.</p>  
+<p>https://sites.google.com/view/from-here-to-there/participate?authuser=0</p>
+<p>We will contact you as soon as we can.</p>
+		        </div>
+		        <div class="modal-footer about-version">
+		          	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		          	<p> </p>
+		        	<div class="about-version text-center">
+		          		<%= rb.getString("software_version")%>: <%= rb.getString("current_version")%>
+		        	</div>
+		        </div>
+		      </div>
+		  </div>
+		</div>
+
   
   <script>
     $(document).ready(function () {
-      $("#loginButton").click(function () {
-        $('#loginModal').modal('toggle')
-        $('#loginContinueButton').hide();
+//        $('#loginModal').modal('toggle');
+		loginRequest();
+        $('#selectorContinueButton').hide();
         $('#loginSubmitButton').show();
-        $('#addNewUserButton').show();
-        $('#registerUserButton').hide();
-        $('#password2Entry').hide();
-        $('#emailEntry').hide();
-        document.getElementById("loginMsgHdr").innerHTML = "<%= rb.getString("signin_header")%>";        
+        $('#signupButton').show();
+        $('#forgotPasswordButton').show();
+        document.getElementById("loginMsgHdr").innerHTML = "<h3><%= rb.getString("signin_header")%></h3>";        
         document.getElementById("loginMsgRsp").innerHTML = "";        
-        document.getElementsById('inputUsername').focus();
-      });
+        $('#inputUsername').focus();
     });
-    $(document).ready(function () {
-        $("#loginCancelButton").click(function () {
-          $('#loginModal').modal('toggle')
-        });
-        //to have your input focused every your modal open
-        $('#loginModal').on("shown.bs.modal", function() {
-            $('#inputUsername').focus();
-        });
-     });
 
- 
+//    $(document).ready(function () {
+        //to have your input focused every your modal open
+//        $('#loginModal').on("shown.bs.modal", function() {
+//            $('#inputUsername').focus();
+//        });
+//     });
+    
     
     $(document).ready(function () {
         $('#password2Entry').hide();
@@ -307,10 +445,11 @@ else {
 
 	function newUserEntry() {
 
+        //$('#loginModal').modal('toggle');
+        $('#signupModal').modal('toggle');
         $('#password2Entry').show();
         $('#emailEntry').show();
-        $('#loginSubmitButton').hide();        
-        $('#addNewUserButton').hide();
+        $('#signupCancelButton').show();
         $('#registerUserButton').show();
              	
 	}

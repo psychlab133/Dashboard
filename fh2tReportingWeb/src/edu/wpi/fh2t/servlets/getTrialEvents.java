@@ -76,6 +76,11 @@ public class getTrialEvents extends HttpServlet {
 		logger.debug("TrialId =" + trialId);
 		experimentID = "";	
 
+		String trialsCollectionName = (String) session.getAttribute("expTrials");
+		logger.debug("trials collection  = " + trialsCollectionName);		
+		String dataCollectionName = (String) session.getAttribute("expData");
+		logger.debug("data collection  = " + dataCollectionName);		
+		
 		//Person current = new Person(DBuserid,username,DBemail,strRoles);
 		Person currentUser = (Person) session.getAttribute("currentUser");
 		logger.debug("Current User is " + currentUser.getName());
@@ -92,7 +97,7 @@ public class getTrialEvents extends HttpServlet {
         		
 		BasicDBObject trialSearchQuery = new BasicDBObject();
 		trialSearchQuery.put("id", trialId);
-		MongoCollection<Document> trialCollection = (MongoCollection <Document>) gmDB.getCollection((String) getServletContext().getInitParameter("gm-trials"));
+		MongoCollection<Document> trialCollection = (MongoCollection <Document>) gmDB.getCollection(trialsCollectionName);
 
 	    FindIterable<Document> trialIterable = (FindIterable<Document>) trialCollection.find(trialSearchQuery);
 	    Iterator<Document> trialIterator = trialIterable.iterator();
@@ -117,7 +122,7 @@ public class getTrialEvents extends HttpServlet {
 		
 		BasicDBObject eventSearchQuery = new BasicDBObject();
 		eventSearchQuery.put("trial_id", trialId);
-		MongoCollection<Document> dataCollection = (MongoCollection <Document>) gmDB.getCollection((String) getServletContext().getInitParameter("gm-data"));
+		MongoCollection<Document> dataCollection = (MongoCollection <Document>) gmDB.getCollection(dataCollectionName);
 		
 		String str = "[";
 		
@@ -177,6 +182,7 @@ public class getTrialEvents extends HttpServlet {
 		        	String method = (String) event.get("method");
 		        	if (method.equals("keypad")){
 		        		elapsed = formatDuration(tstamp,prevTime);
+		        		prevTime = tstamp;
 		        		
 		        		logger.debug("duration = " + elapsed);
 
@@ -190,6 +196,7 @@ public class getTrialEvents extends HttpServlet {
 	        	}
 	        	else {
 	        		elapsed = formatDuration(tstamp,prevTime);
+	        		prevTime = tstamp;
 		        	logger.debug("duration = " + elapsed);
 
 		        	if (needsComma) { str += ", "; } else {	needsComma = true; }
@@ -202,6 +209,7 @@ public class getTrialEvents extends HttpServlet {
         	}
         	if (subtype.equals("reset")) {	        	
         		elapsed = formatDuration(tstamp,prevTime);
+        		prevTime = tstamp;
 	        	logger.debug("duration = " + elapsed);
 
 	        	if (needsComma) { str += ", "; } else {	needsComma = true; }
@@ -228,6 +236,7 @@ public class getTrialEvents extends HttpServlet {
 	        		method = method + "error";
 	        	}
         		elapsed = formatDuration(tstamp,prevTime);
+        		prevTime = tstamp;
 	        	logger.debug("duration = " + elapsed);
 
 	        	if (needsComma) { str += ", "; } else {	needsComma = true; }
@@ -271,7 +280,6 @@ public class getTrialEvents extends HttpServlet {
 		String remainder = "";
 
     	long duration = tstamp - prevTime;
-		prevTime = tstamp;
 		float secs = duration / 1000;
 		seconds = Float.toString(secs);
 		seconds = seconds.substring(0,seconds.indexOf("."));

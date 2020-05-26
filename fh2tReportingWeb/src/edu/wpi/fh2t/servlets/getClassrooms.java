@@ -55,11 +55,6 @@ public class getClassrooms extends HttpServlet {
 			colorName = request.getParameter("tablecolor");
 		}
 
-		String level="";
-		if (request.getParameter("level") != null) {
-			level = request.getParameter("level");
-		}
-
 		String filter="";
 		if (request.getParameter("filter") != null) {
 			filter = request.getParameter("filter") + "%";
@@ -68,6 +63,14 @@ public class getClassrooms extends HttpServlet {
 			filter = "FS%";
 		}
 		
+		String problemId = "121";
+		if (request.getParameter("problemId") != null) {
+			problemId = request.getParameter("problemId");			
+		}
+
+		String collectionName = (String) session.getAttribute("expAggregation");
+		logger.debug("collection  = " + collectionName);
+		
 		logger.debug("getClassrooms servlet using filter: " + filter);			
 
 		
@@ -75,54 +78,61 @@ public class getClassrooms extends HttpServlet {
 		String str = "";
 
 		
-//		str = "<div class='row'><div class='col-4'><h4>" + rb.getString("students") + "</h4></div></div><div class='row'><div class='col-2'><h4></h4></div><div class='col-8'><button type='button' class='btn btn-danger btn-sm ml-1 ' onclick='resetStudents()'>" + rb.getString("reset") + "</div><div class='col-2'><h4></h4></div></div><div class='row'><div class='col-4'>";	
 		str = "<div class='row'><div class='col-4 selection-header'><h4>" + rb.getString("classrooms") + "</h4></div></div><div class='row'><div class='col-4'>";	
-		out.print(str);
-		out.print("<div class='col-4'><select id='classroomsSelections' class='custom-select' size='8' onchange=setClassroom();>");
+		str += "<div class='col-4'><select id='classroomsSelections' class='custom-select' size='1' onchange=setClassroom();>";
+		str += "<option style='background-color:white;' value='Classroom'>Select Class</option>";
 
-		str = "";
 //		String query = "select studentID as SID, username, currentClass as Class from usernames WHERE studentID like '" + filter + "' and not currentClass = '';";		
 		Connection con = null;
 		try {
-			
+
+			MongoClient mongoClient = new MongoClient("localhost", 7010);
+			logger.debug("MongoClient created");
+			MongoDatabase experimentDB = mongoClient.getDatabase("gm-logs");
+			logger.debug("User database=" + experimentDB.getName());
+			MongoCollection<Document> collection = (MongoCollection <Document>) experimentDB.getCollection(collectionName);
+
 			Class.forName((String) getServletContext().getInitParameter("dbClass"));
 			con = (Connection) DriverManager.getConnection ((String) getServletContext().getInitParameter("iesdbUrl"),(String) getServletContext().getInitParameter("iesdbUser"),(String) getServletContext().getInitParameter("iesdbPwd"));
 			
-			String query = "select distinct currentClass from usernames where studentID like '" + filter + "' and not currentClass = '' order by studentID";
+			String query = "select distinct studentID, username as UNAME from usernames where studentID like '" + filter + "' and not currentClass = '' order by studentID";
+
+			//String query = "select distinct currentClass from usernames where studentID like '" + filter + "' and not currentClass = '' order by studentID";
 			logger.debug("query=" + query);
 			PreparedStatement pstmt = (PreparedStatement)con.prepareStatement(query);
 //			pstmt.setString(1, filter);
 			ResultSet rs = pstmt.executeQuery(query);
 			boolean needsComma = false;
+			String strClassroomIDs = "";
+			String classroomID = "";
+
 			while (rs.next()) {
-				if (needsComma) {
-					strClassIDs += ",";
+				boolean studentCompletedProblem = false;
+				if (problemId.length() == 0) {
+					studentCompletedProblem = true;	
 				}
 				else {
-					needsComma = true;
+					// See if this student completed this problem
+					String username = rs.getString("UNAME");
+					studentCompletedProblem = didStudentSolveProblem(problemId,username,collection);
 				}
-				strClassIDs += rs.getString("currentClass"); 
+				if (studentCompletedProblem) {
+					classroomID = ((String) rs.getString("studentID")).substring(0,8);
+					if (strClassroomIDs.indexOf(classroomID) == -1) {
+						str += "<option style='background-color:" + colorName + ";' value='" + classroomID + "'> " + classroomID + "</option>;";
+						strClassroomIDs  += classroomID;
+						if (needsComma) {
+							strClassroomIDs  += ",";
+						}
+						else {
+							needsComma = true;
+						}
+					}
+					else {
+					}
+				}
 		    }
-
-		    logger.debug(strClassIDs);
-		    
-		    String arrClassIds[] = strClassIDs.split(",");
-		    
-		    String query2 = "";
-		    
-		    for(int i=0;i<arrClassIds.length;i++) {
-		    	query2 = "select studentID as SID, username from usernames WHERE currentClass = '" + arrClassIds[i] + "'";
-		    	
-				logger.debug("query2=" + query2);
-				pstmt = (PreparedStatement)con.prepareStatement(query2);
-//				pstmt2.setString(1, arrClassIds[i]);
-				rs = pstmt.executeQuery(query2);
-				while (rs.next()) {    
-					str += "<option style='background-color:" + colorName + ";' value='" + rs.getString("SID") + "'> " + rs.getString("SID").substring(0,8) + "</option>";
-					break;
-				}
 				
-		    }
 		    rs.close();
 		    pstmt.close();
 		} //end try
@@ -154,4 +164,29 @@ public class getClassrooms extends HttpServlet {
 		out.print("</select></div>");
 		out.print("</div></div>");
 	}
+	
+	public boolean didStudentSolveProblem(String problemId, String username, MongoCollection<Document> collection) {
+		boolean result = false;
+		// See if this student completed this problem
+		String problemPrefix = "p" + problemId + "_";
+		//logger.debug("problemPrefix=" + problemPrefix);
+
+
+		BasicDBObject completedQuery = new BasicDBObject();
+		completedQuery.put("studentID", username);
+
+		FindIterable<Document> findIterable = (FindIterable<Document>) collection.find(completedQuery);
+		Iterator<Document> iterator = findIterable.iterator();
+		while(iterator.hasNext()) {
+			Document metric = (Document) iterator.next();
+			String completedValue = (String) metric.get(problemPrefix + "completed");
+			if (completedValue.equals("1")) {
+				result = true;
+			}
+		}
+
+		return result;
+		
+	}
+
 }
