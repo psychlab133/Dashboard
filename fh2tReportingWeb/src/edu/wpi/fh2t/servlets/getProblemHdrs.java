@@ -42,11 +42,6 @@ public class getProblemHdrs extends HttpServlet {
 		
 		logger.debug("getProblemHdrs servlet starting");			
 
-		String experimentID = "";
-		if (request.getParameter("experimentID") != null) {
-			experimentID = request.getParameter("experimentID");
-		}
-
 		
 		String problemId = "";
 		if (request.getParameter("problemId") != null) {

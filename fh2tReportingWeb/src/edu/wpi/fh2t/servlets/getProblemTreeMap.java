@@ -39,11 +39,6 @@ public class getProblemTreeMap extends HttpServlet {
 		
 		logger.debug("getProblemTreeMap servlet starting");			
 
-		String experimentID = "";
-		if (request.getParameter("experimentID") != null) {
-			experimentID = request.getParameter("experimentID");
-		}
-
 		String str = "FileNotFound";
 		String problemId = "";
 		if (request.getParameter("problemId") != null) {

@@ -55,15 +55,14 @@ public class getClassrooms extends HttpServlet {
 			colorName = request.getParameter("tablecolor");
 		}
 
-		String filter="";
-		if (request.getParameter("filter") != null) {
-			filter = request.getParameter("filter") + "%";
-		}
-		else {
-			filter = "FS%";
-		}
+		String filter = (String) session.getAttribute("expAbbr");
 		
-		String problemId = "121";
+		if (request.getParameter("filter") != null) {
+			filter = request.getParameter("filter");
+		}
+		filter += "%";
+
+		String problemId = "1";
 		if (request.getParameter("problemId") != null) {
 			problemId = request.getParameter("problemId");			
 		}
@@ -86,7 +85,15 @@ public class getClassrooms extends HttpServlet {
 		Connection con = null;
 		try {
 
-			MongoClient mongoClient = new MongoClient("localhost", 7010);
+			MongoClient mongoClient = null;
+			String servername = (String) request.getServerName();
+			logger.debug("servername=" + servername);
+			if (servername.startsWith("ssps")) {
+				mongoClient = new MongoClient("localhost", 7010);
+			}
+			else {
+				mongoClient = new MongoClient("0.0.0.0", 7010);
+			}
 			logger.debug("MongoClient created");
 			MongoDatabase experimentDB = mongoClient.getDatabase("gm-logs");
 			logger.debug("User database=" + experimentDB.getName());
@@ -135,6 +142,7 @@ public class getClassrooms extends HttpServlet {
 				
 		    rs.close();
 		    pstmt.close();
+			mongoClient.close();
 		} //end try
 		catch (ClassNotFoundException e1) {
 			logger.error(e1.getMessage());
