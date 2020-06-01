@@ -95,7 +95,7 @@ function approveUser() {
 
     var xmlhttp;
     
-    alert("approveUser()");
+    //alert("approveUser()");
     if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
       xmlhttp = new XMLHttpRequest();
     }
@@ -120,19 +120,15 @@ function approveUser() {
     if ( document.getElementById("researcherRole").checked) {
     	strRoles +=  document.getElementById("researcherRole").value + "~";
     }
-    alert("approveUser(1)");
     if ( document.getElementById("teacherRole").checked) {
     	strRoles +=  document.getElementById("teacherRole").value + "~";
     }
-    alert("approveUser(2)");
     if ( document.getElementById("adminRole").checked) {
     	strRoles +=  document.getElementById("adminRole").value + "~";
     }
-    alert("approveUser(3)");
     if ( document.getElementById("developerRole").checked) {
     	strRoles +=  document.getElementById("developerRole").value + "~";
     }
-    alert("approveUser(4)");
     strRoles += "end";
     
     var cmd = "ApproveUser?username=" + currentUser + "&strRoles=" + strRoles;
