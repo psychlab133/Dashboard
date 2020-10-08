@@ -129,6 +129,9 @@ public class getProblemAvgs extends HttpServlet {
 		        	needsComma = true; 
 		        }
 				str += "\"" + metrics[i] + "\":\"" + "unused" + "~" + avgs[i] + "\"";
+		    }else if(i == 0) {
+		    	str += "\"Students\":\"0\"";
+		    	break;
 		    }
 		    if (i == 0) {
 	        	str += ", "; 
