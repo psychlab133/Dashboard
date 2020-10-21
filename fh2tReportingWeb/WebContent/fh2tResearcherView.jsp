@@ -481,7 +481,49 @@ logger.setLevel(Level.INFO);
        	xmlhttp.open("GET", cmd, true);
        	xmlhttp.send();
     }
-	  
+	function getProblemSan(){
+        var xmlhttp;
+        //alert("getProblemSankey");
+
+        if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        }
+        else {// code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function () {
+           	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+         	   	//alert(xmlhttp.responseText);
+  				if (xmlhttp.responseText == "sankeyFiltered") {
+  					
+    				var problemNbr = currentProblem;
+    				if (problemNbr.length == 1) {
+    					problemNbr = "00" + problemNbr;
+    				}
+    				else {
+    					if ((problemNbr.length == 2)) {
+    						problemNbr = "0" + problemNbr;
+    					}	
+    				}
+    				
+    				//iframeLine = "<iframe frameborder='2' scrolling='yes' width='750px' height='500px' src='images/problem_" + problemNbr + "_Sankey_Filtered.png' name='imgbox' id='imgbox'> <p>iframes are not supported by your browser.</p> </iframe>";
+    				document.getElementById("sankeyImg").src =	'images/problem_' + problemNbr + '_Sankey_Filtered.png';
+
+    		        $('#sankeyModal').modal('toggle');
+  				}
+   	           	else {
+   	           		alert("Diagram not available.");
+    	    		//$("#sankeyWindow").hide();
+   	           	}
+           }
+       };
+     	var cmd = "GetProblemSankey?problemId=" + currentProblem;
+      	//alert(cmd);
+      	xmlhttp.open("GET", cmd, true);
+      	xmlhttp.send();
+      			
+
+	}  
     function getProblemSankey() {
         var xmlhttp;
         //alert("getProblemSankey");
@@ -509,24 +551,7 @@ logger.setLevel(Level.INFO);
     				
     				iframeLine = "<iframe frameborder='2' scrolling='yes' width='750px' height='500px' src='images/problem_" + problemNbr + "_Sankey_Filtered.png' name='imgbox' id='imgbox'> <p>iframes are not supported by your browser.</p> </iframe>";
     				document.getElementById("sankeyView").innerHTML =	iframeLine;
-    				document.getElementById("sankeyView").onclick = function(){
-    			    	alert("hi");
-    			    };
-    			    document.getElementById("sankeyWindow").onclick = function(){
-    			    	alert("hi");
-    			    };
-    			    document.getElementById("imgbox").onclick = function(){
-    			    	alert("hi");
-    			    };
-    				$("#sankeyView").click(function(){
-    			    	alert("hi");
-    			    });
-    			    $("#sankeyWindow").click(function(){
-    			    	alert("hi");
-    			    });
-    			    $("#imgbox").click(function(){
-    			    	alert("hi");
-    			    });
+
     	    		$("#sankeyWindow").show();
   				}
    	           	else {
@@ -540,7 +565,47 @@ logger.setLevel(Level.INFO);
       	xmlhttp.open("GET", cmd, true);
       	xmlhttp.send();
    }
-         
+       function getProblemTree(){
+           var xmlhttp;
+           //alert("getProblemTreeMap");
+
+           if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+               xmlhttp = new XMLHttpRequest();
+           }
+           else {// code for IE6, IE5
+               xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+           }
+           xmlhttp.onreadystatechange = function () {
+              	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            	   	//alert(xmlhttp.responseText);
+     				if (xmlhttp.responseText == "treeMap") {
+
+        				var problemNbr = currentProblem;
+        				if (problemNbr.length == 1) {
+        					problemNbr = "00" + problemNbr;
+        				}
+        				else {
+        					if ((problemNbr.length == 2)) {
+        						problemNbr = "0" + problemNbr;
+        					}	
+        				}
+
+        				document.getElementById("sankeyImg").src =	'images/problem_' + problemNbr + '_Treemap.png';
+
+        		        $('#sankeyModal').modal('toggle');
+     				}
+      	           	else {
+      	           		alert("Diagram not available.");
+       	    			//$("#treeMapWindow").hide();
+      	           	}
+              }
+          };
+            
+      	var cmd = "GetProblemTreeMap?problemId=" + currentProblem;
+      	//alert(cmd);
+      	xmlhttp.open("GET", cmd, true);
+      	xmlhttp.send();    	   
+       }  
        function getProblemTreeMap() {
            var xmlhttp;
            //alert("getProblemTreeMap");
@@ -604,7 +669,10 @@ logger.setLevel(Level.INFO);
        	  
               var metrics = JSON.parse(xmlhttp.responseText);
               //alert(xmlhttp.responseText);
- 
+ 			if (metrics.Students == 0){
+ 				$('#studentModal').modal('toggle');
+ 			}else
+ 			{
               var body = "";
               for (x in metrics) {
   		        
@@ -635,6 +703,7 @@ logger.setLevel(Level.INFO);
               $("#studentMetricsGrid").hide();
               getProblemHdrs();
             //$("#gridHeader").show();
+          }
             }
         };
 
@@ -744,14 +813,47 @@ logger.setLevel(Level.INFO);
           	} 
         };
         
-       	var cmd = "DownloadFile?filename=" + filename;
+       	var cmd = "DownloadFile?filename=" + filename;// + "&problemId=" + currentProblem;
        	//alert(cmd);
        	xmlhttp.open("GET", cmd, true);
        	xmlhttp.send();
       }
 
+    function downloadImage(filename){
+    	var problemNbr = currentProblem;
+		if (problemNbr.length == 1) {
+			problemNbr = "00" + problemNbr;
+		}
+		else {
+			if ((problemNbr.length == 2)) {
+				problemNbr = "0" + problemNbr;
+			}	
+		}
+		
+	  	var element = document.createElement('a');
+	  	element.setAttribute('href', 'images/problem_' + problemNbr + '_' + filename);
+	  	element.setAttribute('download', 'Problem ' + currentProblem + ' ' + filename);
 
-	
+	  	element.style.display = 'none';
+	  	document.body.appendChild(element);
+
+	  	element.click();
+
+	  	document.body.removeChild(element); 
+    }
+
+    /* function downloadProblemViz(filename){
+	  	var element = document.createElement('a');
+	  	element.setAttribute('href', 'pdf/Viz.pdf');
+	  	element.setAttribute('download', filename);
+
+	  	element.style.display = 'none';
+	  	document.body.appendChild(element);
+
+	  	element.click();
+
+	  	document.body.removeChild(element);    	
+    } */
 
     
     function clearWorkArea() {
@@ -929,7 +1031,7 @@ logger.setLevel(Level.INFO);
         $("#sankeyBtn").hide();
         $("#treeMapBtn").hide();
 	    $("#screenshotViewBtn").hide();
-	    $("#sankeyView").click(function(){
+/* 	    $("#sankeyView").click(function(){
 	    	alert("hi");
 	    });
 	    $("#sankeyWindow").click(function(){
@@ -937,7 +1039,7 @@ logger.setLevel(Level.INFO);
 	    });
 	    $("#imgbox").click(function(){
 	    	alert("hi");
-	    });
+	    }); */
     	getProblemView();
     	var researcher = "<%= rb.getString("researcher")%>";
     	var dashboard = "<%= rb.getString("dashboard")%>";
@@ -1043,8 +1145,8 @@ logger.setLevel(Level.INFO);
 	        		<button id="visualizerBtn" type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='setWideScreen(0);setupTrialVisualizer()'><%= rb.getString("visualize")%></button>
 	        		<button id="wideViewBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left hidden" onclick='setWideScreen(1);setupTrialVisualizer()'><%= rb.getString("wide_view")%></button>
 					<a id='screenshotViewBtn' href='/fh2tReportingWeb/fh2tScreenshotVisualizer.jsp'  target='_blank' class='btn btn-primary btn-md ml-1' role='button'>Screenshot View</a>
-	        		<button id="sankeyBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemSankey();'><%= rb.getString("flow_diagram")%></button>
-	        		<button id="treeMapBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemTreeMap();'>TreeMap</button>
+	        		<button id="sankeyBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemSan();'><%= rb.getString("flow_diagram")%></button>
+	        		<button id="treeMapBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemTree();'>TreeMap</button>
 	        		<button id="avgBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemAvgs();'>Problem Avgs</button>
 	        		<button id="clearBtn"type="button" class="btn btn-danger btn-md ml-1 pull-left " onclick='clearProblemArea()'><%= rb.getString("clear")%></button>
 	    		</div>
@@ -1081,9 +1183,29 @@ logger.setLevel(Level.INFO);
 			</div>
 			<div id="btnrow" class="row">
 	    		<div class="col-sm-12">
-	        		<button id="downloadOBtn" type="button" class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left " onclick='downloadFile("aggregation_table_overall_level.csv")'><strong><%= rb.getString("download")%><strong/> <br/><%= rb.getString("overall_level_data")%></button>
-	        		<button id="downloadPBtn"type="button" class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "  onclick='downloadFile("aggregation_table_problem_level.csv")'><%= rb.getString("download")%> <br/><%= rb.getString("problem_level_data")%></button>
-	    		</div>
+						<button id="downloadOBtn" type="button"
+							class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "
+							onclick='downloadFile("aggregation_table_overall_level.csv")'>
+							<strong><%=rb.getString("download")%><strong /> <br /><%=rb.getString("overall_level_data")%>
+						</button>
+						<button id="downloadPBtn" type="button"
+							class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "
+							onclick='downloadFile("aggregation_table_problem_level.csv")'><%=rb.getString("download")%>
+							<br /><%=rb.getString("problem_level_data")%></button>
+						<a href="pdf/Viz.pdf" download="Problem Level Visualization">
+							<button id="downloadPVBtn" type="button"
+								class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "><%=rb.getString("download")%>
+								<br /><%=rb.getString("problem_level_vis")%></button>
+						</a>
+						<button id="downloadSanBtn" type="button"
+							class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "
+							onclick='downloadImage("Sankey_Filtered.png")'><%=rb.getString("download")%>
+							<br /><%=rb.getString("sankey_dia")%></button>
+						<button id="downloadTreeBtn" type="button"
+							class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "
+							onclick='downloadImage("Treemap.png")'><%= rb.getString("download")%>
+							<br /><%= rb.getString("tree_map")%></button>
+					</div>
 	    		<div class="col-sm-4">
 	      			<h3></h3>
 	    		</div>
@@ -1162,6 +1284,33 @@ logger.setLevel(Level.INFO);
 	</div>
 	
 </div>
+
+		<!-- Modal -->
+		<div class="modal fade" id="sankeyModal" tabindex="-1" role="dialog" >
+		  <div class="modal-dialog modal-dialog-centered" style = "left:35%" role="content">
+		          <img id = "sankeyImg" width='1000px' height='600px'></img>
+		      <!-- Modal content-->
+<!-- 		      <div class="modal-content">
+		        <div class="about-modal-body"">
+		        </div>
+		      </div> -->
+		  </div>
+		</div>
+		<div class="modal fade" id="studentModal" tabindex="-1" role="dialog" >
+		  <div class="modal-dialog modal-dialog-centered" role="content">
+		      <div class="modal-content">
+		        <div class="modal-header">
+		          <h4 class="about-modal-header text-center">Researcher Dashboard</h4>
+		        </div>
+		        <div class="about-modal-body"">
+		        <p></p>
+		          <p>No students have completed the problem.</p>
+		          <p></p>
+		        </div>
+		      </div>
+
+		  </div>
+		</div>
     <div class="footer">
       <div class="container">
         <div class="row">

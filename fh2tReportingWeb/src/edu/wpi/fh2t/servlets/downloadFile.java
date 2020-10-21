@@ -42,10 +42,18 @@ public class downloadFile extends HttpServlet {
 		
 		String filePath = "";
 		if (request.getParameter("filename") != null) {
-			filePath = "C:\\WPI\\DataFiles\\" + "2020_0131_" + expId + "_" + request.getParameter("filename");
-			logger.debug(filePath);
+			/*if ( request.getParameter("filename").equals("Sankey") ) {
+				
+			}else if ( request.getParameter("filename").equals("Tree Map") ) {
+				
+			}else if (request.getParameter("filename").equals( "ProblemViz.pdf" )) {
+				filePath = getServletContext().getRealPath("/WEB-INF/resources/") + "Viz.pdf";
+				logger.debug(filePath);
+			} else {*/
+				filePath = "C:\\WPI\\DataFiles\\" + "2020_0131_" + expId + "_" + request.getParameter("filename");
+				logger.debug(filePath);
+			//}
 		}
-		
 		// reads input file from an absolute path
         try {
 		    File downloadFile = new File(filePath);
