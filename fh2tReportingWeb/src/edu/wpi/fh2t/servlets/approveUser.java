@@ -101,7 +101,14 @@ public class approveUser extends HttpServlet {
 				updatePstmt.execute(updateQuery);
 				updatePstmt.close();
 				DashboardEmail de = new DashboardEmail();
-				de.sendmail(DBemail,DBpwd, "Your IES Dashboard","Welcome,  Your IES Dashboard access has been approved. Your username is " + DBusername + " aad your password is " + DBpwd);
+				de.sendmail(DBemail,DBpwd, "DASHBOARD ACCOUNT REQUEST APPROVED",
+						"<p>Your request for a Researcher Dashboard account has been approved! Please use the following credentials to log into the Dashboard (<a href=\"http://fh2tresearch.com\">FH2T</a>)</p>\r\n" + 
+						"\r\n" + 
+						"<p><b>USERNAME: "+ DBusername +"<br>\r\n" + 
+						"PASSWORD: "+ DBpwd +"</b></p>\r\n" + 
+						"\r\n" + 
+						"<p><b>Best,<br>\r\n" + 
+						"The IES Dashboard Team</b></p>");
 
 			}
 			rs.close();
