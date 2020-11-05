@@ -146,10 +146,13 @@ else {
           if (rsp.indexOf("Error") > -1) {
 
               document.getElementById("loginMsgRsp").innerHTML = xmlhttp.responseText;
+        	  
+
           }
           else {
-        	  var result = xmlhttp.responseText;
-        	  alert(result);
+		        $('#confirmModal').modal('toggle');
+        	 //var result = xmlhttp.responseText;
+        	  //alert(result);
           }
         }
       };
@@ -385,7 +388,12 @@ else {
             <button id="registerUserButton" type="button" class="btn btn-primary btn-sm ml-1 pull-left"  tabindex="4" onclick='registerUser()'><%= rb.getString("register_new_user")%></button>
             <button id="signupCancelButton" type="button" class="btn btn-danger btn-sm ml-1 pull-left"  tabindex="4" onclick='registerUserCancel()'><%= rb.getString("cancel")%></button>
         </div>
-		
+	 <div class="about-modal-body" style="font-size:10px">
+		        <p>If you wish to request access to the FH2T researcher dashboard, you will need to submit a data-sharing agreement form. For more information about this process,
+		         please fill out the google form below, or email Erin Ottmar at erottmar@wpi.edu</p>  
+				<p><a href ="https://sites.google.com/view/from-here-to-there/participate?authuser=0" target="_blank">FH2T Access form</a></p>
+				<p>We will contact you as soon as we can</p>
+	</div>
       </div>
   </div>
 </div>
@@ -414,8 +422,26 @@ else {
 		      </div>
 		  </div>
 		</div>
+		<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" >
+		  <div class="modal-dialog modal-dialog-centered" role="content">
+		      <div class="modal-content">
+		        <div class="modal-header">
+		          <h4 class="about-modal-header text-center">Researcher Dashboard</h4>
+		        </div>
+		        <div class="about-modal-body"">
+		        <p></p>
+		          <p>We have sent your password. Please check your email</p>
+		          <p></p>
+		        </div>
+		        <div class="modal-footer about-version">
+		        	<div class="about-version text-center">
+		          		<%= rb.getString("software_version")%>: <%= rb.getString("current_version")%>
+		        	</div>
+		        </div>
+		      </div>
 
-  
+		  </div>
+		</div>
   <script>
     $(document).ready(function () {
 //        $('#loginModal').modal('toggle');

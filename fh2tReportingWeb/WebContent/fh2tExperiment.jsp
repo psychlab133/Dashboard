@@ -22,12 +22,8 @@ currentUser.setCurrentRole("Researcher");
 currentUser.getName();
 
 String ExperimentID  = "Fall 2019- GA Study FC";
-String ExperimentID2 = "Spring 2019- MA Study W";
-String ExperimentAbbr = "FS";
+String ExperimentAbbr = "";
 
-//TBD
-//session.setAttribute("ExperimentID", ExperimentID);
-//session.setAttribute("ExperimentAbbr", ExperimentAbbr);
 
 %>
 
@@ -102,16 +98,6 @@ function getExperiments() {
 	          var rsp = xmlhttp.responseText;
 	          //alert(rsp);
 	          document.getElementById("experimentList").innerHTML = xmlhttp.responseText;           
-        	  //alert("xmlhttp.responseText=" + xmlhttp.responseText);
-        	  
-        	  //var str = "";
-      		  //str += "<div class='col-4'><select id='experimentSelections' class='custom-select' size='5'  onchange=setExperiment();>";
-    		  //str += "<option style='background-color:white;' value='noop~noop'>" + rb.getString("select_experiment") + "</option>";
-
-     	      //str += "<option style='background-color:blue;' value='FS~wpi_ies_study_fall_19'>Forsythe Fall 2019</option>";
-        	  //str += "</select></div></div></div>"
-           	  //document.getElementById("selectorWindow").innerHTML = str;
-
 	    }
     };
       
