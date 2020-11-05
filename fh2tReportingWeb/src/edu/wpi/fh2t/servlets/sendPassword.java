@@ -102,7 +102,13 @@ public class sendPassword extends HttpServlet {
         String pw = username.substring(0,2) + Integer.toString(x) + symbols.substring(mod,mod+1);
 
 		DashboardEmail de = new DashboardEmail();
-		de.sendmail(DBemail,DBpwd, "Your IES Dashboard","Your IES Dashboard password is " + DBpwd);
+		//de.sendmail(DBemail,DBpwd, "Your IES Dashboard","Your IES Dashboard password is " + DBpwd);
+		de.sendmail(DBemail, DBpwd, "Your From Here to There Researcher Dashboard password",
+				"<p>You recently requested to reset your password for the From Here to There (<a href=\"http://fh2tresearch.com\">FH2T</a>) research dashboard account. Please find your attached password below. <b>Thanks!</b></p>\r\n" + 
+				"<b>Password:</b>" + DBpwd +
+				"\r\n" + 
+				"<p><b>Best,<br>\r\n" + 
+				"The IES Dashboard Team</b></p>");
 		str = "We have sent your password. Please check your email.";
 		out.print(str);
 	}

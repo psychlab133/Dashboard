@@ -1,5 +1,6 @@
 package edu.wpi.fh2t.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,9 +12,13 @@ import java.util.Random;
 
 import com.sun.mail.smtp.SMTPTransport;
 
+import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Date;
@@ -26,22 +31,25 @@ public class DashboardEmail {
 		super();
 	}
 
-	
 	public void sendmail(String emailAddr, String password, String subject, String content) {
 		
-		
 	    Properties prop = System.getProperties();
-	    prop.put("mail.smtp.host", "mailsrv.cs.umass.edu"); //optional, defined in SMTPTransport
+	    prop.put("mail.smtp.host", "smtp.gmail.com"); //optional, defined in SMTPTransport "mailsrv.cs.umass.edu"
 	    prop.put("mail.smtp.auth", "true");
-	    prop.put("mail.smtp.port", "25"); // default port 25
-	    
-	    Session session = Session.getInstance(prop, null);
+	    prop.put("mail.smtp.starttls.enable", "true");
+	    prop.put("mail.smtp.port", "587"); // default port 25
+	    Authenticator auth = new Authenticator() {
+            public PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("fh2tresearch@gmail.com", "erot1234");
+            }
+        };
+	    Session session = Session.getInstance(prop, auth);
 
-	    Message msg = new MimeMessage(session);
+	    MimeMessage msg = new MimeMessage(session);
 	    try {
 
 			// from
-	        msg.setFrom(new InternetAddress("DoNotReply@cs.umass.edu"));
+	        msg.setFrom(new InternetAddress("fh2tresearch@gmail.com"));
 
 			// to
 	        msg.setRecipients(Message.RecipientType.TO,
@@ -51,11 +59,11 @@ public class DashboardEmail {
 	        msg.setSubject(subject);
 
 			// content
-	        msg.setText(password);
+	        msg.setText(content,"UTF-8","html" );
 
 	        msg.setSentDate(new Date());
 
-			// Get SMTPTransport
+			/*// Get SMTPTransport
 	        SMTPTransport t = (SMTPTransport) session.getTransport("smtps");
 
 			// connect
@@ -66,8 +74,10 @@ public class DashboardEmail {
 
 	        //System.out.println("Response: " + t.getLastServerResponse());
 
-	        t.close();
-
+	        t.close();*/
+	        
+	        Transport.send(msg);
+	        
 	    } catch (MessagingException e) {
 	        e.printStackTrace();
 	    }
