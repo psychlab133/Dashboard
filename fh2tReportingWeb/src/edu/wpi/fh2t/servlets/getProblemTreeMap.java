@@ -39,6 +39,13 @@ public class getProblemTreeMap extends HttpServlet {
 		
 		logger.debug("getProblemTreeMap servlet starting");			
 
+		String experimentID = "";
+		String filter="";
+
+		if (request.getParameter("experimentID") != null) {
+			experimentID = request.getParameter("experimentID");
+		}
+
 		String str = "FileNotFound";
 		String problemId = "";
 		if (request.getParameter("problemId") != null) {
@@ -52,10 +59,20 @@ public class getProblemTreeMap extends HttpServlet {
 				problemId = "0" + problemId;
 			}
 		}
-		
+		if (request.getParameter("expAbbr") != null) {
+			filter = request.getParameter("expAbbr");
+		}
+		else {
+			if (session.getAttribute("expAbbr") != null) {
+				filter = (String) session.getAttribute("expAbbr");
+			}
+			else {
+				filter = "FS";
+			}
+		}			
 	    String relativePath = getServletContext().getRealPath("");
 
-		String filePath = relativePath + "images\\problem_" + problemId + "_Treemap.png";
+		String filePath = relativePath + "images\\problem_" + problemId + "_Treemap_" + filter + ".png";
 	    System.out.println(filePath);
 		logger.debug(filePath);
 		try {

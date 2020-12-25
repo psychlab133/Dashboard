@@ -56,15 +56,21 @@ public class getStudents extends HttpServlet {
 			colorName = request.getParameter("tablecolor");
 		}
 
-		String filter = (String) session.getAttribute("expAbbr");
-		String unfiltered = (String) session.getAttribute("expAbbr") + "%";
-		
+		String filter="";
 		if (request.getParameter("filter") != null) {
 			filter = request.getParameter("filter");
 		}
+		else {
+			if (session.getAttribute("filter") != null) {
+				filter = (String) session.getAttribute("filter");
+			}
+			else {
+				filter = "FS";
+			}
+		}	
 		filter += "%";
 		
-		String problemId = "1";
+		String problemId = "121";
 		if (request.getParameter("problemId") != null) {
 			problemId = request.getParameter("problemId");			
 		}
@@ -82,7 +88,7 @@ public class getStudents extends HttpServlet {
 		String query = "";
 
 //		String query = "select studentID as SID, username, currentClass as Class from usernames WHERE studentID like '" + filter + "' and not currentClass = '';";		
-		if (filter.equals(unfiltered)) {
+		if (filter.equals("FS%")) {
 			logger.debug("unfiltered");
 			query = "select studentID as SID, username as UNAME from usernames WHERE not currentClass = ''" + "order by studentID;";					
 		}
@@ -93,15 +99,7 @@ public class getStudents extends HttpServlet {
 		Connection con = null;
 		try {
 
-			MongoClient mongoClient = null;
-			String servername = (String) request.getServerName();
-			logger.debug("servername=" + servername);
-			if (servername.startsWith("ssps")) {
-				mongoClient = new MongoClient("localhost", 7010);
-			}
-			else {
-				mongoClient = new MongoClient("0.0.0.0", 7010);
-			}			
+			MongoClient mongoClient = new MongoClient("localhost", 7010);
 			logger.debug("MongoClient created");
 			MongoDatabase experimentDB = mongoClient.getDatabase("gm-logs");
 			logger.debug("User database=" + experimentDB.getName());

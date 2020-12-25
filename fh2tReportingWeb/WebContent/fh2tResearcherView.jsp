@@ -507,7 +507,7 @@ logger.setLevel(Level.INFO);
     				}
     				
     				//iframeLine = "<iframe frameborder='2' scrolling='yes' width='750px' height='500px' src='images/problem_" + problemNbr + "_Sankey_Filtered.png' name='imgbox' id='imgbox'> <p>iframes are not supported by your browser.</p> </iframe>";
-    				document.getElementById("sankeyImg").src =	'images/problem_' + problemNbr + '_Sankey_Filtered.png';
+    				document.getElementById("sankeyImg").src =	'images/problem_' + problemNbr + '_Sankey_Filtered_' + filter + '.png';
 
     		        $('#sankeyModal').modal('toggle');
   				}
@@ -590,7 +590,7 @@ logger.setLevel(Level.INFO);
         					}	
         				}
 
-        				document.getElementById("sankeyImg").src =	'images/problem_' + problemNbr + '_Treemap.png';
+        				document.getElementById("sankeyImg").src =	'images/problem_' + problemNbr + '_Treemap_' + filter + '.png';
 
         		        $('#sankeyModal').modal('toggle');
      				}
@@ -831,7 +831,7 @@ logger.setLevel(Level.INFO);
 		}
 		
 	  	var element = document.createElement('a');
-	  	element.setAttribute('href', 'images/problem_' + problemNbr + '_' + filename);
+	  	element.setAttribute('href', 'images/problem_' + problemNbr + '_' + filename + '_' + filter + '.png');
 	  	element.setAttribute('download', 'Problem ' + currentProblem + ' ' + filename);
 
 	  	element.style.display = 'none';
@@ -1199,11 +1199,11 @@ logger.setLevel(Level.INFO);
 						</a>
 						<button id="downloadSanBtn" type="button"
 							class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "
-							onclick='downloadImage("Sankey_Filtered.png")'><%=rb.getString("download")%>
+							onclick='downloadImage("Sankey_Filtered")'><%=rb.getString("download")%>
 							<br /><%=rb.getString("sankey_dia")%></button>
 						<button id="downloadTreeBtn" type="button"
 							class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "
-							onclick='downloadImage("Treemap.png")'><%= rb.getString("download")%>
+							onclick='downloadImage("Treemap")'><%= rb.getString("download")%>
 							<br /><%= rb.getString("tree_map")%></button>
 					</div>
 	    		<div class="col-sm-4">
