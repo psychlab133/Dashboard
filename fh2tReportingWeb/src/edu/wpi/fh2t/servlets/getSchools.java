@@ -55,17 +55,20 @@ public class getSchools extends HttpServlet {
 			colorName = request.getParameter("tablecolor");
 		}
 
-		String filter = (String) session.getAttribute("expAbbr");
-		
+		String filter="";
 		if (request.getParameter("filter") != null) {
-			filter = request.getParameter("filter");
+			filter = request.getParameter("filter") + "%";
 		}
-		filter += "%";
+		else {
+			filter = "FS%";
+		}
 
-		String problemId = "1";
+		String problemId = "121";
 		if (request.getParameter("problemId") != null) {
 			problemId = request.getParameter("problemId");			
 		}
+		//String problemPrefix = "p" + problemId + "_";
+		//logger.debug("problemPrefix=" + problemPrefix);
 		
 		String collectionName = (String) session.getAttribute("expAggregation");
 		logger.debug("collection  = " + collectionName);
@@ -79,16 +82,8 @@ public class getSchools extends HttpServlet {
 		out.print("<div><select id='schoolsSelections' class='custom-select' size='0' min-width:90%; onchange=setSchool();>");
 		
 		str = "<option style='background-color:white;' value='School'>Select School</option>";
-		
-		MongoClient mongoClient = null;
-		String servername = (String) request.getServerName();
-		logger.debug("servername=" + servername);
-		if (servername.startsWith("ssps")) {
-			mongoClient = new MongoClient("localhost", 7010);
-		}
-		else {
-			mongoClient = new MongoClient("0.0.0.0", 7010);
-		}
+
+		MongoClient mongoClient = new MongoClient("localhost", 7010);
 		logger.debug("MongoClient created");
 		MongoDatabase experimentDB = mongoClient.getDatabase("gm-logs");
 		logger.debug("User database=" + experimentDB.getName());
@@ -120,7 +115,12 @@ public class getSchools extends HttpServlet {
 					studentCompletedProblem = didStudentSolveProblem(problemId,username,collection);
 				}
 				if (studentCompletedProblem) {
-					schoolID = ((String) rs.getString("studentID")).substring(0,4);
+					if (filter.equals("F7%")) {
+						schoolID = ((String) rs.getString("studentID")).substring(0,5);
+					} else {
+						schoolID = ((String) rs.getString("studentID")).substring(0,4);	
+					}
+					
 					//logger.debug("teacherID=" + teacherID);
 					//logger.debug("teacherIDs=" + strTeacherIDs);
 					if (strSchoolIDs.indexOf(schoolID) == -1) {
@@ -140,7 +140,6 @@ public class getSchools extends HttpServlet {
 
 		    rs.close();
 		    pstmt.close();
-
 		} //end try
 		catch (ClassNotFoundException e1) {
 			logger.error(e1.getMessage());
@@ -163,7 +162,6 @@ public class getSchools extends HttpServlet {
 				logger.error(e.fillInStackTrace());
 			}			
 		}
-		mongoClient.close();
 		
 		logger.debug("str=" + str);
 
