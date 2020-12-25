@@ -56,6 +56,12 @@ public class getTrialId extends HttpServlet {
 		
 		logger.debug("getTrials servlet starting");			
 
+		String experimentID = "";
+		if (request.getParameter("experimentID") != null) {
+			experimentID = request.getParameter("experimentID");
+		}
+
+		
 		String studentId = "";
 		if (request.getParameter("studentId") != null) {
 			studentId = request.getParameter("studentId");			
@@ -69,6 +75,9 @@ public class getTrialId extends HttpServlet {
 		String trialsCollectionName = (String) session.getAttribute("expTrials");
 		logger.debug("trials collection  = " + trialsCollectionName);		
 
+		experimentID = "";
+		//studentId = "FS0601-117";
+		
 		Student student = new Student(studentId);
 		
 		logger.debug("getTrialId servlet starting");			
@@ -111,16 +120,7 @@ public class getTrialId extends HttpServlet {
 			}			
 		}
 		
-		MongoClient mongoClient = null;
-		String servername = (String) request.getServerName();
-		logger.debug("servername=" + servername);
-		if (servername.startsWith("ssps")) {
-			mongoClient = new MongoClient("localhost", 7010);
-		}
-		else {
-			mongoClient = new MongoClient("0.0.0.0", 7010);
-		}			
-
+		MongoClient mongoClient = new MongoClient("localhost", 7010);
 		logger.debug("MongoClient created");
 		MongoDatabase gmDB = mongoClient.getDatabase((String) getServletContext().getInitParameter("gm-DBName"));
 		logger.debug("User database=" + gmDB.getName());

@@ -39,8 +39,14 @@ public class getProblemSankey extends HttpServlet {
 		
 		logger.debug("getProblemSankey servlet starting");			
 
+		String experimentID = "";
+		if (request.getParameter("experimentID") != null) {
+			experimentID = request.getParameter("experimentID");
+		}
+
 		String str = "FileNotFound";
 		String problemId = "";
+		String filter="";
 		if (request.getParameter("problemId") != null) {
 			problemId = request.getParameter("problemId");			
 		} 		
@@ -52,10 +58,20 @@ public class getProblemSankey extends HttpServlet {
 				problemId = "0" + problemId;
 			}	
 		}
-		
+		if (request.getParameter("expAbbr") != null) {
+			filter = request.getParameter("expAbbr");
+		}
+		else {
+			if (session.getAttribute("expAbbr") != null) {
+				filter = (String) session.getAttribute("expAbbr");
+			}
+			else {
+				filter = "FS";
+			}
+		}	
 	    String relativePath = getServletContext().getRealPath("");
 
-		String filePath = relativePath + "images\\problem_" + problemId + "_Sankey_Filtered.png";
+		String filePath = relativePath + "images\\problem_" + problemId + "_Sankey_Filtered_" + filter + ".png";
 	    System.out.println(filePath);
 		logger.debug(filePath);
 		try {

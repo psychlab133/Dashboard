@@ -77,6 +77,11 @@ public class getTrialMetrics extends HttpServlet {
 		String avgs[] = { "","","","","","","","","","","","","",""};
 		  
 		
+		String experimentID = "";
+		if (request.getParameter("experimentID") != null) {
+			experimentID = request.getParameter("experimentID");
+		}
+
 		String studentId = "";
 		if (request.getParameter("studentId") != null) {
 			studentId = request.getParameter("studentId");			
@@ -88,6 +93,7 @@ public class getTrialMetrics extends HttpServlet {
 		}
 		String problemPrefix = "p" + problemId + "_";
 		logger.debug("problemPrefix=" + problemPrefix);
+		experimentID = "";
 		
 		Student student = new Student(studentId);
 		
@@ -137,16 +143,8 @@ public class getTrialMetrics extends HttpServlet {
 		}
 	
 	
-		MongoClient mongoClient = null;
-		String servername = (String) request.getServerName();
-		logger.debug("servername=" + servername);
-		if (servername.startsWith("ssps")) {
-			mongoClient = new MongoClient("localhost", 7010);
-		}
-		else {
-			mongoClient = new MongoClient("0.0.0.0", 7010);
-		}			
-
+		//MongoIterable<String> temp;
+		MongoClient mongoClient = new MongoClient("localhost", 7010);
 		logger.debug("MongoClient created");
 		MongoDatabase experimentDB = mongoClient.getDatabase("gm-logs");
 		logger.debug("User database=" + experimentDB.getName());

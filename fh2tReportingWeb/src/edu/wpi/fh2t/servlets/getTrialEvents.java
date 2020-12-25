@@ -85,16 +85,7 @@ public class getTrialEvents extends HttpServlet {
 		Person currentUser = (Person) session.getAttribute("currentUser");
 		logger.debug("Current User is " + currentUser.getName());
 		
-		MongoClient mongoClient = null;
-		String servername = (String) request.getServerName();
-		logger.debug("servername=" + servername);
-		if (servername.startsWith("ssps")) {
-			mongoClient = new MongoClient("localhost", 7010);
-		}
-		else {
-			mongoClient = new MongoClient("0.0.0.0", 7010);
-		}			
-
+		MongoClient mongoClient = new MongoClient("localhost", 7010);
 		logger.debug("MongoClient created");
 		MongoDatabase gmDB = mongoClient.getDatabase((String) getServletContext().getInitParameter("gm-DBName"));
 		logger.debug("User database=" + gmDB.getName());
