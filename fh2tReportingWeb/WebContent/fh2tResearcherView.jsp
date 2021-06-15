@@ -48,7 +48,9 @@ logger.setLevel(Level.INFO);
     <!-- jQuery (Bootstrap JS plugins depend on it) -->
     <script src="js/jquery-2.1.4.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    
+    <script src='js/plotly.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>											
+																								    
     <script>
 
    
@@ -482,48 +484,303 @@ logger.setLevel(Level.INFO);
        	xmlhttp.send();
     }
 	function getProblemSan(){
-        var xmlhttp;
-        //alert("getProblemSankey");
+		if (experimentAbbr == 'F7S'){
+			drawSankey();
+	        $('#sankeyModalInt').modal('toggle');
+		}else{
+	        var xmlhttp;
+	        //alert("getProblemSankey");
 
-        if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp = new XMLHttpRequest();
-        }
-        else {// code for IE6, IE5
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function () {
-           	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-         	   	//alert(xmlhttp.responseText);
-  				if (xmlhttp.responseText == "sankeyFiltered") {
-  					
-    				var problemNbr = currentProblem;
-    				if (problemNbr.length == 1) {
-    					problemNbr = "00" + problemNbr;
-    				}
-    				else {
-    					if ((problemNbr.length == 2)) {
-    						problemNbr = "0" + problemNbr;
-    					}	
-    				}
-    				
-    				//iframeLine = "<iframe frameborder='2' scrolling='yes' width='750px' height='500px' src='images/problem_" + problemNbr + "_Sankey_Filtered.png' name='imgbox' id='imgbox'> <p>iframes are not supported by your browser.</p> </iframe>";
-    				document.getElementById("sankeyImg").src =	'images/problem_' + problemNbr + '_Sankey_Filtered_' + filter + '.png';
+	        if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+	            xmlhttp = new XMLHttpRequest();
+	        }
+	        else {// code for IE6, IE5
+	            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	        }
+	        xmlhttp.onreadystatechange = function () {
+	           	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	         	   	//alert(xmlhttp.responseText);
+	  				if (xmlhttp.responseText == "sankeyFiltered") {
+	  					
+	    				var problemNbr = currentProblem;
+	    				if (problemNbr.length == 1) {
+	    					problemNbr = "00" + problemNbr;
+	    				}
+	    				else {
+	    					if ((problemNbr.length == 2)) {
+	    						problemNbr = "0" + problemNbr;
+	    					}	
+	    				}
+	    				
+	    				//iframeLine = "<iframe frameborder='2' scrolling='yes' width='750px' height='500px' src='images/problem_" + problemNbr + "_Sankey_Filtered.png' name='imgbox' id='imgbox'> <p>iframes are not supported by your browser.</p> </iframe>";
+	    				document.getElementById("sankeyImg").src =	'images/problem_' + problemNbr + '_Sankey_Filtered_' + filter + '.png';
 
-    		        $('#sankeyModal').modal('toggle');
-  				}
-   	           	else {
-   	           		alert("Diagram not available.");
-    	    		//$("#sankeyWindow").hide();
-   	           	}
-           }
-       };
-     	var cmd = "GetProblemSankey?problemId=" + currentProblem;
-      	//alert(cmd);
-      	xmlhttp.open("GET", cmd, true);
-      	xmlhttp.send();
-      			
-
+	    		        $('#sankeyModal').modal('toggle');
+	  				}
+	   	           	else {
+	   	           		alert("Diagram not available.");
+	    	    		//$("#sankeyWindow").hide();
+	   	           	}
+	           }
+	       };
+	     	var cmd = "GetProblemSankey?problemId=" + currentProblem;
+	      	//alert(cmd);
+	      	xmlhttp.open("GET", cmd, true);
+	      	xmlhttp.send();
+	      						
+		}
 	}  
+	function drawSankey(){
+		var problemNbr = 'Pb_'+currentProblem+'_'+experimentAbbr;
+		sankeyImg = document.getElementById("sankeyImgInt");
+
+		Plotly.d3.json('json/'+problemNbr+'.json', function (fig) {
+            problem_list = fig.Sheet1;
+					  
+												 
+									   
+				 
+			
+		 
+															   
+					
+									  
+					  
+		 
+
+            var label = [];// To store expressions(unique) for each row id
+            var n = [0];// To store the length of expressions(unique) for each row id
+
+            /* Set of variables to generate the diagram */
+            var source = [];
+            var link_label = [];
+            var target = [];
+            var value = [];
+            var lin_colour = [];
+
+            var filtered = true;
+            var sankey_type = 0;//0 Simple,  1 Productivity, 2 Pre-knowledge
+
+            var mistake = false;
+
+            /* To update for cluster data */
+            var cluster_type = false;
+            var cluster = 0;//0 All
+
+            /* To get the list of 
+            problems based on the data type */
+            if (!cluster_type) {
+                problem_01 = problem_list;
+            } else if (cluster == 0) {
+                problem_01 = _.sortBy(problem_list, 'cluster');
+            } else {
+                problem_01 = _.filter(problem_list, function (ans) {
+                    return ans.cluster == "Cluster" + cluster
+                });
+            }
+
+            /* sort row id, for each row id get
+             unique expression in label */
+            _.sortBy(_.uniq(_.map(problem_01, function (elem) {
+                return elem.row_id
+            })), function (row) {
+                return parseInt(row)
+            }).forEach(function (val) {
+                label.push(_.uniq(_.map(_.filter(problem_01, function (ans) {
+                    return ans.row_id == val
+                }), function (valu) {
+                    return valu.expr_ascii
+                })));
+                n.push(label.flat().length);
+            });
+
+            var problem_row = (_.find(problem_01, function (num) {
+                return num.row_id == 0;
+            }));
+            //var prob_no = problem_row.problem_id;
+            //var start_state = problem_row.start_state;
+            //var end_state = problem_row.goal_state;
+            var fh2t_user = _.uniq(_.map(problem_01, function (num) {
+                return num.trial_id;
+            }));//unique students
+
+            fh2t_user.forEach(function (element) {
+                var student_list = _.sortBy(_.filter(problem_01, function (num) {
+                    return num.trial_id == element;
+                }), function (val) {
+                    return parseInt(val.row_id);
+                });
+                var expr_ascii_list = _.map(student_list, function (elem) {
+                    return elem.expr_ascii;
+                });// for each student get expressions
+                var productivity = _.map(student_list, function (elem) {
+                    return elem.productivity;
+                });
+                var cluster_list = _.map(student_list, function (elem) {
+                    return elem.cluster;
+                });
+                var action_list = _.map(student_list, function (elem) {
+                    return elem.action;
+                });
+                var prior_know = _.map(student_list, function (elem) {
+                    return elem["prior-knowledge"];
+                });
+
+                // For Filtered Sankey
+                if (filtered) {
+                    if (expr_ascii_list.length > 11) {
+                        return;
+                    }
+                    var should_ret = true;
+                    for (i = 1; i < expr_ascii_list.length - 1 || i == 1; i++) {// To eliminate all single paths
+                        if (_.filter(problem_01, function (exp) {
+                            return exp.row_id == i && exp.expr_ascii == expr_ascii_list[i]
+                        }).length > 1) {
+                            should_ret = false;
+                            break;
+                        }
+                    }
+                    if (should_ret) {
+                        return;
+                    }
+                }
+
+                for (i = 0; i < expr_ascii_list.length - 1; i++) {
+                    // for (i = 0; i < 10; i++) {
+                    var source_index = label[i].indexOf(expr_ascii_list[i]) + n[i];
+                    var target_index = label[i + 1].indexOf(expr_ascii_list[i + 1]) + n[i + 1];
+
+                    // To increase the count for same path between two same nodes(expressions)
+                    var source_list = source.reduce(function (a, e, i) {
+                        if (e === source_index)
+                            a.push(i);
+                        return a;
+                    }, []);
+                    var target_list = target.reduce(function (a, e, i) {
+                        if (e === target_index)
+                            a.push(i);
+                        return a;
+                    }, []);
+                    var link_label_list = link_label.reduce(function (a, e, ind) {
+                        if (e === cluster_list[i])
+                            a.push(ind);
+                        return a;
+                    }, []);
+                    var indx = _.intersection(source_list, target_list, link_label_list);
+                    if (indx.length > 0) {
+                        value[indx[0]] += 1;
+                    } else {// Following works if its a new path between two same nodes(expressions)
+                        source.push(source_index);
+                        target.push(target_index);
+                        link_label.push(cluster_list[i]);
+                        value.push(1);
+
+                        /* Assigning colors for cluster data */
+                        if (cluster_type && sankey_type == 0) {
+                            if (cluster_list[i + 1] == "Cluster1") {
+                                lin_colour.push("rgba(159, 37, 247,0.6)")
+
+                            } else if (cluster_list[i + 1] == "Cluster2") {
+                                lin_colour.push("rgba(11, 222, 0,0.4)")
+
+                            } else if (cluster_list[i + 1] == "Cluster3") {
+                                lin_colour.push("rgba(0, 0, 255,0.5)")
+
+                            } else if (cluster_list[i + 1] == "Cluster4") {
+                                lin_colour.push("rgba(247, 37, 37,0.5)")
+
+                            }
+                        }
+
+                        /* Assigning colors for sankey type */
+                        if (sankey_type == 1) {
+                            if (productivity[i + 1]) {
+                                if (productivity[i + 1] == "Yes") {
+                                    lin_colour.push("rgba(0, 0, 255,0.5)")
+                                } else {
+                                    lin_colour.push("rgba(255, 0, 0,0.5)")
+                                }
+                            } else {
+                                lin_colour.push("rgba(68, 68, 68, 0.2)")
+                            }
+                        }
+                        if (sankey_type == 2) {
+                            if (prior_know[i + 1]) {
+                                if (prior_know[i + 1] == "high") {
+                                    lin_colour.push("rgba(0, 255, 0,0.5)")
+                                } else {
+                                    lin_colour.push("rgba(255, 0, 0,0.5)")
+                                }
+                            } else {
+                                lin_colour.push("rgba(68, 68, 68, 0.2)")
+                            }
+                        }
+
+                        /* Assigning colors for action */
+                        if (mistake) {
+                            if (action_list[i]) {
+                                if (action_list[i] == "mistake") {
+                                    lin_colour.push("rgba(255, 0, 0,0.5)")
+                                }
+                            } else {
+                                lin_colour.push("rgba(68, 68, 68, 0.2)")
+                            }
+                        }
+                    }
+                }
+            });
+
+            /* Default sankey type */
+            if (sankey_type == 0 && !cluster_type && !mistake) {
+                lin_colour = Array(source.length).fill("rgba(68, 68, 68, 0.2)")
+            }
+            var color = Array(label.flat().length).fill("black");
+            var data = {
+                type: "sankey",
+                domain: {
+                    x: [0, 1],
+                    y: [0, 1]
+                },
+                orientation: "h",
+                node: {
+                    pad: 10,
+                    thickness: 5,
+                    /*line: {
+                        color: "blue",
+                        width: 0.5
+                    },*/
+                    valueformat: ".0f",
+                    valuesuffix: "TWh",
+                    label: label.flat(),
+                    color: color
+                },
+
+                link: {
+                    source: source,
+                    target: target,
+                    value: value,
+                    color: lin_colour,
+                    label: link_label
+                }
+            }
+
+            var data = [data]
+
+            var layout = {
+                //title: "Problem number: " + prob_no + "<br>Start State: " + start_state + "<br>Goal State: " + end_state,
+                title: "Problem number : "+currentProblem,
+                width: 7200,
+                height: 800,
+                font: {
+                    size: 15,
+                    color: "Black",
+                    weight: 900
+                }
+            }
+
+            Plotly.newPlot(sankeyImg, data, layout, { displaylogo: false, displayModeBar: true })
+        });
+	}
     function getProblemSankey() {
         var xmlhttp;
         //alert("getProblemSankey");
@@ -1286,9 +1543,19 @@ logger.setLevel(Level.INFO);
 </div>
 
 		<!-- Modal -->
-		<div class="modal fade" id="sankeyModal" tabindex="-1" role="dialog" >
+		<div class="modal fade" id="sankeyModal" style="overflow-x:auto" tabindex="-1" role="dialog" >
 		  <div class="modal-dialog modal-dialog-centered" style = "left:35%" role="content">
 		          <img id = "sankeyImg" width='1000px' height='600px'></img>
+		      <!-- Modal content-->
+<!-- 		      <div class="modal-content">
+		        <div class="about-modal-body"">
+		        </div>
+		      </div> -->
+		  </div>
+		</div>
+		<div class="modal fade" id="sankeyModalInt" style="overflow-x:auto" tabindex="-1" role="dialog" >
+		  <div class="modal-dialog modal-dialog-centered" style = "left:20%" role="content">
+		          <div id = "sankeyImgInt"></div>
 		      <!-- Modal content-->
 <!-- 		      <div class="modal-content">
 		        <div class="about-modal-body"">
