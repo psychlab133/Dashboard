@@ -536,17 +536,6 @@ logger.setLevel(Level.INFO);
 
 		Plotly.d3.json('json/'+problemNbr+'.json', function (fig) {
             problem_list = fig.Sheet1;
-					  
-												 
-									   
-				 
-			
-		 
-															   
-					
-									  
-					  
-		 
 
             var label = [];// To store expressions(unique) for each row id
             var n = [0];// To store the length of expressions(unique) for each row id
