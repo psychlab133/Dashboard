@@ -385,6 +385,16 @@
 	<url-pattern>/SendPassword</url-pattern>
   </servlet-mapping>
 
+  <servlet id="Servlet_32">
+  	<servlet-name>GetSortedList</servlet-name>
+  	<servlet-class>edu.wpi.fh2t.servlets.getSortedList</servlet-class>
+  </servlet>
+  
+  <servlet-mapping id="GetSortedList">
+  	<servlet-name>GetSortedList</servlet-name>
+	<url-pattern>/GetSortedList</url-pattern>
+  </servlet-mapping>
+
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>

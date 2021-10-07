@@ -63,9 +63,10 @@ public class getProblems extends HttpServlet {
 
 		out.print("<div class='col-4'><select id='problemsSelections' class='custom-select' size='1'  onchange=setProblem();>");
 
-		str = "<option style='background-color:white;' value='Problem'>Select Problem</option>";
+		str = "<option style='background-color:white;' value=''>Select Problem</option>";
 	
-		String query = "select problem as PROBLEM, ID as id from problems;";		
+		String query = "select problem as PROBLEM, ID as id from problems;";
+//		getSortedProblemList(logger, session, request);
 		logger.debug("query=" + query);
 		Connection con = null;
 		try {
@@ -108,9 +109,12 @@ public class getProblems extends HttpServlet {
 		}
 
 		logger.debug("str=" + str);
+		//request.setAttribute("studentID", "21");
+		//request.getRequestDispatcher("fh2tResearcherView.jsp").forward(request, response);
 
 		out.print(str);
 		out.print("</select></div>");
 		out.print("</div></div>");
 	}
+
 }
