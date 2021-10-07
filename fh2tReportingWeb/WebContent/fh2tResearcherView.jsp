@@ -25,7 +25,7 @@ Person currentUser = (Person) session.getAttribute("currentUser");
 currentUser.setCurrentRole("Researcher");
 String experimentAbbr = (String) session.getAttribute("expAbbr");
 String experimentDisplay = (String) session.getAttribute("expDisplay");
-
+//String studentIDInfo = (String) request.getAttribute("studentID");
 
 logger.setLevel(Level.INFO);
 %>
@@ -49,12 +49,13 @@ logger.setLevel(Level.INFO);
     <script src="js/jquery-2.1.4.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src='js/plotly.min.js'></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>											
-																								    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
+    
     <script>
 
    
     var serverName = "<%=ServerName%>";
+<%--     var studentIDInfo = "<%=studentIDInfo%>" --%>
     var currentUser = "<%=currentUser.getName()%>";
 	var experimentAbbr = "<%=experimentAbbr%>";
 	var experimentDisplay = "<%=experimentDisplay%>";
@@ -66,6 +67,8 @@ logger.setLevel(Level.INFO);
 	var currentTableNbr = 0;
 
 	var filter = "";
+	var sortBy = "";
+	var sortOrder = "";
     var currentSchool = "06";
     var currentTeacher = "";
     var currentClassroom = "";
@@ -111,6 +114,40 @@ logger.setLevel(Level.INFO);
     		//alert("setFilter = " + filter);
     	}
     }
+    function getSortedList(){
+    	 var xmlhttp;
+         
+         //alert("getStudents()");
+         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+           xmlhttp = new XMLHttpRequest();
+         }
+         else {// code for IE6, IE5
+           xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+         }
+         xmlhttp.onreadystatechange = function () {
+           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {          
+             	document.getElementById("SortedListSelection").innerHTML = xmlhttp.responseText;
+             	getStudents();
+           }
+         };
+
+         if (filter.length == 0) {
+         	filter = experimentAbbr;
+         }
+          	currentTableNbr = STUDENTS;
+   	
+           var cmd = "";
+           if (currentProblem == "") {
+          		cmd = "GetSortedList?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter;
+           }
+           else {
+          		cmd = "GetSortedList?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem;       	
+           }
+         	xmlhttp.open("GET", cmd, true);
+         	xmlhttp.send();
+       
+    }
+    
     function getStudents() {
       var xmlhttp;
       
@@ -151,6 +188,8 @@ logger.setLevel(Level.INFO);
         var cmd = "";
         if (currentProblem == "") {
        		cmd = "GetStudents?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter;
+        } else if (sortBy != '' && sortOrder != ''){
+        	cmd = "GetStudents?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem + "\&sortOrder=" + sortOrder + "\&sortBy=" + sortBy;
         }
         else {
        		cmd = "GetStudents?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem;       	
@@ -182,7 +221,8 @@ logger.setLevel(Level.INFO);
         xmlhttp.onreadystatechange = function () {
           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {          
             document.getElementById("ClassroomSelection").innerHTML = xmlhttp.responseText;
-            getStudents();
+            getSortedList();
+            //getStudents();
           }
         };
         
@@ -290,6 +330,8 @@ logger.setLevel(Level.INFO);
           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {          
             //alert(xmlhttp.responseText);
             document.getElementById("ProblemSelection").innerHTML = xmlhttp.responseText;
+            //var studentID = ${studentID};
+            //var studentID = request.getAttribute("studentID")
           }
         };
         
@@ -514,7 +556,6 @@ logger.setLevel(Level.INFO);
 	    				
 	    				//iframeLine = "<iframe frameborder='2' scrolling='yes' width='750px' height='500px' src='images/problem_" + problemNbr + "_Sankey_Filtered.png' name='imgbox' id='imgbox'> <p>iframes are not supported by your browser.</p> </iframe>";
 	    				document.getElementById("sankeyImg").src =	'images/problem_' + problemNbr + '_Sankey_Filtered_' + filter + '.png';
-
 	    		        $('#sankeyModal').modal('toggle');
 	  				}
 	   	           	else {
@@ -530,6 +571,7 @@ logger.setLevel(Level.INFO);
 	      						
 		}
 	}  
+	
 	function drawSankey(){
 		var problemNbr = 'Pb_'+currentProblem+'_'+experimentAbbr;
 		sankeyImg = document.getElementById("sankeyImgInt");
@@ -754,6 +796,11 @@ logger.setLevel(Level.INFO);
             }
 
             var data = [data]
+            
+            /*
+            Set height = max height of each sankey diagram (nodes)
+            ex: if 15 nodes, height = 100 * 15 for example
+            */
 
             var layout = {
                 //title: "Problem number: " + prob_no + "<br>Start State: " + start_state + "<br>Goal State: " + end_state,
@@ -768,8 +815,10 @@ logger.setLevel(Level.INFO);
             }
 
             Plotly.newPlot(sankeyImg, data, layout, { displaylogo: false, displayModeBar: true })
+            //Plotly.downloadImage('myDiv', { format: 'png', width: 800, height: 600, filename: 'newplot' });
         });
 	}
+	
     function getProblemSankey() {
         var xmlhttp;
         //alert("getProblemSankey");
@@ -1132,6 +1181,7 @@ logger.setLevel(Level.INFO);
 	    document.getElementById("SchoolSelection").innerHTML = "";
 	    document.getElementById("TeacherSelection").innerHTML = "";
 	    document.getElementById("ClassroomSelection").innerHTML = "";
+	    document.getElementById("SortedListSelection").innerHTML = "";
 	    document.getElementById("StudentSelection").innerHTML = "";
 	    document.getElementById("selectStudent").value = "";
 		document.getElementById("resultsView").innerHTML = "";
@@ -1149,8 +1199,9 @@ logger.setLevel(Level.INFO);
         
         
 //        $("#visualizerBtn").show();        
-//        $("#clearBtn").show();        
-        getProblems();
+//        $("#clearBtn").show();
+		//getAllProblems();
+        getProblems(); 
 		$("#wide-work-area").hide();
 		setFilter();
 	        
@@ -1187,8 +1238,12 @@ logger.setLevel(Level.INFO);
  
     function setSchool() {
     	var x = document.getElementById("schoolsSelections").value;
-    	filter = x.substring(0,4);
-    	currentSchool = x.substring(0,2);
+    	filter = x;
+    	if (x.startsWith("F7")){
+    		currentSchool = x.substring(3,5);
+    	}else{
+    		currentSchool = x.substring(2,4);
+    	}    	
     	currentTeacher = "";
     	currentClassroom = "";
     	currentStudent = "";
@@ -1198,9 +1253,14 @@ logger.setLevel(Level.INFO);
 
 	function setTeacher() {
     	var x = document.getElementById("teachersSelections").value;
-    	filter = x.substring(0,6);
-    	currentSchool = x.substring(2,4);
-    	currentTeacher = x.substring(4,6);
+    	filter = x;
+    	if (x.startsWith("F7")){
+    		currentSchool = x.substring(3,5);
+    		currentTeacher = x.substring(5,7);
+    	}else{
+    		currentSchool = x.substring(2,4);
+    		currentTeacher = x.substring(4,6);
+    	}
     	currentClassroom = "";
     	currentStudent = "";
     	document.getElementById("selectStudent").value = filter;
@@ -1209,27 +1269,51 @@ logger.setLevel(Level.INFO);
 
     function setClassroom() {
     	var x = document.getElementById("classroomsSelections").value;
-    	filter = x.substring(0,8);
-    	currentSchool = x.substring(2,4);
-    	currentTeacher = x.substring(4,6);
-    	currentClassroom = x.substring(7,8);
+    	filter = x;
+    	if (x.startsWith("F7")){
+    		currentSchool = x.substring(3,5);
+    		currentTeacher = x.substring(5,7);
+    		currentClassroom = x.substring(8,9);
+    	}else{
+    		currentSchool = x.substring(2,4);
+        	currentTeacher = x.substring(4,6);
+        	currentClassroom = x.substring(7,8);
+    	}
     	currentStudent = "";
     	document.getElementById("selectStudent").value = filter;
     	getStudents();
       }
-
+	
+    function setSortedList(){
+    	sortBy = document.getElementById("sortBySelections").value;
+    	sortOrder = document.getElementById("sortOrderSelections").value;
+    	if (sortBy != "" && sortOrder != ""){
+    		getStudents();
+    	}
+    }
+    
     function setStudent() {
     	var x = document.getElementById("usernamesSelections").value;
-    	currentSchool = x.substring(0,2);
-    	currentTeacher = x.substring(2,6);
-    	currentClassroom = x.substring(7,8);
+    	if (x.startsWith("F7")){
+    		currentSchool = x.substring(3,5);
+    		currentTeacher = x.substring(5,7);
+    		currentClassroom = x.substring(8,9);
+    	}else{
+    		currentSchool = x.substring(2,4);
+        	currentTeacher = x.substring(4,6);
+        	currentClassroom = x.substring(7,8);
+    	}
     	currentStudent = x;
     	document.getElementById("selectStudent").value = x;
       }
 
     function setProblem() {
     	var x = document.getElementById("problemsSelections").value;
+    	filter = "";
     	currentProblem = x;
+    	sortBy = '';
+    	sortOrder = '';
+    	
 	    $("#screenshotViewBtn").hide();
 		getSchools();
 		
@@ -1358,23 +1442,27 @@ logger.setLevel(Level.INFO);
 		   	<div class="row">
 			    <div id="selectionPanel" class="container-fluid selectionPanel">
 			    	<div id=menus class="col-md-12 col-sm-12 col-xs-12v">
-				      	<div id="level1" class="col-md-3 col-sm-5 col-xs-12v">
+				      	<div id="level1" class="col-md-2 col-sm-5 col-xs-12v" style="width:20%">
 							<div class="col-3" id="ProblemSelection"></div>
 				      	</div>
 				      	
-				      	<div id="level2" class="col-md-2 col-sm-6 col-xs-12v">
+				      	<div id="level2" class="col-md-2 col-sm-6 col-xs-12v" style="width:13%">
 				    		<div class="col-3" id="SchoolSelection"></div>
 					   	</div>
 				      	    	
-				      	<div id="level3" class="col-md-2 col-sm-6 col-xs-12v">
+				      	<div id="level3" class="col-md-2 col-sm-6 col-xs-12v" style="width:14%">
 							<div class="col-2" id="TeacherSelection"></div>
 				      	</div>
 				
-				      	<div id="level4" class="col-md-2 col-sm-6 col-xs-12v">
+				      	<div id="level4" class="col-md-2 col-sm-6 col-xs-12v" style="width:12%">
 							<div class="col-2" id="ClassroomSelection"></div>
 				      	</div>
 				      	
-				      	<div id="level5" class="col-md-3 col-sm-6 col-xs-12v">
+				      	<div id="level5" class="col-md-2 col-sm-6 col-xs-12v" style="width:23%">
+							<div class="col-2" id="SortedListSelection"></div>
+				      	</div>
+				      	
+				      	<div id="level6" class="col-md-2 col-sm-6 col-xs-12v">
 							<div class="col-2" id="StudentSelection"></div>
 				      	</div>
 			      	</div>
@@ -1391,8 +1479,8 @@ logger.setLevel(Level.INFO);
 	        		<button id="visualizerBtn" type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='setWideScreen(0);setupTrialVisualizer()'><%= rb.getString("visualize")%></button>
 	        		<button id="wideViewBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left hidden" onclick='setWideScreen(1);setupTrialVisualizer()'><%= rb.getString("wide_view")%></button>
 					<a id='screenshotViewBtn' href='/fh2tReportingWeb/fh2tScreenshotVisualizer.jsp'  target='_blank' class='btn btn-primary btn-md ml-1' role='button'>Screenshot View</a>
-	        		<button id="sankeyBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemSan();'><%= rb.getString("flow_diagram")%></button>
-	        		<button id="treeMapBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemTree();'>TreeMap</button>
+	        		<button id="sankeyBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemSan()'><%= rb.getString("flow_diagram")%></button>
+	        		<button id="treeMapBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemTree()'>TreeMap</button>
 	        		<button id="avgBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemAvgs();'>Problem Avgs</button>
 	        		<button id="clearBtn"type="button" class="btn btn-danger btn-md ml-1 pull-left " onclick='clearProblemArea()'><%= rb.getString("clear")%></button>
 	    		</div>
@@ -1438,10 +1526,15 @@ logger.setLevel(Level.INFO);
 							class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "
 							onclick='downloadFile("aggregation_table_problem_level.csv")'><%=rb.getString("download")%>
 							<br /><%=rb.getString("problem_level_data")%></button>
-						<a href="pdf/Viz.pdf" download="Problem Level Visualization">
-							<button id="downloadPVBtn" type="button"
+						<a href="pdf/Viz2.pdf" download="Problem Level Visualization">
+						<button id="downloadPVBtn" type="button"
 								class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "><%=rb.getString("download")%>
 								<br /><%=rb.getString("problem_level_vis")%></button>
+						</a>
+						<a href="pdf/Fh2t_overall_summary.pdf" download="Overall level summary">
+						<button id="downloadPVBtn" type="button"
+								class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "><%=rb.getString("download")%>
+								<br /><%=rb.getString("overall_level_summary")%></button>
 						</a>
 						<button id="downloadSanBtn" type="button"
 							class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "
@@ -1542,7 +1635,7 @@ logger.setLevel(Level.INFO);
 		      </div> -->
 		  </div>
 		</div>
-		<div class="modal fade" id="sankeyModalInt" style="overflow-x:auto" tabindex="-1" role="dialog" >
+		<div class="modal fade" id="sankeyModalInt" style="overflow-x:auto;overflow-y:auto" tabindex="-1" role="dialog" >
 		  <div class="modal-dialog modal-dialog-centered" style = "left:20%" role="content">
 		          <div id = "sankeyImgInt"></div>
 		      <!-- Modal content-->

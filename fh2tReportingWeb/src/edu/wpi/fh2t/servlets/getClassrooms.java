@@ -18,6 +18,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Projections;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
 import com.mysql.jdbc.PreparedStatement;
@@ -25,7 +26,10 @@ import com.mysql.jdbc.PreparedStatement;
 import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class getClassrooms extends HttpServlet {
@@ -80,7 +84,7 @@ public class getClassrooms extends HttpServlet {
 		
 		str = "<div class='row'><div class='col-4 selection-header'><h4>" + rb.getString("classrooms") + "</h4></div></div><div class='row'><div class='col-4'>";	
 		str += "<div class='col-4'><select id='classroomsSelections' class='custom-select' size='1' onchange=setClassroom();>";
-		str += "<option style='background-color:white;' value='Classroom'>Select Class</option>";
+		str += "<option style='background-color:white;' value=''>Select Class</option>";
 
 //		String query = "select studentID as SID, username, currentClass as Class from usernames WHERE studentID like '" + filter + "' and not currentClass = '';";		
 		Connection con = null;
@@ -105,8 +109,24 @@ public class getClassrooms extends HttpServlet {
 			boolean needsComma = false;
 			String strClassroomIDs = "";
 			String classroomID = "";
-
+			List<String> studentIDList = new ArrayList<String>();
+			List<String> userNameList = new ArrayList<String>();
+			
 			while (rs.next()) {
+				userNameList.add(rs.getString("UNAME"));
+				if (filter.startsWith("F7")) {
+					studentIDList.add(((String) rs.getString("studentID")).substring(0,9));
+				} else {
+					studentIDList.add(((String) rs.getString("studentID")).substring(0,8));
+				}
+			}
+			
+			List<String> sortedClassList = getSortedClassList(userNameList, logger, studentIDList, collection, problemId);
+			for (int i = 0; i < sortedClassList.size(); i++) {
+				str += "<option style='background-color:" + colorName + ";' value='" + sortedClassList.get(i) + "'> " + sortedClassList.get(i) + "</option>";
+			}
+			
+			/*while (rs.next()) {
 				boolean studentCompletedProblem = false;
 				if (problemId.length() == 0) {
 					studentCompletedProblem = true;	
@@ -135,7 +155,7 @@ public class getClassrooms extends HttpServlet {
 					else {
 					}
 				}
-		    }
+		    }*/
 				
 		    rs.close();
 		    pstmt.close();
@@ -169,6 +189,43 @@ public class getClassrooms extends HttpServlet {
 		out.print("</div></div>");
 	}
 	
+	private List<String> getSortedClassList(List<String> userNameList, Logger logger, List<String> studentIDList,
+			MongoCollection<Document> collection, String problemId) {
+
+		List<BasicDBObject> sortQueryList = new ArrayList<BasicDBObject>();
+	    BasicDBObject sortQuery = new BasicDBObject();	    
+	    List<String> sortedClassList = new ArrayList<String>();
+	    
+//	    sortQuery.put("studentID", new BasicDBObject("$in", userNameList));
+	    sortQueryList.add(new BasicDBObject("studentID", new BasicDBObject("$in", userNameList)));
+		String problemPrefix = "p" + problemId;
+		logger.debug("problemPrefix=" + problemPrefix);	    
+		
+
+	    sortQueryList.add(new BasicDBObject(problemPrefix+"_completed", "1"));
+	    sortQuery.put("$and", sortQueryList);
+
+	    FindIterable<Document> findIterable = (FindIterable<Document>) collection.find(sortQuery).projection(Projections.include("studentID"));
+		Iterator<Document> iterator = findIterable.iterator();
+
+		String sortedStudent = "";
+		String sortedClass = "";
+		Document metric = null;
+		
+		while(iterator.hasNext()) {
+			metric = (Document) iterator.next();
+			sortedStudent = (String) metric.get("studentID");
+			sortedClass = studentIDList.get(userNameList.indexOf(sortedStudent));
+			
+			if (!sortedClassList.contains(sortedClass)) {
+				sortedClassList.add(studentIDList.get(userNameList.indexOf(sortedStudent))); //(ArrayList) listWithDuplicateValues.stream().distinct().collect(Collectors.toList());				
+			}
+		}
+		Collections.sort(sortedClassList);
+		
+		return sortedClassList;
+	}
+
 	public boolean didStudentSolveProblem(String problemId, String username, MongoCollection<Document> collection) {
 		boolean result = false;
 		// See if this student completed this problem
