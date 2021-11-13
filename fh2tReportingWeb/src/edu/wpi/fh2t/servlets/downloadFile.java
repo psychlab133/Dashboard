@@ -50,7 +50,7 @@ public class downloadFile extends HttpServlet {
 				filePath = getServletContext().getRealPath("/WEB-INF/resources/") + "Viz.pdf";
 				logger.debug(filePath);
 			} else {*/
-				filePath = "C:\\WPI\\DataFiles\\" + "2020_0131_" + expId + "_" + request.getParameter("filename");
+				filePath = "C:\\WPI\\DataFiles\\" + expId + "_" + request.getParameter("filename");
 				logger.debug(filePath);
 			//}
 		}
