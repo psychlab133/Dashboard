@@ -806,7 +806,7 @@ logger.setLevel(Level.INFO);
                 //title: "Problem number: " + prob_no + "<br>Start State: " + start_state + "<br>Goal State: " + end_state,
                 title: "Problem number : "+currentProblem,
                 width: 7200,
-                height: 800,
+                height: 600,
                 font: {
                     size: 15,
                     color: "Black",
@@ -819,6 +819,7 @@ logger.setLevel(Level.INFO);
         });
 	}
 	
+		// Seems like this function is no longer in use? (1/24/23)
     function getProblemSankey() {
         var xmlhttp;
         //alert("getProblemSankey");
@@ -860,8 +861,76 @@ logger.setLevel(Level.INFO);
       	xmlhttp.open("GET", cmd, true);
       	xmlhttp.send();
    }
+		
+		
+		function drawProblemTree(){
+			console.log("drawProblemTree");
+			var problemNbr = 'Pb_'+currentProblem+'_'+experimentAbbr;
+			console.log(problemNbr + " for draw problem tree");
+			// same DOM obj as the sankeyImgInt
+			sankeyImg = document.getElementById("sankeyImgInt");
+			Plotly.d3.json('json/'+problemNbr+'.json', function (fig) {
+	            problem_list = fig.Sheet1;
+	            var start_state = problem_list[0].start_state;
+	            var first_step_map = new Map();
+	            var parent_count = 0;
+	            for (let i = 0; i < problem_list.length; i++) {
+	            	  if (problem_list[i].row_id == "1"){ // first step
+	            		  parent_count += 1;
+	            		  var expr_ascii_count = first_step_map.get(problem_list[i].expr_ascii)
+	            		  if (expr_ascii_count == undefined){ // add to the map
+	            			  first_step_map.set(problem_list[i].expr_ascii,1)
+	            			  console.log(first_step_map.get(problem_list[i].expr_ascii));
+	            		  } else{ // increment count by 1
+	            			  first_step_map.set(problem_list[i].expr_ascii,expr_ascii_count+1)
+	            		  }
+	            	  }
+	            	}
+	            var labels = Array.from(first_step_map.keys());
+	            var values = Array.from(first_step_map.values());
+	            var parents = Array(labels.length).fill("");
+	            console.log(labels);
+	            console.log(parents);
+	            console.log(values);
+	            console.log(parent_count);
+	            var data = [{
+	                type: "treemap",
+	                labels: labels,
+	                parents: parents,
+	                values:values,
+	                textinfo: "label+value+percent parent"
+	              }]
+	            var layout = {
+	                    //title: "Problem number: " + prob_no + "<br>Start State: " + start_state + "<br>Goal State: " + end_state,
+	                    title: "Problem number : "+currentProblem,
+	                    width: 1000,
+	                    height: 600,
+	                    font: {
+	                        size: 15,
+	                        color: "Black",
+	                        weight: 900
+	                    }
+	                }
+
+	               Plotly.newPlot(sankeyImg, data, layout);
+	            
+			});
+			
+		}
+		
+	
+		
        function getProblemTree(){
-           var xmlhttp;
+           console.log("getProblemTree");
+      		var testing =  true;
+           
+           if (testing){
+        	   drawProblemTree();
+        	   $('#sankeyModalInt').modal('toggle'); //using same modal for sankey and treemap
+        	   return;
+           }
+           
+    	   var xmlhttp;
            //alert("getProblemTreeMap");
 
            if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -884,8 +953,9 @@ logger.setLevel(Level.INFO);
         						problemNbr = "0" + problemNbr;
         					}	
         				}
-
-        				document.getElementById("sankeyImg").src =	'images/problem_' + problemNbr + '_Treemap_' + filter + '.png';
+        				var imgSrc = 'images/problem_' + problemNbr + '_Treemap_' + filter + '.png';
+						console.log(imgSrc);
+        				document.getElementById("sankeyImg").src =	imgSrc;
 
         		        $('#sankeyModal').modal('toggle');
      				}
@@ -896,13 +966,18 @@ logger.setLevel(Level.INFO);
               }
           };
             
-      	var cmd = "GetProblemTreeMap?problemId=" + currentProblem;
-      	//alert(cmd);
+      	var cmd = "GetProblemTreeMap?problemId=" + currentProblem+ "\&filter=" + filter;
+      	alert(cmd);
       	xmlhttp.open("GET", cmd, true);
       	xmlhttp.send();    	   
-       }  
+       }
+       
        function getProblemTreeMap() {
-           var xmlhttp;
+           console.log("getProblemTreeMap");
+           // TODO: remove after testing 
+     
+           
+    	   var xmlhttp;
            //alert("getProblemTreeMap");
 
            if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -928,7 +1003,6 @@ logger.setLevel(Level.INFO);
 
        					iframeLine = "<iframe frameborder='2' scrolling='yes' width='600px' height='500px' src='images/problem_" + problemNbr + "_Treemap.png' name='imgbox' id='imgbox'> <p>iframes are not supported by your browser.</p> </iframe>";
        					document.getElementById("treeMapView").innerHTML =	iframeLine;
-       		
        	    			$("#treeMapWindow").show();
      				}
       	           	else {

@@ -390,8 +390,8 @@ else {
         </div>
 	 <div class="about-modal-body" style="font-size:10px">
 		        <p>If you wish to request access to the FH2T researcher dashboard, you will need to submit a data-sharing agreement form. For more information about this process,
-		         please fill out the google form below, or email Erin Ottmar at erottmar@wpi.edu</p>  
-				<p><a href ="https://sites.google.com/view/from-here-to-there/participate?authuser=0" target="_blank">FH2T Access form</a></p>
+		         please email Erin Ottmar at erottmar@wpi.edu</p>  
+				<!-- p><a href ="https://sites.google.com/view/from-here-to-there/participate?authuser=0" target="_blank">FH2T Access form</a></p-->
 				<p>We will contact you as soon as we can</p>
 	</div>
       </div>

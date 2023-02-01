@@ -1,9 +1,6 @@
 package edu.wpi.fh2t.servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +13,11 @@ import org.apache.log4j.Logger;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
+
+import java.io.PrintWriter;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.util.ResourceBundle;
 
 public class getProblemHdrs extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -34,16 +36,11 @@ public class getProblemHdrs extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		Logger logger = (Logger) session.getAttribute("logger");
-		//ResourceBundle rb = (ResourceBundle) session.getAttribute("rb");
+		ResourceBundle rb = (ResourceBundle) session.getAttribute("rb");
 
 		logger.setLevel(Level.DEBUG);
 		
 		logger.debug("getProblemHdrs servlet starting");			
-
-//		String experimentID = "";
-//		if (request.getParameter("experimentID") != null) {
-//			experimentID = request.getParameter("experimentID");
-//		}
 
 		
 		String problemId = "";

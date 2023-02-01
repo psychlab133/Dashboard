@@ -37,7 +37,7 @@
 
   <context-param>
         <param-name>dbUrl</param-name>
-        <param-value>jdbc:mysql://graspablefh2t.c1s9301aopbb.us-east-2.rds.amazonaws.com:3306/fh2tdev</param-value>
+        <param-value>jdbc:mysql://fromheretothere.cwuys1bpsuvb.us-east-2.rds.amazonaws.com:3306/fh2tdev</param-value>
     </context-param>
 
   <context-param>

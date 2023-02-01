@@ -39,11 +39,6 @@ public class getProblemSankey extends HttpServlet {
 		
 		logger.debug("getProblemSankey servlet starting");			
 
-		String experimentID = "";
-		if (request.getParameter("experimentID") != null) {
-			experimentID = request.getParameter("experimentID");
-		}
-
 		String str = "FileNotFound";
 		String problemId = "";
 		String filter="";
