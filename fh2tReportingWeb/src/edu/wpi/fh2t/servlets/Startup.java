@@ -108,7 +108,6 @@ public class Startup extends HttpServlet {
 				System.out.println("Init Parameter: " + s + "=" + ctx.getInitParameter(s));
 			}
 		}
-		
 		try {
 			ResourceBundle rb = ResourceBundle.getBundle("fh2tReporting");
 			String str = rb.getString("title");
@@ -227,15 +226,14 @@ public class Startup extends HttpServlet {
 
 	public void init(String realPath) {
 		// TODO Auto-generated method stub
-	
 		logger = Logger.getLogger("MyLogger");
 
 		try {	
 		    //PropertiesConfigurator is used to configure logger from properties file
 
 			
-			
-			PropertyConfigurator.configure("C:/WPI/FH2T/Efficacy/fh2tReportingWeb/WebContent/WEB-INF/classes/log4j.properties");
+			String filePath = realPath + "WebContent\\WEB-INF\\classes\\log4j.properties";
+			PropertyConfigurator.configure(filePath);
 
 			logger.setLevel(Level.DEBUG);
 		    

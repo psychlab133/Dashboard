@@ -54,30 +54,44 @@ public class getProblemTreeMap extends HttpServlet {
 				problemId = "0" + problemId;
 			}
 		}
-		if (request.getParameter("expAbbr") != null) {
-			filter = request.getParameter("expAbbr");
-		}
-		else {
-			if (session.getAttribute("expAbbr") != null) {
-				filter = (String) session.getAttribute("expAbbr");
+		if(request.getParameter("filter")!=null) {
+			filter = request.getParameter("filter");
+			logger.debug("From parameter filter = " + filter);
+		} else {
+			if (request.getParameter("expAbbr") != null) {
+				filter = request.getParameter("expAbbr");
+				logger.debug("From parameter expAbbr = " + filter);
 			}
 			else {
-				filter = "FS";
+				if (session.getAttribute("expAbbr") != null) {
+					filter = (String) session.getAttribute("expAbbr");
+					logger.debug("From session expAbbr = " + filter);
+				}
+				else {
+					filter = "FS";
+					logger.debug("default = " + filter);
+				}
 			}
-		}			
+		}
+		
+		
+			
 	    String relativePath = getServletContext().getRealPath("");
-
+	    logger.debug("Filter=" + filter);
 		String filePath = relativePath + "images\\problem_" + problemId + "_Treemap_" + filter + ".png";
-	    System.out.println(filePath);
-		logger.debug(filePath);
+		logger.debug("Treemap file path = " + filePath);
 		try {
 			File f = new File(filePath);
 			if(f.exists() && !f.isDirectory()) { 
 				str = "treeMap";
+			} else {
+				logger.debug("Treemap image not found, trying to generate");
+				
 			}
 		}
 		catch (Exception e) {
 			logger.error(e.getMessage());
+			
 		}
 		out.print(str);
 		logger.debug("result is " + str);

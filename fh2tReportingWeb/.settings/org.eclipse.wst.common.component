@@ -2,7 +2,7 @@
     <wb-module deploy-name="fh2tReportingWeb">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <property name="context-root" value="fh2tReportingWeb"/>
         <property name="java-output-path" value="/fh2tReportingWeb/build/classes"/>
+        <property name="context-root" value="fh2tReportingWeb_dev"/>
     </wb-module>
 </project-modules>
