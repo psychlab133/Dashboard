@@ -1174,7 +1174,7 @@ function debugAlert(msg) {
       <div class="container">
         <div class="row">
           <div class="col-xs-12 text-center">
-            <p class="glyphicon glyphicon-copyright-mark"> 2019 WPI</p>
+            <p class="glyphicon glyphicon-copyright-mark"> <%=rb.getString("copyright_short")%></p>
           </div>
         </div>
       </div>
