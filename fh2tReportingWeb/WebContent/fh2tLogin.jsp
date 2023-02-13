@@ -295,7 +295,7 @@ else {
                     placeholder="Enter username" tabindex="1">
                 </div>
                 <div class="form-group col-sm-12">
-                  <input type="text" class="form-control form-control-sm mr-1" id="inputPassword"
+                  <input type="password" class="form-control form-control-sm mr-1" id="inputPassword"
                     placeholder="Password" tabindex="2">
                 </div>
              </div>
