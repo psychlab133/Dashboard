@@ -102,11 +102,12 @@ public class getProblemAvgs extends HttpServlet {
 		}
 		else {
 			mongoClient = new MongoClient("0.0.0.0", 7010);
-		}		logger.debug("MongoClient created");
+		}		
+		logger.debug("MongoClient created");
 		MongoDatabase experimentDB = mongoClient.getDatabase("gm-logs");
 		logger.debug("User database=" + experimentDB.getName());
 
-
+		averagesCollectionName = "2020_01_31_wpi_ies_study_fall_19_Sample_average";
 		MongoCollection<Document> avgCollection = (MongoCollection <Document>) experimentDB.getCollection(averagesCollectionName);
 		
 		boolean needsComma = false;

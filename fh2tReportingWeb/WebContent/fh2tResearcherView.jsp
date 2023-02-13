@@ -1033,11 +1033,8 @@ logger.setLevel(Level.INFO);
           xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
         xmlhttp.onreadystatechange = function () {
-          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-
-       	  
-              var metrics = JSON.parse(xmlhttp.responseText);
-              //alert(xmlhttp.responseText);
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {    	  
+            var metrics = JSON.parse(xmlhttp.responseText);
  			if (metrics.Students == 0){
  				$('#studentModal').modal('toggle');
  			}else
@@ -1046,6 +1043,7 @@ logger.setLevel(Level.INFO);
               for (x in metrics) {
   		        
             	  var theMetric = x.split("~");
+            	  console.log(theMetric[1]);
             	  if (theMetric[1] == "time_interaction") {
               		  var strMetric = metrics[x];
             		  var theValues = strMetric.split("~");
@@ -1555,7 +1553,7 @@ logger.setLevel(Level.INFO);
 					<a id='screenshotViewBtn' href='/fh2tReportingWeb/fh2tScreenshotVisualizer.jsp'  target='_blank' class='btn btn-primary btn-md ml-1' role='button'>Screenshot View</a>
 	        		<button id="sankeyBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemSan()'><%= rb.getString("flow_diagram")%></button>
 	        		<button id="treeMapBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemTree()'>TreeMap</button>
-	        		<button id="avgBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemAvgs();'>Problem Avgs</button>
+	        		<button id="avgBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemAvgs()'>Problem Avgs</button>
 	        		<button id="clearBtn"type="button" class="btn btn-danger btn-md ml-1 pull-left " onclick='clearProblemArea()'><%= rb.getString("clear")%></button>
 	    		</div>
 	    		<div class="col-sm-4">

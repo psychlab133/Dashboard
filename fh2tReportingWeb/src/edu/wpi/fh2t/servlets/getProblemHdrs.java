@@ -76,6 +76,7 @@ public class getProblemHdrs extends HttpServlet {
 			}
 			rs.close();
 		    pstmt.close();
+		    logger.debug(str);
 		} //end try
 		catch (ClassNotFoundException e1) {
 			logger.error(e1.getMessage());
