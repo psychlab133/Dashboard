@@ -1612,11 +1612,11 @@ logger.setLevel(Level.INFO);
 						</a>
 						<button id="downloadSanBtn" type="button"
 							class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "
-							onclick='downloadImage("Sankey_Filtered")'><%=rb.getString("download")%>
+							onclick='downloadImage("Sankey_Filtered")' style="display: none"><%=rb.getString("download")%>
 							<br /><%=rb.getString("sankey_dia")%></button>
 						<button id="downloadTreeBtn" type="button"
 							class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "
-							onclick='downloadImage("Treemap")'><%= rb.getString("download")%>
+							onclick='downloadImage("Treemap")' style="display: none"><%= rb.getString("download")%>
 							<br /><%= rb.getString("tree_map")%></button>
 					</div>
 	    		<div class="col-sm-4">
