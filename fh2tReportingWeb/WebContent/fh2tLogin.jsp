@@ -272,6 +272,10 @@ else {
               <a id="aboutButton" data-toggle="modal" data-target="#aboutModal">
                 <span class="glyphicon glyphicon-info-sign glyphicon-info" id="aboutButton"></span><br class="hidden-xs"><%= rb.getString("about")%></a>
             </li>
+            <li>
+            <a id="manualDownload" href="pdf/Researcher_Dashboard_User_Manual.pdf" download="Researcher Dashboard User Manual">
+                <span class="glyphicon glyphicon-download" id="manualDownload"></span><br class="hidden-xs"><%= rb.getString("user_manual")%></a>
+            </li>
           </ul><!-- #nav-list -->
         </div><!-- .collapse .navbar-collapse -->
       </div><!-- .container -->
