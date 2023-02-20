@@ -99,7 +99,6 @@ logger.setLevel(Level.INFO);
     	{"name":"schools","color":"paleturquoise"},
     	{"name":"teachers","color":"palegreen"},
     	{"name":"classrooms","color":"lemonchiffon"}
-    
     ];
        
     function save() {
@@ -144,8 +143,7 @@ logger.setLevel(Level.INFO);
           		cmd = "GetSortedList?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem;       	
            }
          	xmlhttp.open("GET", cmd, true);
-         	xmlhttp.send();
-       
+         	xmlhttp.send();  
     }
     
     function getStudents() {
@@ -278,6 +276,7 @@ logger.setLevel(Level.INFO);
    			xmlhttp.open("GET", cmd, true);
          	xmlhttp.send();          
         }
+      
         
         function getSchools() {
             var xmlhttp;
