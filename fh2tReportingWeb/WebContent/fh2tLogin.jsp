@@ -60,19 +60,19 @@ else {
   <script>
 	function TeacherPageSelected() {	
   	  var a_href = $('#selectorContinueButton').attr('href');
-  	  $('#selectorContinueButton').attr('href','/fh2tReportingWeb/fh2tTeacherView.jsp');
+  	  $('#selectorContinueButton').attr('href','/fh2tTeacherView.jsp');
   	}
   	function ResearcherPageSelected() {
    	  var a_href = $('#selectorContinueButton').attr('href');
-   	  $('#selectorContinueButton').attr('href','/fh2tReportingWeb/fh2tExperiment.jsp');
+   	  $('#selectorContinueButton').attr('href','/fh2tExperiment.jsp');
    	}
   	function AdminPageSelected() {	
    	  var a_href = $('#selectorContinueButton').attr('href');
-   	  $('#selectorContinueButton').attr('href','/fh2tReportingWeb/fh2tAdminView.jsp');
+   	  $('#selectorContinueButton').attr('href','/fh2tAdminView.jsp');
    	}
     function DeveloperPageSelected() {
   	  var a_href = $('#selectorContinueButton').attr('href');
-   	  $('#selectorContinueButton').attr('href','/fh2tReportingWeb/fh2tDeveloperView.jsp');
+   	  $('#selectorContinueButton').attr('href','/fh2tDeveloperView.jsp');
   	}
   
   function loginRequest() {
@@ -332,7 +332,7 @@ else {
 	<div class='row'>
 		<div class='col-md-5'></div>
 		<div class='col-sm-2'>
-			<a id='selectorContinueButton' href='/fh2tReportingWeb/fh2tExperiment.jsp' class='btn btn-primary btn-sm ml-1' role='button'><%= rb.getString("continue")%></a>
+			<a id='selectorContinueButton' href='/fh2tExperiment.jsp' class='btn btn-primary btn-sm ml-1' role='button'><%= rb.getString("continue")%></a>
 		</div>
 		<div class='col-md-5'></div>
 	</div>

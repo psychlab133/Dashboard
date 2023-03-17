@@ -1019,7 +1019,7 @@ function debugAlert(msg) {
                   <span class=" glyphicon fas fa-user-graduate" ></span><br class="hidden-xs">Students</a>
               </li>
              <li>
-              <a id="Button" href='/fh2tReportingWeb/index.jsp'>
+              <a id="Button" href='/index.jsp'>
                 <span class="glyphicon glyphicon-log-in"></span><br class="hidden-xs">Sign Out</a>
              </li>
             </ul><!-- #nav-list -->
@@ -1177,7 +1177,7 @@ function debugAlert(msg) {
 		</iframe>
 		</div>  	
 		<div class="col-md-4" id="vresultsView" >
-   		<iframe src="/fh2tReportingWeb/vbarchart.html" width = "100%" height = "500" frameborder="1" marginwidth = "10" marginheight = "10" scrolling = "yes">
+   		<iframe src="/vbarchart.html" width = "100%" height = "500" frameborder="1" marginwidth = "10" marginheight = "10" scrolling = "yes">
 	         Sorry your browser does not support inline frames.
 		</iframe>
 		</div>  	
@@ -1190,7 +1190,7 @@ function debugAlert(msg) {
     <div class="row">
     <div id="tester2" class="container-fluid tester">
 		<div class="col-md-12" id="hresultsView" >
-   		<iframe src="/fh2tReportingWeb/barchart.html" width = "100%" height = "400" frameborder="1" marginwidth = "10" marginheight = "10" scrolling = "yes">
+   		<iframe src="/barchart.html" width = "100%" height = "400" frameborder="1" marginwidth = "10" marginheight = "10" scrolling = "yes">
 	         Sorry your browser does not support inline frames.
 		</iframe>
 		</div>  	

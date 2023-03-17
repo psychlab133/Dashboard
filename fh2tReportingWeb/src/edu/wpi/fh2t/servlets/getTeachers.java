@@ -97,9 +97,9 @@ public class getTeachers extends HttpServlet {
 			
 			Class.forName((String) getServletContext().getInitParameter("dbClass"));
 			con = (Connection) DriverManager.getConnection ((String) getServletContext().getInitParameter("iesdbUrl"),(String) getServletContext().getInitParameter("iesdbUser"),(String) getServletContext().getInitParameter("iesdbPwd"));
-			
 			String query = "select distinct studentID, username as UNAME from usernames where studentID like '" + filter + "' and not currentClass = '' order by studentID";
 			logger.debug("query=" + query);
+			logger.debug("dbDetails=" + (String) getServletContext().getInitParameter("iesdbUrl") + "," + (String) getServletContext().getInitParameter("iesdbUser") + "," + (String) getServletContext().getInitParameter("iesdbPwd"));
 			PreparedStatement pstmt = (PreparedStatement)con.prepareStatement(query);
 //			pstmt.setString(1, filter);
 			ResultSet rs = pstmt.executeQuery(query);

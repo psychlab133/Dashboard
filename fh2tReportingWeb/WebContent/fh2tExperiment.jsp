@@ -72,7 +72,7 @@ else {
 <script>
   	function ResearcherPageSelected(evt) {
    	  var a_href = $('#selectorContinueButton').attr('href');
-   	  $('#selectorContinueButton').attr('href','/fh2tReportingWeb/fh2tResearcherView.jsp?expAddr=FS');
+   	  $('#selectorContinueButton').attr('href','/fh2tResearcherView.jsp?expAddr=FS');
    	}
 </script>
 
@@ -219,8 +219,8 @@ $(document).ready(function () {
 		  				<p id="bpad"> </p>
 		  			</div>
 					<div class='col-sm-6'>
-						<a id='selectorContinueButton' href='/fh2tReportingWeb/fh2tResearcherView.jsp' class='btn btn-primary btn-sm ml-1' role='button'><%=rb.getString("continue")%></a>
-						<a id='selectorCancelButton' href='/fh2tReportingWeb/index.jsp' type='button' class='btn btn-danger btn-sm ml-auto'><%=rb.getString("cancel")%></a>
+						<a id='selectorContinueButton' href='/fh2tResearcherView.jsp' class='btn btn-primary btn-sm ml-1' role='button'><%=rb.getString("continue")%></a>
+						<a id='selectorCancelButton' href='/index.jsp' type='button' class='btn btn-danger btn-sm ml-auto'><%=rb.getString("cancel")%></a>
 					</div>
 					<div class="col-md-3">
 		  				<p id="bpad"> </p>

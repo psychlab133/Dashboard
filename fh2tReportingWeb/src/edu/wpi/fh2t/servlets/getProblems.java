@@ -71,6 +71,8 @@ public class getProblems extends HttpServlet {
 		Connection con = null;
 		try {
 			Class.forName((String) getServletContext().getInitParameter("dbClass"));
+			logger.debug("dbClass="+(String) getServletContext().getInitParameter("dbClass"));
+			logger.debug("dbInfo="+(String) getServletContext().getInitParameter("dbUrl") +","+(String) getServletContext().getInitParameter("dbUser")+","+(String) getServletContext().getInitParameter("dbPwd"));
 			con = (Connection) DriverManager.getConnection ((String) getServletContext().getInitParameter("dbUrl"),(String) getServletContext().getInitParameter("dbUser"),(String) getServletContext().getInitParameter("dbPwd"));
 			PreparedStatement pstmt = (PreparedStatement)con.prepareStatement(query);
 			ResultSet rs = pstmt.executeQuery(query);

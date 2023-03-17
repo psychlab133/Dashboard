@@ -235,7 +235,7 @@ public class Startup extends HttpServlet {
 
 			
 			
-			PropertyConfigurator.configure("C:/WPI/FH2T/Efficacy/fh2tReportingWeb/WebContent/WEB-INF/classes/log4j.properties");
+			PropertyConfigurator.configure("C:/WPI/FH2T/Dashboard/fh2tReportingWeb/WebContent/WEB-INF/classes/log4j.properties");
 
 			logger.setLevel(Level.DEBUG);
 		    

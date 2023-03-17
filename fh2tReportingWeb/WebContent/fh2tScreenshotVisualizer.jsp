@@ -103,7 +103,7 @@ logger.setLevel(Level.INFO);
     		<div id="ScreenshotPageTitle" class="col-md-8 col-sm-12 col-xs-12v pull-left">	   
     		</div>
     		<div id="ResearchPageSignoutButton"class="col-md-2 col-sm-12 col-xs-12v pull-right">
-              	<a id="Button" href='/fh2tReportingWeb/index.jsp'>
+              	<a id="Button" href='/index.jsp'>
                 	<class="hidden-xs pull-right"><%= rb.getString("sign_out")%></a>
     		</div>	
     	</div>
