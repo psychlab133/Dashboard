@@ -958,7 +958,7 @@ function debugAlert(msg) {
                   <span class=" glyphicon fas fa-user-graduate" ></span><br class="hidden-xs">Students</a>
               </li>
              <li>
-              <a id="Button" href='/fh2tReportingWeb/index.jsp'>
+              <a id="Button" href='/index.jsp'>
                 <span class="glyphicon glyphicon-log-in"></span><br class="hidden-xs">Sign Out</a>
              </li>
             </ul><!-- #nav-list -->

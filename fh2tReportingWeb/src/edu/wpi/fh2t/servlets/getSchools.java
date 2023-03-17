@@ -90,20 +90,19 @@ public class getSchools extends HttpServlet {
 		out.print("<div><select id='schoolsSelections' class='custom-select' size='0' min-width:90%; onchange=setSchool();>");
 		
 		str = "<option style='background-color:white;' value=''>Select School</option>";
-
 		MongoClient mongoClient = new MongoClient("localhost", 7010);
 		logger.debug("MongoClient created");
 		MongoDatabase experimentDB = mongoClient.getDatabase("gm-logs");
 		logger.debug("User database=" + experimentDB.getName());
 		MongoCollection<Document> collection = (MongoCollection <Document>) experimentDB.getCollection(collectionName);
-
+		//logger.debug("User database=" + experimentDB.getName());
 //		String query = "select studentID as SID, username, currentClass as Class from usernames WHERE studentID like '" + filter + "' and not currentClass = '';";		
 		Connection con = null;
 		try {
 			
 			Class.forName((String) getServletContext().getInitParameter("dbClass"));
 			con = (Connection) DriverManager.getConnection ((String) getServletContext().getInitParameter("iesdbUrl"),(String) getServletContext().getInitParameter("iesdbUser"),(String) getServletContext().getInitParameter("iesdbPwd"));
-			
+			logger.debug("dbInfo="+(String) getServletContext().getInitParameter("iesdbUrl") +","+(String) getServletContext().getInitParameter("iesdbUser")+","+(String) getServletContext().getInitParameter("iesdbPwd"));
 			String query = "select distinct studentID, username as UNAME from usernames where studentID like '" + filter + "' and not currentClass = '' order by studentID";
 			logger.debug("query=" + query);
 			PreparedStatement pstmt = (PreparedStatement)con.prepareStatement(query);
@@ -220,7 +219,6 @@ public class getSchools extends HttpServlet {
 			metric = (Document) iterator.next();
 			sortedStudent = (String) metric.get("studentID");
 			sortedSchool = studentIDList.get(userNameList.indexOf(sortedStudent));
-			
 			if (!sortedSchoolList.contains(sortedSchool)) {
 				sortedSchoolList.add(studentIDList.get(userNameList.indexOf(sortedStudent))); //(ArrayList) listWithDuplicateValues.stream().distinct().collect(Collectors.toList());				
 			}

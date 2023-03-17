@@ -14,6 +14,7 @@
 
 <% 
 session = request.getSession();
+// TODO: need to add null pointer check here. Redirect to index if null
 ResourceBundle rb = (ResourceBundle) session.getAttribute("rb");
 Logger logger = (Logger) session.getAttribute("logger");
 logger.setLevel(Level.INFO);
@@ -864,9 +865,9 @@ logger.setLevel(Level.INFO);
 		
 		
 		function drawProblemTree(){
-			console.log("drawProblemTree");
+			//console.log("drawProblemTree");
 			var problemNbr = 'Pb_'+currentProblem+'_'+experimentAbbr;
-			console.log(problemNbr + " for draw problem tree");
+			//console.log(problemNbr + " for draw problem tree");
 			// same DOM obj as the sankeyImgInt
 			sankeyImg = document.getElementById("sankeyImgInt");
 			Plotly.d3.json('json/'+problemNbr+'.json', function (fig) {
@@ -880,7 +881,7 @@ logger.setLevel(Level.INFO);
 	            		  var expr_ascii_count = first_step_map.get(problem_list[i].expr_ascii)
 	            		  if (expr_ascii_count == undefined){ // add to the map
 	            			  first_step_map.set(problem_list[i].expr_ascii,1)
-	            			  console.log(first_step_map.get(problem_list[i].expr_ascii));
+	            			  //console.log(first_step_map.get(problem_list[i].expr_ascii));
 	            		  } else{ // increment count by 1
 	            			  first_step_map.set(problem_list[i].expr_ascii,expr_ascii_count+1)
 	            		  }
@@ -889,10 +890,10 @@ logger.setLevel(Level.INFO);
 	            var labels = Array.from(first_step_map.keys());
 	            var values = Array.from(first_step_map.values());
 	            var parents = Array(labels.length).fill("");
-	            console.log(labels);
-	            console.log(parents);
-	            console.log(values);
-	            console.log(parent_count);
+	            //console.log(labels);
+	            //console.log(parents);
+	            //console.log(values);
+	            //console.log(parent_count);
 	            var data = [{
 	                type: "treemap",
 	                labels: labels,
@@ -913,7 +914,6 @@ logger.setLevel(Level.INFO);
 	                }
 
 	               Plotly.newPlot(sankeyImg, data, layout);
-	            
 			});
 			
 		}
@@ -975,8 +975,7 @@ logger.setLevel(Level.INFO);
        function getProblemTreeMap() {
            console.log("getProblemTreeMap");
            // TODO: remove after testing 
-     
-           
+
     	   var xmlhttp;
            //alert("getProblemTreeMap");
 
@@ -1226,8 +1225,6 @@ logger.setLevel(Level.INFO);
 
     
     function clearWorkArea() {
-		
-		
 		//currentSchool = "";
 		currentTeacher = "";
 	    currentClassroom = "";
@@ -1317,7 +1314,7 @@ logger.setLevel(Level.INFO);
     		currentSchool = x.substring(3,5);
     	}else{
     		currentSchool = x.substring(2,4);
-    	}    	
+    	}   
     	currentTeacher = "";
     	currentClassroom = "";
     	currentStudent = "";
@@ -1466,7 +1463,7 @@ logger.setLevel(Level.INFO);
     		<div id="ResearchPageTitle" class="col-md-6 col-sm-12 col-xs-12v pull-left">	   
     		</div>
     		<div id="ResearchPageSignoutButton"class="col-md-2 col-sm-12 col-xs-12v pull-right">
-              	<a id="Button" href='/fh2tReportingWeb/index.jsp'>
+              	<a id="Button" href='/index.jsp'>
                 	<class="hidden-xs pull-right"><%= rb.getString("sign_out")%></a>
     		</div>	
     	</div>
@@ -1552,7 +1549,7 @@ logger.setLevel(Level.INFO);
 					</div>
 	        		<button id="visualizerBtn" type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='setWideScreen(0);setupTrialVisualizer()'><%= rb.getString("visualize")%></button>
 	        		<button id="wideViewBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left hidden" onclick='setWideScreen(1);setupTrialVisualizer()'><%= rb.getString("wide_view")%></button>
-					<a id='screenshotViewBtn' href='/fh2tReportingWeb/fh2tScreenshotVisualizer.jsp'  target='_blank' class='btn btn-primary btn-md ml-1' role='button'>Screenshot View</a>
+					<a id='screenshotViewBtn' href='/fh2tScreenshotVisualizer.jsp'  target='_blank' class='btn btn-primary btn-md ml-1' role='button'>Screenshot View</a>
 	        		<button id="sankeyBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemSan()'><%= rb.getString("flow_diagram")%></button>
 	        		<button id="treeMapBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemTree()'>TreeMap</button>
 	        		<button id="avgBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='getProblemAvgs();'>Problem Avgs</button>

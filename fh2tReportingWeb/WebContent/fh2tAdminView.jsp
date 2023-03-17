@@ -194,7 +194,7 @@ function toggleRolesModal() {
                 <span class="glyphicon glyphicon-user" id="UserMaintButton"></span><br class="hidden-xs"><%= rb.getString("users")%></a>
             </li>
             <li >
-              <a id="Button" href='/fh2tReportingWeb/index.jsp'">
+              <a id="Button" href='/index.jsp'>
                 <span class="glyphicon glyphicon-log-out" id="SignOutButton"></span><br class="hidden-xs"><%= rb.getString("sign_out")%></a>
             </li>
           </ul><!-- #nav-list -->
