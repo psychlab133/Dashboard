@@ -48,8 +48,8 @@ public class getExperiments extends HttpServlet {
 //		out.print("<div class='row'><div class='col-4 selection-header'><h4>" + rb.getString("experiments") + "</h4></div></div><div class='row'><div class='col-4'>");	
 
 		str += "<select id='experimentSelections' class='custom-select' size='5'  onchange=setExperiment();>";
-		str += "<option style='background-color:white;' value='FS~wpi_ies_study_fall_19'>FGA Fall 2019</option>";
-		str += "<option style='background-color:white;' value='WS~wpi_ies_study_fall_19'>IES WMA - Fall 2019</option>";
+//		str += "<option style='background-color:white;' value='FS~wpi_ies_study_fall_19'>FGA Fall 2019</option>";
+//		str += "<option style='background-color:white;' value='WS~wpi_ies_study_fall_19'>IES WMA - Fall 2019</option>";
 		str += "<option style='background-color:white;' value='F7S~wpi_ies_study_fall_20'>IES Efficacy 2020</option>";
 		str += "</select>";
 
