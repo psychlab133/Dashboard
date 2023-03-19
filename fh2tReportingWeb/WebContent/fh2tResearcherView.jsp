@@ -208,9 +208,8 @@ logger.setLevel(Level.INFO);
 	        $("#getStudentsBtn").show();
         }
     
-    
-    function getClassrooms() {
-        var xmlhttp;
+    function getStudentData(){
+    	var xmlhttp;
         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
           xmlhttp = new XMLHttpRequest();
         }
@@ -218,10 +217,16 @@ logger.setLevel(Level.INFO);
           xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
         xmlhttp.onreadystatechange = function () {
-          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {          
-            document.getElementById("ClassroomSelection").innerHTML = xmlhttp.responseText;
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        	  var data = JSON.parse(xmlhttp.responseText);
+              console.log(data);
+	          document.getElementById("ClassroomSelection").innerHTML = data["class"];
+	          document.getElementById("SchoolSelection").innerHTML = data["school"];
+	          document.getElementById("TeacherSelection").innerHTML = data["teacher"];
+	            
+			// TODO: integrate later
             getSortedList();
-            //getStudents();
+
           }
         };
         
@@ -229,90 +234,126 @@ logger.setLevel(Level.INFO);
         	filter = experimentAbbr;
         }
         //alert("Class filter " + filter);
-       	currentTableNbr = CLASSROOMS;
-    	
         var cmd = "";
+        // need to add in current 
         if (currentProblem == "") {
-       		cmd = "GetClassrooms?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter;
+       		cmd = "GetStudentData?filter=" + filter;
         }
         else {
-       		cmd = "GetClassrooms?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem;       	
+       		cmd = "GetStudentData?filter=" + filter + "\&problemId=" + currentProblem;       	
         }
-		xmlhttp.open("GET", cmd, true);
+        cmd+="\&claColor=" + tables[CLASSROOMS].color;
+        cmd+="\&schColor=" + tables[SCHOOLS].color;
+        cmd+="\&teaColor=" + tables[TEACHERS].color;
+        xmlhttp.open("GET", cmd, true);
        	xmlhttp.send();
+    }
+    
+    
+//     function getClassrooms() {
+//         var xmlhttp;
+//         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+//           xmlhttp = new XMLHttpRequest();
+//         }
+//         else {// code for IE6, IE5
+//           xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+//         }
+//         xmlhttp.onreadystatechange = function () {
+//           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {          
+//             document.getElementById("ClassroomSelection").innerHTML = xmlhttp.responseText;
+//             getSortedList();
+//             //getStudents();
+//           }
+//         };
         
-      }
+//         if (filter.length == 0) {
+//         	filter = experimentAbbr;
+//         }
+//         //alert("Class filter " + filter);
+//        	currentTableNbr = CLASSROOMS;
+    	
+//         var cmd = "";
+//         if (currentProblem == "") {
+//        		cmd = "GetClassrooms?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter;
+//         }
+//         else {
+//        		cmd = "GetClassrooms?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem;       	
+//         }
+// 		xmlhttp.open("GET", cmd, true);
+//        	xmlhttp.send();
+        
+//       }
 
  
-      function getTeachers() {
-          var xmlhttp;
-          //alert("getTeachers");
+//       function getTeachers() {
+//           var xmlhttp;
+//           //alert("getTeachers");
 
-          if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp = new XMLHttpRequest();
-          }
-          else {// code for IE6, IE5
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-          }
-          xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {          
-              document.getElementById("TeacherSelection").innerHTML = xmlhttp.responseText;
-              getClassrooms();
-            }
-          };
+//           if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+//             xmlhttp = new XMLHttpRequest();
+//           }
+//           else {// code for IE6, IE5
+//             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+//           }
+//           xmlhttp.onreadystatechange = function () {
+//             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {          
+//               document.getElementById("TeacherSelection").innerHTML = xmlhttp.responseText;
+//               getClassrooms();
+//             }
+//           };
           
-          if (filter.length == 0) {
-          	filter = experimentAbbr;
-          }
-          	//alert("Teacher filter " + filter);
-            currentTableNbr = TEACHERS;    	
-            var cmd = "";
-            if (currentProblem == "") {
-           		cmd = "GetTeachers?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter;
-            }
-            else {
-           		cmd = "GetTeachers?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem;       	
-            }
-   			//alert(cmd);
-   			xmlhttp.open("GET", cmd, true);
-         	xmlhttp.send();          
-        }
+//           if (filter.length == 0) {
+//           	filter = experimentAbbr;
+//           }
+//           	//alert("Teacher filter " + filter);
+//             currentTableNbr = TEACHERS;    	
+//             var cmd = "";
+//             if (currentProblem == "") {
+//            		cmd = "GetTeachers?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter;
+//             }
+//             else {
+//            		cmd = "GetTeachers?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem;       	
+//             }
+//    			//alert(cmd);
+//    			xmlhttp.open("GET", cmd, true);
+//          	xmlhttp.send();          
+//         }
       
         
-        function getSchools() {
-            var xmlhttp;
-            //alert("getSchools");
+//         function getSchools() {
+//             var xmlhttp;
+//             //alert("getSchools");
 
-            if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-              xmlhttp = new XMLHttpRequest();
-            }
-            else {// code for IE6, IE5
-              xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            xmlhttp.onreadystatechange = function () {
-              if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {          
-                document.getElementById("SchoolSelection").innerHTML = xmlhttp.responseText;
-                getTeachers();
-              }
-            };
+//             if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+//               xmlhttp = new XMLHttpRequest();
+//             }
+//             else {// code for IE6, IE5
+//               xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+//             }
+//             xmlhttp.onreadystatechange = function () {
+//               if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {          
+//                 document.getElementById("SchoolSelection").innerHTML = xmlhttp.responseText;
+//                 getTeachers();
+//               }
+//             };
 
-            if (filter.length == 0) {
-            	filter = experimentAbbr;
-            }
-            //alert("School filter " + filter);
-            currentTableNbr = SCHOOLS;
-            var cmd = "";
-            if (currentProblem == "") {
-           		cmd = "GetSchools?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter;
-            }
-            else {
-           		cmd = "GetSchools?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem;       	
-            }
-   			//alert(cmd);
-           	xmlhttp.open("GET", cmd, true);
-           	xmlhttp.send();
+//             if (filter.length == 0) {
+//             	filter = experimentAbbr;
+//             }
+//             //alert("School filter " + filter);
+//             currentTableNbr = SCHOOLS;
+//             var cmd = "";
+//             if (currentProblem == "") {
+//            		cmd = "GetSchools?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter;
+//             }
+//             else {
+//            		cmd = "GetSchools?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem;       	
+//             }
+//    			//alert(cmd);
+//            	xmlhttp.open("GET", cmd, true);
+//            	xmlhttp.send();
             
-          }
+//           }
 
 
 
@@ -1385,7 +1426,7 @@ logger.setLevel(Level.INFO);
     	sortOrder = '';
     	
 	    $("#screenshotViewBtn").hide();
-		getSchools();
+	    getStudentData();
 		
 		document.getElementById("sankeyView").innerHTML = " ";
 		$("#sankeyWindow").show();

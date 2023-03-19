@@ -1,401 +1,325 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
-                      http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-         version="3.1">
-  
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
   <context-param>
-        <param-name>loggingLevel</param-name>
-        <param-value>DEBUG</param-value>
-    </context-param>
-
+    <param-name>loggingLevel</param-name>
+    <param-value>DEBUG</param-value>
+  </context-param>
   <context-param>
-        <param-name>gm-DBName</param-name>
-        <param-value>gm-logs</param-value>
-    </context-param>
-
+    <param-name>gm-DBName</param-name>
+    <param-value>gm-logs</param-value>
+  </context-param>
   <context-param>
-        <param-name>gm-trials</param-name>
-        <param-value>_trials</param-value>
-    </context-param>
-
+    <param-name>gm-trials</param-name>
+    <param-value>_trials</param-value>
+  </context-param>
   <context-param>
-        <param-name>gm-data</param-name>
-        <param-value>_data</param-value>
-    </context-param>
-
+    <param-name>gm-data</param-name>
+    <param-value>_data</param-value>
+  </context-param>
   <context-param>
-        <param-name>gm-aggregation</param-name>
-        <param-value>_aggregation_table</param-value>
-    </context-param>
-
+    <param-name>gm-aggregation</param-name>
+    <param-value>_aggregation_table</param-value>
+  </context-param>
   <context-param>
-        <param-name>gm-averages</param-name>
-        <param-value>_Sample_average</param-value>
-    </context-param>
-
+    <param-name>gm-averages</param-name>
+    <param-value>_Sample_average</param-value>
+  </context-param>
   <context-param>
-        <param-name>dbUrl</param-name>
-        <param-value>jdbc:mysql://fromheretothere.cwuys1bpsuvb.us-east-2.rds.amazonaws.com:3306/fh2tdev</param-value>
-    </context-param>
-
+    <param-name>dbUrl</param-name>
+    <param-value>jdbc:mysql://fromheretothere.cwuys1bpsuvb.us-east-2.rds.amazonaws.com:3306/fh2tdev</param-value>
+  </context-param>
   <context-param>
-        <param-name>dbClass</param-name>
-        <param-value>com.mysql.jdbc.Driver</param-value>
-    </context-param>
- 
-   <context-param>
-        <param-name>dbUser</param-name>
-        <param-value>graspablemaster</param-value>
-    </context-param>
-
-   <context-param>
-        <param-name>dbSchema</param-name>
-        <param-value>fh2tdev</param-value>
-    </context-param>
-
-   <context-param>
-        <param-name>dbPwd</param-name>
-        <param-value>gmw86d4nhie5ss</param-value>
-    </context-param>
-
+    <param-name>dbClass</param-name>
+    <param-value>com.mysql.jdbc.Driver</param-value>
+  </context-param>
   <context-param>
-        <param-name>iesdbUrl</param-name>
-        <param-value>jdbc:mysql://inception-db.cfevqzf0hgpl.us-east-2.rds.amazonaws.com:3308/iesfull</param-value>
-    </context-param>
-
+    <param-name>dbUser</param-name>
+    <param-value>graspablemaster</param-value>
+  </context-param>
   <context-param>
-        <param-name>iesdbClass</param-name>
-        <param-value>com.mysql.jdbc.Driver</param-value>
-    </context-param>
-
-   <context-param>
-        <param-name>iesdbUser</param-name>
-        <param-value>psychlab</param-value>
-    </context-param>
-
-   <context-param>
-        <param-name>iesdbSchema</param-name>
-        <param-value>iesfull</param-value>
-    </context-param>
-
-   <context-param>
-        <param-name>iesdbPwd</param-name>
-        <param-value>erottmar123</param-value>
-    </context-param>
-
-
+    <param-name>dbSchema</param-name>
+    <param-value>fh2tdev</param-value>
+  </context-param>
   <context-param>
-        <param-name>rptdbUrl</param-name>
-        <param-value>jdbc:mysql://wpi-fh2t-db.cfevqzf0hgpl.us-east-2.rds.amazonaws.com:3308/wpifh2tdb</param-value>
-    </context-param>
-
+    <param-name>dbPwd</param-name>
+    <param-value>gmw86d4nhie5ss</param-value>
+  </context-param>
   <context-param>
-        <param-name>rptdbClass</param-name>
-        <param-value>com.mysql.jdbc.Driver</param-value>
-    </context-param>
-
-   <context-param>
-        <param-name>rptdbUser</param-name>
-        <param-value>psychlab</param-value>
-    </context-param>
-
-   <context-param>
-        <param-name>rptdbSchema</param-name>
-        <param-value>wpifh2tdb</param-value>
-    </context-param>
-
-   <context-param>
-        <param-name>rptdbPwd</param-name>
-        <param-value>erottmar123</param-value>
-    </context-param>
-
-
-  
+    <param-name>iesdbUrl</param-name>
+    <param-value>jdbc:mysql://inception-db.cfevqzf0hgpl.us-east-2.rds.amazonaws.com:3308/iesfull</param-value>
+  </context-param>
+  <context-param>
+    <param-name>iesdbClass</param-name>
+    <param-value>com.mysql.jdbc.Driver</param-value>
+  </context-param>
+  <context-param>
+    <param-name>iesdbUser</param-name>
+    <param-value>psychlab</param-value>
+  </context-param>
+  <context-param>
+    <param-name>iesdbSchema</param-name>
+    <param-value>iesfull</param-value>
+  </context-param>
+  <context-param>
+    <param-name>iesdbPwd</param-name>
+    <param-value>erottmar123</param-value>
+  </context-param>
+  <context-param>
+    <param-name>rptdbUrl</param-name>
+    <param-value>jdbc:mysql://wpi-fh2t-db.cfevqzf0hgpl.us-east-2.rds.amazonaws.com:3308/wpifh2tdb</param-value>
+  </context-param>
+  <context-param>
+    <param-name>rptdbClass</param-name>
+    <param-value>com.mysql.jdbc.Driver</param-value>
+  </context-param>
+  <context-param>
+    <param-name>rptdbUser</param-name>
+    <param-value>psychlab</param-value>
+  </context-param>
+  <context-param>
+    <param-name>rptdbSchema</param-name>
+    <param-value>wpifh2tdb</param-value>
+  </context-param>
+  <context-param>
+    <param-name>rptdbPwd</param-name>
+    <param-value>erottmar123</param-value>
+  </context-param>
   <servlet id="Servlet_S">
-  	<servlet-name>Startup</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.Startup</servlet-class>
-  	<load-on-startup>1</load-on-startup>
+    <servlet-name>Startup</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.Startup</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
-  
   <servlet-mapping id="Startup">
-  	<servlet-name>Startup</servlet-name>
-	<url-pattern>/Startup</url-pattern>
+    <servlet-name>Startup</servlet-name>
+    <url-pattern>/Startup</url-pattern>
   </servlet-mapping>
-  
   <servlet id="Servlet_0">
-  	<servlet-name>GetColumns</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getColumns</servlet-class>
+    <servlet-name>GetColumns</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getColumns</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetColumns">
-  	<servlet-name>GetColumns</servlet-name>
-	<url-pattern>/GetColumns</url-pattern>
+    <servlet-name>GetColumns</servlet-name>
+    <url-pattern>/GetColumns</url-pattern>
   </servlet-mapping>
-  
   <servlet id="Servlet_1">
-  	<servlet-name>GetStudents</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getStudents</servlet-class>
+    <servlet-name>GetStudents</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getStudents</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetStudents">
-  	<servlet-name>GetStudents</servlet-name>
-	<url-pattern>/GetStudents</url-pattern>
+    <servlet-name>GetStudents</servlet-name>
+    <url-pattern>/GetStudents</url-pattern>
   </servlet-mapping>
-  
   <servlet id="Servlet_2">
-  	<servlet-name>GetProblems</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getProblems</servlet-class>
+    <servlet-name>GetProblems</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getProblems</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetProblems">
-  	<servlet-name>GetProblems</servlet-name>
-	<url-pattern>/GetProblems</url-pattern>
+    <servlet-name>GetProblems</servlet-name>
+    <url-pattern>/GetProblems</url-pattern>
   </servlet-mapping>
-  
   <servlet id="Servlet_3">
-  	<servlet-name>GetWorlds</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getWorlds</servlet-class>
+    <servlet-name>GetWorlds</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getWorlds</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetWorlds">
-  	<servlet-name>GetWorlds</servlet-name>
-	<url-pattern>/GetWorlds</url-pattern>
+    <servlet-name>GetWorlds</servlet-name>
+    <url-pattern>/GetWorlds</url-pattern>
   </servlet-mapping>
-  
   <servlet id="Servlet_4">
-  	<servlet-name>GetAttempts</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getAttempts</servlet-class>
+    <servlet-name>GetAttempts</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getAttempts</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetAttempts">
-  	<servlet-name>GetAttempts</servlet-name>
-	<url-pattern>/GetAttempts</url-pattern>
+    <servlet-name>GetAttempts</servlet-name>
+    <url-pattern>/GetAttempts</url-pattern>
   </servlet-mapping>
-  
   <servlet id="Servlet_10">
-  	<servlet-name>RunTestQuery</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.runTestQuery</servlet-class>
+    <servlet-name>RunTestQuery</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.runTestQuery</servlet-class>
   </servlet>
-  
   <servlet-mapping id="RunTestQuery">
-  	<servlet-name>RunTestQuery</servlet-name>
-	<url-pattern>/RunTestQuery</url-pattern>
+    <servlet-name>RunTestQuery</servlet-name>
+    <url-pattern>/RunTestQuery</url-pattern>
   </servlet-mapping>
-
   <servlet id="Servlet_11">
-  	<servlet-name>LoginRequest</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.loginRequest</servlet-class>
+    <servlet-name>LoginRequest</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.loginRequest</servlet-class>
   </servlet>
-  
   <servlet-mapping id="LoginRequest">
-  	<servlet-name>LoginRequest</servlet-name>
-	<url-pattern>/LoginRequest</url-pattern>
+    <servlet-name>LoginRequest</servlet-name>
+    <url-pattern>/LoginRequest</url-pattern>
   </servlet-mapping>
-
   <servlet id="Servlet_12">
-  	<servlet-name>GetReports</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getReports</servlet-class>
+    <servlet-name>GetReports</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getReports</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetReports">
-  	<servlet-name>GetReports</servlet-name>
-	<url-pattern>/GetReports</url-pattern>
+    <servlet-name>GetReports</servlet-name>
+    <url-pattern>/GetReports</url-pattern>
   </servlet-mapping>
-
   <servlet id="Servlet_13">
-  	<servlet-name>GetTrials</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getTrials</servlet-class>
+    <servlet-name>GetTrials</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getTrials</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetTrials">
-  	<servlet-name>GetTrials</servlet-name>
-	<url-pattern>/GetTrials</url-pattern>
+    <servlet-name>GetTrials</servlet-name>
+    <url-pattern>/GetTrials</url-pattern>
   </servlet-mapping>
-  
   <servlet id="Servlet_14">
-  	<servlet-name>GetTrialEvents</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getTrialEvents</servlet-class>
+    <servlet-name>GetTrialEvents</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getTrialEvents</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetTrialEvents">
-  	<servlet-name>GetTrialEvents</servlet-name>
-	<url-pattern>/GetTrialEvents</url-pattern>
+    <servlet-name>GetTrialEvents</servlet-name>
+    <url-pattern>/GetTrialEvents</url-pattern>
   </servlet-mapping>
-  
   <servlet id="Servlet_15">
-  	<servlet-name>GetTrialId</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getTrialId</servlet-class>
+    <servlet-name>GetTrialId</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getTrialId</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetTrialId">
-  	<servlet-name>GetTrialId</servlet-name>
-	<url-pattern>/GetTrialId</url-pattern>
+    <servlet-name>GetTrialId</servlet-name>
+    <url-pattern>/GetTrialId</url-pattern>
   </servlet-mapping>
-  
   <servlet id="Servlet_16">
-  	<servlet-name>GetTrialMetrics</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getTrialMetrics</servlet-class>
+    <servlet-name>GetTrialMetrics</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getTrialMetrics</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetTrialMetrics">
-  	<servlet-name>GetTrialMetrics</servlet-name>
-	<url-pattern>/GetTrialMetrics</url-pattern>
+    <servlet-name>GetTrialMetrics</servlet-name>
+    <url-pattern>/GetTrialMetrics</url-pattern>
   </servlet-mapping>
-  
   <servlet id="Servlet_17">
-  	<servlet-name>GetClassrooms</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getClassrooms</servlet-class>
+    <servlet-name>GetClassrooms</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getClassrooms</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetClassrooms">
-  	<servlet-name>GetClassrooms</servlet-name>
-	<url-pattern>/GetClassrooms</url-pattern>
+    <servlet-name>GetClassrooms</servlet-name>
+    <url-pattern>/GetClassrooms</url-pattern>
   </servlet-mapping>
-  
   <servlet id="Servlet_18">
-  	<servlet-name>GetTeachers</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getTeachers</servlet-class>
+    <servlet-name>GetTeachers</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getTeachers</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetTeachers">
-  	<servlet-name>GetTeachers</servlet-name>
-	<url-pattern>/GetTeachers</url-pattern>
+    <servlet-name>GetTeachers</servlet-name>
+    <url-pattern>/GetTeachers</url-pattern>
   </servlet-mapping>
-
   <servlet id="Servlet_19">
-  	<servlet-name>RegisterUser</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.registerUser</servlet-class>
+    <servlet-name>RegisterUser</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.registerUser</servlet-class>
   </servlet>
-  
   <servlet-mapping id="RegisterUser">
-  	<servlet-name>RegisterUser</servlet-name>
-	<url-pattern>/RegisterUser</url-pattern>
+    <servlet-name>RegisterUser</servlet-name>
+    <url-pattern>/RegisterUser</url-pattern>
   </servlet-mapping>
-
   <servlet id="Servlet_20">
-  	<servlet-name>GetReport</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getReport</servlet-class>
+    <servlet-name>GetReport</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getReport</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetReport">
-  	<servlet-name>GetReport</servlet-name>
-	<url-pattern>/GetReport</url-pattern>
+    <servlet-name>GetReport</servlet-name>
+    <url-pattern>/GetReport</url-pattern>
   </servlet-mapping>
-
   <servlet id="Servlet_21">
-  	<servlet-name>GetSchools</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getSchools</servlet-class>
+    <servlet-name>GetSchools</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getSchools</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetSchools">
-  	<servlet-name>GetSchools</servlet-name>
-	<url-pattern>/GetSchools</url-pattern>
+    <servlet-name>GetSchools</servlet-name>
+    <url-pattern>/GetSchools</url-pattern>
   </servlet-mapping>
-
-  
   <servlet id="Servlet_22">
-  	<servlet-name>DownloadFile</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.downloadFile</servlet-class>
+    <servlet-name>DownloadFile</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.downloadFile</servlet-class>
   </servlet>
-  
   <servlet-mapping id="DownloadFile">
-  	<servlet-name>DownloadFile</servlet-name>
-	<url-pattern>/DownloadFile</url-pattern>
+    <servlet-name>DownloadFile</servlet-name>
+    <url-pattern>/DownloadFile</url-pattern>
   </servlet-mapping>
-
   <servlet id="Servlet_23">
-  	<servlet-name>GetProblemAvgs</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getProblemAvgs</servlet-class>
+    <servlet-name>GetProblemAvgs</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getProblemAvgs</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetProblemAvgs">
-  	<servlet-name>GetProblemAvgs</servlet-name>
-	<url-pattern>/GetProblemAvgs</url-pattern>
+    <servlet-name>GetProblemAvgs</servlet-name>
+    <url-pattern>/GetProblemAvgs</url-pattern>
   </servlet-mapping>
-
   <servlet id="Servlet_24">
-  	<servlet-name>GetProblemSankey</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getProblemSankey</servlet-class>
+    <servlet-name>GetProblemSankey</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getProblemSankey</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetProblemSankey">
-  	<servlet-name>GetProblemSankey</servlet-name>
-	<url-pattern>/GetProblemSankey</url-pattern>
+    <servlet-name>GetProblemSankey</servlet-name>
+    <url-pattern>/GetProblemSankey</url-pattern>
   </servlet-mapping>
-
   <servlet id="Servlet_25">
-  	<servlet-name>GetProblemTreeMap</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getProblemTreeMap</servlet-class>
+    <servlet-name>GetProblemTreeMap</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getProblemTreeMap</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetProblemTreeMap">
-  	<servlet-name>GetProblemTreeMap</servlet-name>
-	<url-pattern>/GetProblemTreeMap</url-pattern>
+    <servlet-name>GetProblemTreeMap</servlet-name>
+    <url-pattern>/GetProblemTreeMap</url-pattern>
   </servlet-mapping>
-
   <servlet id="Servlet_26">
-  	<servlet-name>GetExperiments</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getExperiments</servlet-class>
+    <servlet-name>GetExperiments</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getExperiments</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetExperiments">
-  	<servlet-name>GetExperiments</servlet-name>
-	<url-pattern>/GetExperiments</url-pattern>
+    <servlet-name>GetExperiments</servlet-name>
+    <url-pattern>/GetExperiments</url-pattern>
   </servlet-mapping>
-
   <servlet id="Servlet_27">
-  	<servlet-name>SaveExperimentInfo</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.saveExperimentInfo</servlet-class>
+    <servlet-name>SaveExperimentInfo</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.saveExperimentInfo</servlet-class>
   </servlet>
-  
   <servlet-mapping id="SaveExperimentInfo">
-  	<servlet-name>SaveExperimentInfo</servlet-name>
-	<url-pattern>/SaveExperimentInfo</url-pattern>
+    <servlet-name>SaveExperimentInfo</servlet-name>
+    <url-pattern>/SaveExperimentInfo</url-pattern>
   </servlet-mapping>
-
   <servlet id="Servlet_28">
-  	<servlet-name>GetDashboardUsers</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getDashboardUsers</servlet-class>
+    <servlet-name>GetDashboardUsers</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getDashboardUsers</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetDashboardUsers">
-  	<servlet-name>GetDashboardUsers</servlet-name>
-	<url-pattern>/GetDashboardUsers</url-pattern>
+    <servlet-name>GetDashboardUsers</servlet-name>
+    <url-pattern>/GetDashboardUsers</url-pattern>
   </servlet-mapping>
-
   <servlet id="Servlet_29">
-  	<servlet-name>ApproveUser</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.approveUser</servlet-class>
+    <servlet-name>ApproveUser</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.approveUser</servlet-class>
   </servlet>
-  
   <servlet-mapping id="ApproveUser">
-  	<servlet-name>ApproveUser</servlet-name>
-	<url-pattern>/ApproveUser</url-pattern>
+    <servlet-name>ApproveUser</servlet-name>
+    <url-pattern>/ApproveUser</url-pattern>
   </servlet-mapping>
-
   <servlet id="Servlet_30">
-  	<servlet-name>SendPassword</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.sendPassword</servlet-class>
+    <servlet-name>SendPassword</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.sendPassword</servlet-class>
   </servlet>
-  
   <servlet-mapping id="SendPassword">
-  	<servlet-name>SendPassword</servlet-name>
-	<url-pattern>/SendPassword</url-pattern>
+    <servlet-name>SendPassword</servlet-name>
+    <url-pattern>/SendPassword</url-pattern>
   </servlet-mapping>
-
   <servlet id="Servlet_32">
-  	<servlet-name>GetSortedList</servlet-name>
-  	<servlet-class>edu.wpi.fh2t.servlets.getSortedList</servlet-class>
+    <servlet-name>GetSortedList</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getSortedList</servlet-class>
   </servlet>
-  
   <servlet-mapping id="GetSortedList">
-  	<servlet-name>GetSortedList</servlet-name>
-	<url-pattern>/GetSortedList</url-pattern>
+    <servlet-name>GetSortedList</servlet-name>
+    <url-pattern>/GetSortedList</url-pattern>
   </servlet-mapping>
-
+  <servlet id="Servlet_33">
+    <description></description>
+    <servlet-name>GetStudentData</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getStudentData</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetStudentData</servlet-name>
+    <url-pattern>/GetStudentData</url-pattern>
+  </servlet-mapping>
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
+  
 </web-app>
