@@ -60,6 +60,7 @@ public class getStudentData extends HttpServlet {
 		String schColor = "white";
 		String claColor = "white";
 		String teaColor = "white";
+		String stuColor = "white";
 		
 		if (request.getParameter("schColor") != null) {
 			schColor = request.getParameter("schColor");			
@@ -70,6 +71,10 @@ public class getStudentData extends HttpServlet {
 		if (request.getParameter("teaColor") != null) {
 			teaColor = request.getParameter("teaColor");			
 		}
+		if (request.getParameter("stuColor") != null) {
+			stuColor = request.getParameter("stuColor");			
+		}
+		
 		
 		String filter="";
 		if (request.getParameter("filter") != null) {
@@ -98,17 +103,23 @@ public class getStudentData extends HttpServlet {
 		String str_Sch = getSelectionHeader("schools", rb);
 		String str_Tea = getSelectionHeader("teachers", rb);
 		String str_Cla = getSelectionHeader("classrooms", rb);
+		String str_Sort_by = getSelectionHeader("sortby", rb);
+		String str_Sort_order = getSelectionHeader("sortorder", rb);
+		String str_Stu= getSelectionHeader("students", rb);
+		// need to add sort by, sort order, and students
+		
 
 		String query = "";
 		if (filter.equals("FS%")) {
 			logger.debug("unfiltered");
 			query = "select student_id as SID, username as UNAME, StuID, SchID, TeaID, ClaID from dashboard_view and not ClaID = '' " +
-					"and not TeaID = '';";					
+					"and not TeaID = ''";					
 		}
 		else {
 			query = "select student_id as SID, username as UNAME, StuID, SchID, TeaID, ClaID from dashboard_view WHERE student_id like '" + filter + "' and not ClaID = '' " +
-						"and not TeaID = '';";		
+						"and not TeaID = ''";		
 		}
+		query += ";";
 		logger.debug("query=" + query);
 		Connection con = null;
 		List<String> studentIDList = new ArrayList<String>();
@@ -131,7 +142,7 @@ public class getStudentData extends HttpServlet {
 			PreparedStatement pstmt = (PreparedStatement)con.prepareStatement(query);
 			ResultSet rs = pstmt.executeQuery(query);
 			while (rs.next()) {
-				studentIDList.add(rs.getString("SID"));
+				studentIDList.add(rs.getString("StuId"));
 				userNameList.add(rs.getString("UNAME"));
 				schoolList.add(rs.getString("SchID"));
 				teacherList.add(rs.getString("TeaID"));
@@ -144,6 +155,12 @@ public class getStudentData extends HttpServlet {
 			str_Tea+=selectionEnd;
 			str_Cla+= getSelectBody(sortedStudentData.get(2),claColor); //class
 			str_Cla+=selectionEnd;
+			str_Sort_by+= getSelectBody(sortedStudentData.get(3),stuColor); //sort by
+			str_Sort_by+=selectionEnd;
+			str_Sort_order+= getSelectBody(sortedStudentData.get(4),stuColor); //sort order
+			str_Sort_order+=selectionEnd;
+			str_Stu+= getSelectBody(sortedStudentData.get(5),stuColor); //sort order
+			str_Stu+=selectionEnd;
 //		}
 		rs.close();
 	    pstmt.close();
@@ -171,6 +188,8 @@ public class getStudentData extends HttpServlet {
 				logger.error(e.fillInStackTrace());
 			}			
 		}
+		
+		// ugly code, did not want unneeded gson import but no reason to have a seperate function for this
 		String data_json = "{";
 		data_json+="\"school\":";
 		data_json+="\"";
@@ -186,6 +205,21 @@ public class getStudentData extends HttpServlet {
 		data_json+="\"";
 		data_json+=str_Cla;
 		data_json+="\"";
+		data_json+=",";
+		data_json+="\"sortby\":";
+		data_json+="\"";
+		data_json+=str_Sort_by;
+		data_json+="\"";
+		data_json+=",";
+		data_json+="\"sortorder\":";
+		data_json+="\"";
+		data_json+=str_Sort_order;
+		data_json+="\"";
+		data_json+=",";
+		data_json+="\"student\":";
+		data_json+="\"";
+		data_json+=str_Stu;
+		data_json+="\"";
 		data_json+="}";
 		out.print(data_json);
 		
@@ -199,6 +233,9 @@ public class getStudentData extends HttpServlet {
 	    List<String> sortedSchoolList = new ArrayList<String>();
 	    List<String> sortedTeacherList = new ArrayList<String>();
 	    List<String> sortedClassList = new ArrayList<String>();
+	    List<String> sortedStudentList = new ArrayList<String>();
+	    
+	    
 	    sortQueryList.add(new BasicDBObject("studentID", new BasicDBObject("$in", userNameList)));
 		String problemPrefix = "p" + problemId;
 		logger.debug("problemPrefix=" + problemPrefix);	    
@@ -211,20 +248,20 @@ public class getStudentData extends HttpServlet {
 		Iterator<Document> iterator = findIterable.iterator();
 
 		Document metric = null;
-		String sortedStudent = "";
+		String sortedUser = "";
 		String sortedSchool = "";
 		String sortedClass = "";
 		String sortedTeacher = "";
-
+		String sortedStudent = "";
+		
 		while(iterator.hasNext()) {
 			metric = (Document) iterator.next();
-			sortedStudent = (String) metric.get("studentID"); // AKA username, db calls username as studentID
-			int indexOfStudent = userNameList.indexOf(sortedStudent);
+			sortedUser = (String) metric.get("studentID"); // AKA username, db calls username as studentID
+			int indexOfStudent = userNameList.indexOf(sortedUser);
 			sortedSchool = schoolList.get(indexOfStudent);
 			sortedClass = classList.get(indexOfStudent);
 			sortedTeacher = teacherList.get(indexOfStudent);
-
-			// TODO: add color
+			sortedStudent = studentIDList.get(indexOfStudent);
 			if (!sortedSchoolList.contains(sortedSchool)) {
 				sortedSchoolList.add(sortedSchool);
 			}
@@ -233,6 +270,9 @@ public class getStudentData extends HttpServlet {
 			}
 			if (!sortedClassList.contains(sortedClass)) {
 				sortedClassList.add(sortedClass);
+			}
+			if (!sortedStudentList.contains(sortedStudent)) {
+				sortedStudentList.add(sortedStudent);
 			}
 		}
 		
@@ -249,11 +289,18 @@ public class getStudentData extends HttpServlet {
 		Collections.sort(sortedSchoolList,cmp);
 		Collections.sort(sortedTeacherList,cmp);
 		Collections.sort(sortedClassList,cmp);
+		// sort by custom sort order
+		Collections.sort(sortedStudentList,cmp);
+
 
 		List<List<String>> output = new ArrayList<>();
 		output.add(sortedSchoolList);
 		output.add(sortedTeacherList);
 		output.add(sortedClassList);
+		output.add(getSortByList());
+		output.add(getSortOrderList());
+		output.add(sortedStudentList);
+
 		return output;
 	}
 	
@@ -265,6 +312,32 @@ public class getStudentData extends HttpServlet {
 		return output;
 	}
 	
+	private List<String> getSortByList() {
+		String sortBy[] = {
+				"Number of steps",
+				"Number of go-backs",
+				"Number of resets",
+				"Step-efficiency first",
+				"Step-efficiency last",
+				"Time taken(sec)",
+				"Pause time-first",
+				"Pause time-last",
+				"Number of total errors",
+				"Number of keypad errors",
+				"Number of shaking errros",
+				"Number of snapping errors"
+				};
+		return new ArrayList<>(Arrays.asList(sortBy));
+	}
+	
+	private List<String> getSortOrderList() {
+		String sortOrder[] = {
+				"Ascending",
+				"Descending"
+		};
+		return new ArrayList<>(Arrays.asList(sortOrder));
+	}
+	
 	private String getSelectionHeader(String type, ResourceBundle rb) {
 		String returnStr = "";
 		returnStr+="<div class='row'><div class='col-4 selection-header'><h4>" + rb.getString(type) + "</h4></div></div><div class='row'><div class='col-4'>";
@@ -274,9 +347,18 @@ public class getStudentData extends HttpServlet {
 		} else if (type.equals("classrooms")) {
 			returnStr+="<div class='col-4'><select id='classroomsSelections' class='custom-select' size='1' onchange=setClassroom();>";
 			returnStr+="<option style='background-color:white;' value=''>Select Classroom</option>";
-		} else {
+		} else if (type.equals("teachers")){
 			returnStr+="<div class='col-4'><select id='teachersSelections' class='custom-select' size='1' onchange=setTeacher();>";
 			returnStr+="<option style='background-color:white;' value=''>Select Teacher</option>";
+		} else if (type.equals("students")){
+			returnStr += "<div class='col-4'><select id='usernamesSelections' class='custom-select' size='1' onchange=setStudent();>";
+			returnStr += "<option style='background-color:white;' value=''>Select Student</option>";
+		} else if (type.equals("sortby")){
+			returnStr +="<div class='col-4'><select id='sortBySelections' class='custom-select' size='0' min-width:90%; onchange=setSortedList();>";
+			returnStr +="<option style='background-color:white;' value=''></option>";
+		} else if (type.equals("sortorder")){
+			returnStr +="<div class='col-4'><select id='sortOrderSelections' class='custom-select' size='0' min-width:90%; onchange=setSortedList();>";
+			returnStr +="<option style='background-color:white;' value=''></option>";
 		}
 		return returnStr;
 	}

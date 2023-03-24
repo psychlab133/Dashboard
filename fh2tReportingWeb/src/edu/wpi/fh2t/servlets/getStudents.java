@@ -195,7 +195,7 @@ public class getStudents extends HttpServlet {
 		String metrics[] = {
 				"Number of steps",
 				"Number of go-backs",
-				"number of resets",
+				"Number of resets",
 				"Step-efficiency first",
 				"Step-efficiency last",
 				"Time taken(sec)",

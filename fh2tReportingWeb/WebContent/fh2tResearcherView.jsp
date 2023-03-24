@@ -219,13 +219,17 @@ logger.setLevel(Level.INFO);
         xmlhttp.onreadystatechange = function () {
           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         	  var data = JSON.parse(xmlhttp.responseText);
-              console.log(data);
+              console.log(data["sortby"]);
 	          document.getElementById("ClassroomSelection").innerHTML = data["class"];
 	          document.getElementById("SchoolSelection").innerHTML = data["school"];
 	          document.getElementById("TeacherSelection").innerHTML = data["teacher"];
+	          document.getElementById("SortedListSelection").innerHTML = data["sortby"];
+	          document.getElementById("SortedListSelection").innerHTML += data["sortorder"];
+	          document.getElementById("StudentSelection").innerHTML = data["student"];
 	            
-			// TODO: integrate later
-            getSortedList();
+	            
+			// TODO: make selection automatically based on filter after response
+            //getSortedList();
 
           }
         };
@@ -245,6 +249,7 @@ logger.setLevel(Level.INFO);
         cmd+="\&claColor=" + tables[CLASSROOMS].color;
         cmd+="\&schColor=" + tables[SCHOOLS].color;
         cmd+="\&teaColor=" + tables[TEACHERS].color;
+        cmd+="\&stuColor=" + tables[STUDENTS].color;
         xmlhttp.open("GET", cmd, true);
        	xmlhttp.send();
     }
