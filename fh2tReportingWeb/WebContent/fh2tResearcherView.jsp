@@ -482,7 +482,7 @@ logger.setLevel(Level.INFO);
  	                $("#visHeaderRow").show();
 //		            $("#visContentRow").show();
    	    		    $("#wide-work-area").hide();
-   	    		    iframeLine = "<iframe src='http://" + serverName + ":9000/clustervis_condensed.php?username=" + currentUser + "' width = '100%' height = '600' frameborder='2' marginwidth = '4' marginheight = '10' scrolling = 'yes'></iframe>"
+   	    		    iframeLine = "<iframe src='https://fh2tresearch.com/php/clustervis_condensed.php?username=" + currentUser + "' width = '100%' height = '600' frameborder='2' marginwidth = '4' marginheight = '10' scrolling = 'yes'></iframe>"
    	    		    document.getElementById("wideView").innerHTML =	iframeLine;
    	    			$("#wide-work-area").show();
    	    	        $("#screenshotViewBtn").show();
@@ -496,7 +496,7 @@ logger.setLevel(Level.INFO);
 		            $("#studentMetricsGrid").show();
 		            $("#problemMetricsGrid").hide();
 		   		    $("#visualizer").hide();
-   	    		    iframeLine = "<iframe src='http://" + serverName + ":9000/clustervis.php?username=" + currentUser + "' width = '100%' height = '500' frameborder='2' marginwidth = '4' marginheight = '10' scrolling = 'yes'></iframe>";
+   	    		    iframeLine = "<iframe src='https://fh2tresearch.com/php/clustervis.php?username=" + currentUser + "' width = '100%' height = '500' frameborder='2' marginwidth = '4' marginheight = '10' scrolling = 'yes'></iframe>";
 					//alert(iframeLine);
 
 					document.getElementById("resultsView").innerHTML =	iframeLine;
