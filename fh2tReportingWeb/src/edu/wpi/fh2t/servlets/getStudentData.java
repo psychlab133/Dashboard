@@ -37,6 +37,22 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 public class getStudentData extends HttpServlet {
+	// filter_ar array description
+	//	filter_ar[0] : problem number
+	//	filter_ar[1] : school number
+	//	filter_ar[2] : teacher number
+	//	filter_ar[3] : class number
+	//	filter_ar[4] : sort-by
+	//	filter_ar[5] : sort-order
+	//	filter_ar[6] : studentID
+	private static final int PROBLEMS = 0;
+	private static final int SCHOOLS = 1;
+	private static final int TEACHERS = 2;
+	private static final int CLASSROOMS = 3;
+	private static final int SORT_BY = 4;
+	private static final int SORT_ORDER = 5;
+	private static final int STUDENTS = 6;
+
 	private static final long serialVersionUID = 1L;
 	private static final String selectionEnd= "</select></div></div></div>";
 	
@@ -46,6 +62,9 @@ public class getStudentData extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		
+		long startTime = System.nanoTime();
+		
 		HttpSession session = request.getSession();
 		
 		Logger logger = (Logger) session.getAttribute("logger");
@@ -76,25 +95,18 @@ public class getStudentData extends HttpServlet {
 		}
 		
 		
-		String filter="";
+		String filter= "------";
 		if (request.getParameter("filter") != null) {
 			filter = request.getParameter("filter");
 		}
-		else {
-			if (session.getAttribute("filter") != null) {
-				filter = (String) session.getAttribute("filter");
-			}
-			else {
-				filter = "FS";
-			}
-		}	
-		filter += "%";
-		
-		String problemId = "121";
-		if (request.getParameter("problemId") != null) {
-			problemId = request.getParameter("problemId");			
+
+		String filter_ar[] = filter.split("-", -1); // parse filter Param
+
+		String problemId = filter_ar[PROBLEMS];
+		if (problemId.equals("")) {
+			problemId = "121"; // default
 		}
-		
+
 		String collectionName = (String) session.getAttribute("expAggregation");
 		logger.debug("collection  = " + collectionName);
 
@@ -110,14 +122,23 @@ public class getStudentData extends HttpServlet {
 		
 
 		String query = "";
-		if (filter.equals("FS%")) {
+		if (filter.equals("------")) {
 			logger.debug("unfiltered");
-			query = "select student_id as SID, username as UNAME, StuID, SchID, TeaID, ClaID from dashboard_view and not ClaID = '' " +
+			query = "select username as UNAME, StuID, SchID, TeaID, ClaID from dashboard_view where not ClaID = '' " +
 					"and not TeaID = ''";					
 		}
 		else {
-			query = "select student_id as SID, username as UNAME, StuID, SchID, TeaID, ClaID from dashboard_view WHERE student_id like '" + filter + "' and not ClaID = '' " +
-						"and not TeaID = ''";		
+			query = "select username as UNAME, StuID, SchID, TeaID, ClaID from dashboard_view where not ClaID = '' " +
+						"and not TeaID = ''";
+			if (!filter_ar[SCHOOLS].equals("")) {
+				query+= " and SchID = '" + filter_ar[SCHOOLS] + "'";
+			}
+			if (!filter_ar[TEACHERS].equals("")) {
+				query+= " and TeaID = '" + filter_ar[TEACHERS] + "'";		
+			}
+			if (!filter_ar[CLASSROOMS].equals("")) {
+				query+= " and ClaID = '" + filter_ar[CLASSROOMS] + "'";
+			}
 		}
 		query += ";";
 		logger.debug("query=" + query);
@@ -140,6 +161,14 @@ public class getStudentData extends HttpServlet {
 			Class.forName((String) getServletContext().getInitParameter("dbClass"));
 			con = (Connection) DriverManager.getConnection ((String) getServletContext().getInitParameter("iesdbUrl"),(String) getServletContext().getInitParameter("iesdbUser"),(String) getServletContext().getInitParameter("iesdbPwd"));
 			PreparedStatement pstmt = (PreparedStatement)con.prepareStatement(query);
+			
+			
+			
+			System.out.println("TIME BEFORE IESDB QUERY: " + (System.nanoTime() - startTime)/1000000);
+			startTime = System.nanoTime();
+			
+			
+			
 			ResultSet rs = pstmt.executeQuery(query);
 			while (rs.next()) {
 				studentIDList.add(rs.getString("StuId"));
@@ -148,7 +177,25 @@ public class getStudentData extends HttpServlet {
 				teacherList.add(rs.getString("TeaID"));
 				classList.add(rs.getString("ClaID"));
 			}
+			
+			
+			System.out.println("TIME FOR IESDB QUERY: " + (System.nanoTime() - startTime)/1000000);
+			startTime = System.nanoTime();
+			
+			
+			
+			
 			List<List<String>> sortedStudentData = getSortedList(userNameList, studentIDList, schoolList, teacherList, classList, logger, collection, problemId);
+			
+			
+			
+			
+			System.out.println("TIME FOR getSortedList function call: " + (System.nanoTime() - startTime)/1000000);
+			startTime = System.nanoTime();
+			
+			
+			
+			
 			str_Sch+= getSelectBody(sortedStudentData.get(0),schColor); //school
 			str_Sch+=selectionEnd;
 			str_Tea+= getSelectBody(sortedStudentData.get(1),teaColor); //teacher
@@ -161,6 +208,16 @@ public class getStudentData extends HttpServlet {
 			str_Sort_order+=selectionEnd;
 			str_Stu+= getSelectBody(sortedStudentData.get(5),stuColor); //sort order
 			str_Stu+=selectionEnd;
+			
+			
+			
+			System.out.println("TIME FOR PARSING DATA INTO HTML: " + (System.nanoTime() - startTime)/1000000);
+
+			
+			
+			
+			
+			
 //		}
 		rs.close();
 	    pstmt.close();
@@ -244,7 +301,14 @@ public class getStudentData extends HttpServlet {
 	    sortQueryList.add(new BasicDBObject(problemPrefix+"_completed", "1"));
 	    sortQuery.put("$and", sortQueryList);
 
+	    
+	    
+		long startTime = System.nanoTime();
 	    FindIterable<Document> findIterable = (FindIterable<Document>) collection.find(sortQuery).projection(Projections.include("studentID"));
+		System.out.println("TIME FOR MONGO QUERY: " + (System.nanoTime() - startTime)/1000000);
+
+	    
+	    
 		Iterator<Document> iterator = findIterable.iterator();
 
 		Document metric = null;

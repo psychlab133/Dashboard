@@ -98,7 +98,7 @@ public class getTrialMetrics extends HttpServlet {
 		
 		logger.debug("getTrialMetrics servlet starting");			
 		
-		String query = "select studentID as SID, username, currentClass as Class from usernames WHERE studentID = '" + student.getName() + "' and not currentClass = '';";		
+		String query = "select StuID, username, ClaID as Class from dashboard_view WHERE StuID = '" + student.getName() + "' and not ClaID = '';";		
 		logger.debug("query=" + query);
 		Connection con = null;
 		try {
@@ -108,7 +108,6 @@ public class getTrialMetrics extends HttpServlet {
 			ResultSet rs = pstmt.executeQuery(query);
 			if (rs.next()) {
 				logger.debug("getTrials for " + rs.getString("username"));			
-
 				student.setId(rs.getString("username"));
 			}
 			rs.close();

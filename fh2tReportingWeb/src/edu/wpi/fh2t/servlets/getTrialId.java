@@ -35,6 +35,7 @@ import edu.wpi.fh2t.db.Student;
 
 public class getTrialId extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final int STUDENTS = 6;
 
 	protected static String dbUrl;
 	protected static String dbClass;
@@ -72,8 +73,8 @@ public class getTrialId extends HttpServlet {
 		Student student = new Student(studentId);
 		
 		logger.debug("getTrialId servlet starting");			
-		
-		String query = "select studentID as SID, username, currentClass as Class from usernames WHERE studentID = '" + student.getName() + "' and not currentClass = '';";		
+
+		String query = "select username, ClaID, StuID from dashboard_view WHERE StuID = '" + student.getName() + "' and not ClaID = '';";		
 		logger.debug("query=" + query);
 		Connection con = null;
 		try {
