@@ -106,6 +106,17 @@ public class getStudentData extends HttpServlet {
 		if (problemId.equals("")) {
 			problemId = "121"; // default
 		}
+		
+		int sortBy = -1; 
+		if (!filter_ar[SORT_BY].equals("")) {
+			sortBy = Integer.parseInt(filter_ar[SORT_BY]);
+		}
+		
+		int sortOrder = -1;
+		if (!filter_ar[SORT_ORDER].equals("")) {
+			sortOrder = Integer.parseInt(filter_ar[SORT_ORDER]);
+		}
+		
 
 		String collectionName = (String) session.getAttribute("expAggregation");
 		logger.debug("collection  = " + collectionName);
@@ -185,7 +196,7 @@ public class getStudentData extends HttpServlet {
 			
 			
 			
-			List<List<String>> sortedStudentData = getSortedList(userNameList, studentIDList, schoolList, teacherList, classList, logger, collection, problemId);
+			List<List<String>> sortedStudentData = getSortedList(userNameList, studentIDList, schoolList, teacherList, classList, logger, collection, problemId, sortBy, sortOrder);
 			
 			
 			
@@ -283,29 +294,54 @@ public class getStudentData extends HttpServlet {
 	}
 	
 	private List<List<String>> getSortedList(List<String> userNameList, List<String> studentIDList, List<String> schoolList, 
-			List<String> teacherList, List<String> classList, Logger logger, MongoCollection<Document> collection, String problemId){
+			List<String> teacherList, List<String> classList, Logger logger, MongoCollection<Document> collection, String problemId, int sortBy, int sortOrder){
+		
+		
+		String sortMetrics[] = {
+				"_num_steps",
+				"_num_gobacks",
+				"_num_reset",
+				"_first_efficiency",
+				"_last_efficiency",
+				"_time_interaction",
+				"_time_first",
+				"_time_last",
+				"_total_error",
+				"_keypad_error",
+				"_shaking_error",
+				"_snapping_error"
+			};
+		
 		
 		List<BasicDBObject> sortQueryList = new ArrayList<BasicDBObject>();
 	    BasicDBObject sortQuery = new BasicDBObject();	    
 	    List<String> sortedSchoolList = new ArrayList<String>();
 	    List<String> sortedTeacherList = new ArrayList<String>();
 	    List<String> sortedClassList = new ArrayList<String>();
-	    List<String> sortedStudentList = new ArrayList<String>();
+	    List<String> sortedStudentIDList = new ArrayList<String>();
+	    Map<String, String> sortedStudentList = new HashMap<String, String>();
 	    
+		String problemPrefix = "p" + problemId;
+		logger.debug("problemPrefix=" + problemPrefix);	
+		String sortField = "";
 	    
 	    sortQueryList.add(new BasicDBObject("studentID", new BasicDBObject("$in", userNameList)));
-		String problemPrefix = "p" + problemId;
-		logger.debug("problemPrefix=" + problemPrefix);	    
+    
 		
+		if (sortBy != -1 && sortOrder != -1) {
+			sortField = problemPrefix + sortMetrics[sortBy];
+//		    sortQuery.put(sortField, new BasicDBObject("$ne", "N/A"));
+		    sortQueryList.add(new BasicDBObject(sortField, new BasicDBObject("$ne", "N/A")));			
+		}
+	    
+	
 
 	    sortQueryList.add(new BasicDBObject(problemPrefix+"_completed", "1"));
 	    sortQuery.put("$and", sortQueryList);
 
 	    
 	    
-		long startTime = System.nanoTime();
-	    FindIterable<Document> findIterable = (FindIterable<Document>) collection.find(sortQuery).projection(Projections.include("studentID"));
-		System.out.println("TIME FOR MONGO QUERY: " + (System.nanoTime() - startTime)/1000000);
+	    FindIterable<Document> findIterable = (FindIterable<Document>) collection.find(sortQuery).projection(Projections.include("studentID", sortField));
 
 	    
 	    
@@ -317,6 +353,7 @@ public class getStudentData extends HttpServlet {
 		String sortedClass = "";
 		String sortedTeacher = "";
 		String sortedStudent = "";
+		String studentNum = "";
 		
 		while(iterator.hasNext()) {
 			metric = (Document) iterator.next();
@@ -335,8 +372,12 @@ public class getStudentData extends HttpServlet {
 			if (!sortedClassList.contains(sortedClass)) {
 				sortedClassList.add(sortedClass);
 			}
-			if (!sortedStudentList.contains(sortedStudent)) {
-				sortedStudentList.add(sortedStudent);
+			if (sortBy != -1 && sortOrder != -1) {
+				studentNum = (String) metric.get(sortField);				
+				sortedStudentList.put(studentIDList.get(indexOfStudent), studentNum);
+				}
+			else {
+				sortedStudentIDList.add(studentIDList.get(indexOfStudent));
 			}
 		}
 		
@@ -354,7 +395,21 @@ public class getStudentData extends HttpServlet {
 		Collections.sort(sortedTeacherList,cmp);
 		Collections.sort(sortedClassList,cmp);
 		// sort by custom sort order
-		Collections.sort(sortedStudentList,cmp);
+		if (sortBy != -1 && sortOrder != -1) {
+			sortedStudentIDList = sortedStudentList.entrySet()
+					.stream()
+					.sorted((i1, i2)
+								-> sortOrder == 0 ? (i1.getValue().compareTo(
+									i2.getValue()) == 0 ? i1.getKey().compareTo(
+									i2.getKey()) : i1.getValue().compareTo(
+									i2.getValue())) : (i2.getValue().compareTo(
+											i1.getValue()) == 0 ? i1.getKey().compareTo(
+													i2.getKey()) : i2.getValue().compareTo(
+													i1.getValue())) ).map(Map.Entry::getKey)
+					.collect(Collectors.toList());
+		}else {
+			Collections.sort(sortedStudentIDList, cmp);
+		}
 
 
 		List<List<String>> output = new ArrayList<>();
@@ -363,7 +418,7 @@ public class getStudentData extends HttpServlet {
 		output.add(sortedClassList);
 		output.add(getSortByList());
 		output.add(getSortOrderList());
-		output.add(sortedStudentList);
+		output.add(sortedStudentIDList);
 
 		return output;
 	}

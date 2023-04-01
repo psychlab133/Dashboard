@@ -1468,7 +1468,7 @@ logger.setLevel(Level.INFO);
 						<button id="downloadOBtn" type="button"
 							class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "
 							onclick='downloadFile("aggregation_table_overall_level.csv")'>
-							<strong><%=rb.getString("download")%><strong /> <br /><%=rb.getString("overall_level_data")%>
+							<strong><%=rb.getString("download")%> </strong> <br /><%=rb.getString("overall_level_data")%>
 						</button>
 						<button id="downloadPBtn" type="button"
 							class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "
