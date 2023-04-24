@@ -67,10 +67,10 @@ logger.setLevel(Level.INFO);
     
 	var currentTableNbr = 0;
 
-	var filter = "";
-	var sortBy = "";
-	var sortOrder = "";
-    var currentSchool = "06";
+	var filter = "------";
+	var sortBy = -1;
+	var sortOrder = -1;
+    var currentSchool = "";
     var currentTeacher = "";
     var currentClassroom = "";
     var currentStudent = "";
@@ -88,6 +88,8 @@ logger.setLevel(Level.INFO);
     const SCHOOLS  = 7;
     const TEACHERS = 8;
     const CLASSROOMS = 9;
+    const SORT_BY = 10;
+    const SORT_ORDER = 11;
          
     var tables = [
     	{"name":"","color":""},
@@ -101,102 +103,81 @@ logger.setLevel(Level.INFO);
     	{"name":"teachers","color":"palegreen"},
     	{"name":"classrooms","color":"lemonchiffon"}
     ];
-       
+	const sortOrder_ar = [
+			"Ascending",
+			"Descending"
+	];   
+	
+	const sortBy_ar = [
+			"Number of steps",
+			"Number of go-backs",
+			"Number of resets",
+			"Step-efficiency first",
+			"Step-efficiency last",
+			"Time taken(sec)",
+			"Pause time-first",
+			"Pause time-last",
+			"Number of total errors",
+			"Number of keypad errors",
+			"Number of shaking errros",
+			"Number of snapping errors"
+			];
+	
     function save() {
       //alert("Save");
     }
-    function setFilter() {
-    	  	
-    	var role = "Researcher";
-
-    	if (role == "Researcher") {
-    		filter = experimentAbbr;
-    		//alert("setFilter = " + filter);
-    	}
-    }
-    function getSortedList(){
-    	 var xmlhttp;
-         
-         //alert("getStudents()");
-         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-           xmlhttp = new XMLHttpRequest();
-         }
-         else {// code for IE6, IE5
-           xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-         }
-         xmlhttp.onreadystatechange = function () {
-           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {          
-             	document.getElementById("SortedListSelection").innerHTML = xmlhttp.responseText;
-             	getStudents();
-           }
-         };
-
-         if (filter.length == 0) {
-         	filter = experimentAbbr;
-         }
-          	currentTableNbr = STUDENTS;
-   	
-           var cmd = "";
-           if (currentProblem == "") {
-          		cmd = "GetSortedList?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter;
-           }
-           else {
-          		cmd = "GetSortedList?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem;       	
-           }
-         	xmlhttp.open("GET", cmd, true);
-         	xmlhttp.send();  
+    
+    function clearFilter(){
+    	filter = "------";
     }
     
-    function getStudents() {
-      var xmlhttp;
-      
-      //alert("getStudents()");
-      if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp = new XMLHttpRequest();
-      }
-      else {// code for IE6, IE5
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-      }
-      xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {          
-            $("#shared-work-area").show();
-          	document.getElementById("StudentSelection").innerHTML = xmlhttp.responseText;
-//	  		if (currentStudent.length == 0) {
-//				$("#avgBtn").show();
-//				$("#sankeyBtn").show();
-//				$("#treeMapBtn").show();
-//		        $("#visualizerBtn").show();        
-//		        $("#clearBtn").show();        
-//			}
-//			else {
-//				$("#avgBtn").hide();
-//				$("#sankeyBtn").hide();			
-//				$("#treeMapBtn").hide();			
-//		        $("#visualizerBtn").show();        
-//		        $("#clearBtn").show();        
-//			}
-        }
-      };
-
-      if (filter.length == 0) {
-      	filter = experimentAbbr;
-      }
-      	//alert("Student filter " + filter);
-       	currentTableNbr = STUDENTS;
-	
-        var cmd = "";
-        if (currentProblem == "") {
-       		cmd = "GetStudents?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter;
-        } else if (sortBy != '' && sortOrder != ''){
-        	cmd = "GetStudents?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem + "\&sortOrder=" + sortOrder + "\&sortBy=" + sortBy;
-        }
-        else {
-       		cmd = "GetStudents?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem;       	
-        }
-      	xmlhttp.open("GET", cmd, true);
-      	xmlhttp.send();
-      
+    function setFilter(filterVal, filtertype, updateData=true) {
+    	const filter_ar = filter.split("-");
+    	// filter_ar array description
+    	//	filter_ar[0] : problem number
+    	//	filter_ar[1] : school number
+    	//	filter_ar[2] : teacher number
+    	//	filter_ar[3] : class number
+    	//	filter_ar[4] : sort-by
+    	//	filter_ar[5] : sort-order
+    	//	filter_ar[6] : studentID
+    	var array_idx = -1;
+    	switch(filtertype) {
+		  case PROBLEMS:
+			  array_idx = 0;
+	  	    break;    		
+    	  case STUDENTS:
+    		  array_idx = 6;
+    	    break;
+    	  case SCHOOLS:
+    		  array_idx = 1;
+    	    break;
+    	  case TEACHERS:
+    		  array_idx = 2;
+      	    break;
+      	  case CLASSROOMS:
+      		array_idx = 3;
+      	    break;
+    	  case SORT_BY:
+    		  array_idx = 4;
+        	break;
+          case SORT_ORDER:
+        	  array_idx = 5;
+        	break;
+    	  default:
+    		  array_idx = -1;
+    	}
+    	if (array_idx != -1){
+    		filter_ar[array_idx] = filterVal;
+    		filter = filter_ar.join('-');
+    		console.log(filter);
+        	document.getElementById("selectStudent").value = filter;
+    	}
+    	if (updateData == true){
+    		getStudentData()
+    	}
     }
+    
 
     function getStudentView() {
 
@@ -208,9 +189,8 @@ logger.setLevel(Level.INFO);
 	        $("#getStudentsBtn").show();
         }
     
-    
-    function getClassrooms() {
-        var xmlhttp;
+    function getStudentData(updateSch = true, updateTea = true, updateCla = true){
+    	var xmlhttp;
         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
           xmlhttp = new XMLHttpRequest();
         }
@@ -218,104 +198,47 @@ logger.setLevel(Level.INFO);
           xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
         xmlhttp.onreadystatechange = function () {
-          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {          
-            document.getElementById("ClassroomSelection").innerHTML = xmlhttp.responseText;
-            getSortedList();
-            //getStudents();
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        	  var data = JSON.parse(xmlhttp.responseText);
+              if (updateSch){
+    	          document.getElementById("SchoolSelection").innerHTML = data["school"];
+              }
+              if (updateTea){
+    	          document.getElementById("TeacherSelection").innerHTML = data["teacher"];
+              }
+              if (updateCla){
+    	          document.getElementById("ClassroomSelection").innerHTML = data["class"];
+              }
+	          document.getElementById("SortedListSelection").innerHTML = data["sortby"];
+	          document.getElementById("SortedListSelection").innerHTML += data["sortorder"];
+	          document.getElementById("StudentSelection").innerHTML = data["student"];
+	          setSelectionValues();  
+	            
+			// TODO: make selection automatically based on filter after response
+            //getSortedList();
+
           }
         };
-        
-        if (filter.length == 0) {
-        	filter = experimentAbbr;
-        }
-        //alert("Class filter " + filter);
-       	currentTableNbr = CLASSROOMS;
-    	
-        var cmd = "";
-        if (currentProblem == "") {
-       		cmd = "GetClassrooms?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter;
-        }
-        else {
-       		cmd = "GetClassrooms?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem;       	
-        }
-		xmlhttp.open("GET", cmd, true);
+        var cmd = "GetStudentData?filter=" + filter;       	
+        cmd+="\&claColor=" + tables[CLASSROOMS].color;
+        cmd+="\&schColor=" + tables[SCHOOLS].color;
+        cmd+="\&teaColor=" + tables[TEACHERS].color;
+        cmd+="\&stuColor=" + tables[STUDENTS].color;
+        xmlhttp.open("GET", cmd, true);
        	xmlhttp.send();
-        
-      }
-
- 
-      function getTeachers() {
-          var xmlhttp;
-          //alert("getTeachers");
-
-          if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp = new XMLHttpRequest();
-          }
-          else {// code for IE6, IE5
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-          }
-          xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {          
-              document.getElementById("TeacherSelection").innerHTML = xmlhttp.responseText;
-              getClassrooms();
-            }
-          };
-          
-          if (filter.length == 0) {
-          	filter = experimentAbbr;
-          }
-          	//alert("Teacher filter " + filter);
-            currentTableNbr = TEACHERS;    	
-            var cmd = "";
-            if (currentProblem == "") {
-           		cmd = "GetTeachers?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter;
-            }
-            else {
-           		cmd = "GetTeachers?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem;       	
-            }
-   			//alert(cmd);
-   			xmlhttp.open("GET", cmd, true);
-         	xmlhttp.send();          
-        }
-      
-        
-        function getSchools() {
-            var xmlhttp;
-            //alert("getSchools");
-
-            if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-              xmlhttp = new XMLHttpRequest();
-            }
-            else {// code for IE6, IE5
-              xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            xmlhttp.onreadystatechange = function () {
-              if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {          
-                document.getElementById("SchoolSelection").innerHTML = xmlhttp.responseText;
-                getTeachers();
-              }
-            };
-
-            if (filter.length == 0) {
-            	filter = experimentAbbr;
-            }
-            //alert("School filter " + filter);
-            currentTableNbr = SCHOOLS;
-            var cmd = "";
-            if (currentProblem == "") {
-           		cmd = "GetSchools?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter;
-            }
-            else {
-           		cmd = "GetSchools?tablecolor=" + tables[currentTableNbr].color + "\&filter=" + filter + "\&problemId=" + currentProblem;       	
-            }
-   			//alert(cmd);
-           	xmlhttp.open("GET", cmd, true);
-           	xmlhttp.send();
-            
-          }
-
-
-
+    }
+    
+    function setSelectionValues(){
+    	const filter_ar = filter.split('-');
+        document.getElementById("schoolsSelections").value = filter_ar[1];
+        document.getElementById("teachersSelections").value = filter_ar[2];
+        document.getElementById("classroomsSelections").value = filter_ar[3];
+        document.getElementById("sortBySelections").value = sortBy_ar[parseInt(filter_ar[4])];
+        document.getElementById("sortOrderSelections").value = sortOrder_ar[parseInt(filter_ar[5])];
+        document.getElementById("usernamesSelections").value = filter_ar[6];
+    }
+    
+  
     function getProblems() {
         var xmlhttp;
         //alert("getProblems");
@@ -408,29 +331,6 @@ logger.setLevel(Level.INFO);
 
         xmlhttp.onreadystatechange = function () {
           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        	
-        	//var txt = '[{"name":"John", "age":30, "city":"New York"}]'
-        	//var obj = JSON.parse(txt);
-            //var line = obj[0].name + ", " + obj[0].age;
-            //alert("Test = " + line);
-      	
-        	//alert(xmlhttp.responseText);
-        	
-        	//var allData = JSON.parse(xmlhttp.responseText);
-        	//document.getElementById("visualizerJSON").value = allData;
-	   		//var visualizerForm= document.getElementById("visualizerForm");
-	   		//visualizerForm.submit();
-
-              
-    	    //allData.forEach(myFunction); 
-    	    //function myFunction(d, i, arr) {
-    	    	//if (d["expr_ascii"] == null) {
-    	    	//}
-    	    	//else {
-        	    	//var line = d["expr_ascii"];
-    	    	//}
-    	    //}
-   	    	//alert(xmlhttp.responseText);
    	    	var resp = xmlhttp.responseText;
    	    	var iframeLine = "";
    	    	if (resp == "[]") {
@@ -439,15 +339,11 @@ logger.setLevel(Level.INFO);
    	    	else {  	
    	    		if (wideScreen == 1) {
  	                $("#visHeaderRow").show();
-//		            $("#visContentRow").show();
    	    		    $("#wide-work-area").hide();
-   	    		    iframeLine = "<iframe src='http://" + serverName + ":9000/clustervis_condensed.php?username=" + currentUser + "' width = '100%' height = '600' frameborder='2' marginwidth = '4' marginheight = '10' scrolling = 'yes'></iframe>"
+   	    		    iframeLine = "<iframe src='https://fh2tresearch.com/php/clustervis_condensed.php?username=" + currentUser + "' width = '100%' height = '600' frameborder='2' marginwidth = '4' marginheight = '10' scrolling = 'yes'></iframe>"
    	    		    document.getElementById("wideView").innerHTML =	iframeLine;
    	    			$("#wide-work-area").show();
    	    	        $("#screenshotViewBtn").show();
-   	    		
-   	    			
-
    	    		}
 				if (wideScreen == 0) {
 		      		getTrialMetrics(studentId,problemId);
@@ -455,9 +351,7 @@ logger.setLevel(Level.INFO);
 		            $("#studentMetricsGrid").show();
 		            $("#problemMetricsGrid").hide();
 		   		    $("#visualizer").hide();
-   	    		    iframeLine = "<iframe src='http://" + serverName + ":9000/clustervis.php?username=" + currentUser + "' width = '100%' height = '500' frameborder='2' marginwidth = '4' marginheight = '10' scrolling = 'yes'></iframe>";
-					//alert(iframeLine);
-
+   	    		    iframeLine = "<iframe src='https://fh2tresearch.com/php/clustervis.php?username=" + currentUser + "' width = '100%' height = '500' frameborder='2' marginwidth = '4' marginheight = '10' scrolling = 'yes'></iframe>";
 					document.getElementById("resultsView").innerHTML =	iframeLine;
 		   	    	$("#visualizer").show();
    	    	        $("#screenshotViewBtn").show();
@@ -468,8 +362,6 @@ logger.setLevel(Level.INFO);
         };
         
         $("#visHeaderRow").hide();
-//        $("#visContentRow").hide();
-//        $("#gridHeader").hide();
         $("#studentMetricsGrid").hide();
 	    $("#visualizer").hide();
     	$("#wide-work-area").show();
@@ -478,7 +370,6 @@ logger.setLevel(Level.INFO);
     	document.getElementById("resultsView").innerHTML = "";
     	
        	var cmd = "GetTrialEvents?trialId=" + trialId;
-       	//alert(cmd);
        	xmlhttp.open("GET", cmd, true);
        	xmlhttp.timeout = 10000;
        	xmlhttp.send();
@@ -495,9 +386,7 @@ logger.setLevel(Level.INFO);
 
      function getProblemHdrs() {
           var xmlhttp;
-          //alert("getProblemHdrs");
 
-   
           if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
             xmlhttp = new XMLHttpRequest();
           }
@@ -1185,7 +1074,7 @@ logger.setLevel(Level.INFO);
        	xmlhttp.open("GET", cmd, true);
        	xmlhttp.send();
       }
-
+// TODO: check
     function downloadImage(filename){
     	var problemNbr = currentProblem;
 		if (problemNbr.length == 1) {
@@ -1273,7 +1162,8 @@ logger.setLevel(Level.INFO);
 		//getAllProblems();
         getProblems(); 
 		$("#wide-work-area").hide();
-		setFilter();
+
+		clearFilter();
 	        
 	}
 	
@@ -1281,7 +1171,8 @@ logger.setLevel(Level.INFO);
 	function setupTrialVisualizer() {
 					
 //		if (currentView == "problemView") {
-			var selectStudent = document.getElementById("selectStudent").value;
+			var selectStudent = document.getElementById("usernamesSelections").value;
+			console.log("setupTrialVisualizer() : SelectedStudent " + selectStudent);
 			if (selectStudent.length > 0 ) {
 				currentStudent = selectStudent;
 				//document.getElementById("usernamesSelections").selectedIndex = "0";
@@ -1305,87 +1196,74 @@ logger.setLevel(Level.INFO);
 			}
 //		}
 	}
- 
+ // TODO: all of the set function need working
     function setSchool() {
     	var x = document.getElementById("schoolsSelections").value;
-    	filter = x;
-    	if (x.startsWith("F7")){
-    		currentSchool = x.substring(3,5);
-    	}else{
-    		currentSchool = x.substring(2,4);
-    	}   
+    	setFilter(x, SCHOOLS, false);
+    	getStudentData(false)
+    	//if (x.startsWith("F7")){
+    	//	currentSchool = x.substring(3,5);
+    	//}else{
+    	//	currentSchool = x.substring(2,4);
+    	//}
+    	currentSchool = x;
     	currentTeacher = "";
     	currentClassroom = "";
     	currentStudent = "";
-    	document.getElementById("selectStudent").value = filter;
-		getTeachers();
+		//getTeachers();
       }
 
 	function setTeacher() {
     	var x = document.getElementById("teachersSelections").value;
-    	filter = x;
-    	if (x.startsWith("F7")){
-    		currentSchool = x.substring(3,5);
-    		currentTeacher = x.substring(5,7);
-    	}else{
-    		currentSchool = x.substring(2,4);
-    		currentTeacher = x.substring(4,6);
-    	}
+    	setFilter(x, TEACHERS, false);
+    	getStudentData(false, false);
     	currentClassroom = "";
     	currentStudent = "";
-    	document.getElementById("selectStudent").value = filter;
-		getClassrooms();
+		//getClassrooms();
       }
 
     function setClassroom() {
     	var x = document.getElementById("classroomsSelections").value;
-    	filter = x;
-    	if (x.startsWith("F7")){
-    		currentSchool = x.substring(3,5);
-    		currentTeacher = x.substring(5,7);
-    		currentClassroom = x.substring(8,9);
-    	}else{
-    		currentSchool = x.substring(2,4);
-        	currentTeacher = x.substring(4,6);
-        	currentClassroom = x.substring(7,8);
-    	}
+    	setFilter(x, CLASSROOMS, false);
+    	getStudentData(false, false, false);
     	currentStudent = "";
-    	document.getElementById("selectStudent").value = filter;
-    	getStudents();
+    	//getStudents();
       }
 	
     function setSortedList(){
-    	sortBy = document.getElementById("sortBySelections").value;
-    	sortOrder = document.getElementById("sortOrderSelections").value;
-    	if (sortBy != "" && sortOrder != ""){
-    		getStudents();
+    	sortBy = sortBy_ar.indexOf(document.getElementById("sortBySelections").value);
+    	sortOrder = sortOrder_ar.indexOf(document.getElementById("sortOrderSelections").value);
+    	if (sortBy != -1){
+    		setFilter(sortBy, SORT_BY, false);
+    	}
+    	if (sortOrder != -1){
+    		setFilter(sortOrder, SORT_ORDER, false);
+    	}
+    			
+    	if (sortBy != -1 && sortOrder != -1){
+    		// TODO: might need ann update flag for the data
+    		getStudentData();
     	}
     }
     
     function setStudent() {
     	var x = document.getElementById("usernamesSelections").value;
-    	if (x.startsWith("F7")){
-    		currentSchool = x.substring(3,5);
-    		currentTeacher = x.substring(5,7);
-    		currentClassroom = x.substring(8,9);
-    	}else{
-    		currentSchool = x.substring(2,4);
-        	currentTeacher = x.substring(4,6);
-        	currentClassroom = x.substring(7,8);
-    	}
     	currentStudent = x;
-    	document.getElementById("selectStudent").value = x;
+    	setFilter(x, STUDENTS);
       }
 
     function setProblem() {
     	var x = document.getElementById("problemsSelections").value;
-    	filter = "";
+    	// clear filter
+    	clearFilter();
     	currentProblem = x;
-    	sortBy = '';
-    	sortOrder = '';
+    	setFilter(x, PROBLEMS);
+        currentSchool = "";
+        currentTeacher = "";
+        currentClassroom = "";
+        currentStudent = "";
     	
 	    $("#screenshotViewBtn").hide();
-		getSchools();
 		
 		document.getElementById("sankeyView").innerHTML = " ";
 		$("#sankeyWindow").show();
@@ -1544,7 +1422,7 @@ logger.setLevel(Level.INFO);
 			<div id="btnrow" class="row">
 	    		<div class="col-sm-12">
 					<div class="form-group col-md-2">
-	  					<input type="text" class="form-control pull-left" id="selectStudent" placeholder="Enter StudentID">
+	  					<input type="text" class="form-control pull-left" id="selectStudent" placeholder="Current Filter" readonly>
 					</div>
 	        		<button id="visualizerBtn" type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left " onclick='setWideScreen(0);setupTrialVisualizer()'><%= rb.getString("visualize")%></button>
 	        		<button id="wideViewBtn"type="button" class="offset-1 col-2 btn btn-primary btn-md ml-1 pull-left hidden" onclick='setWideScreen(1);setupTrialVisualizer()'><%= rb.getString("wide_view")%></button>
@@ -1590,7 +1468,7 @@ logger.setLevel(Level.INFO);
 						<button id="downloadOBtn" type="button"
 							class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "
 							onclick='downloadFile("aggregation_table_overall_level.csv")'>
-							<strong><%=rb.getString("download")%><strong /> <br /><%=rb.getString("overall_level_data")%>
+							<strong><%=rb.getString("download")%> </strong> <br /><%=rb.getString("overall_level_data")%>
 						</button>
 						<button id="downloadPBtn" type="button"
 							class="offset-1 col-2 btn btn-primary btn-sm ml-1 pull-left "
