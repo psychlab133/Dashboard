@@ -21,6 +21,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
+import com.mongodb.client.model.Projections;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient; 
 import com.mongodb.MongoCredential;
@@ -28,6 +29,7 @@ import com.mongodb.MongoCredential;
 import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
@@ -56,13 +58,13 @@ public class getProblemAvgs extends HttpServlet {
 		
 		logger.debug("getProblemAvgs servlet starting");			
 
-		String averagesCollectionName = (String) session.getAttribute("expAverages");
-		logger.debug("averages collection  = " + averagesCollectionName);		
+		String collectionName = (String) session.getAttribute("expAggregation");
+		logger.debug("averages collection  = " + collectionName);		
 		
 		// Warning: if you add elements to metric[] you must add them to avgs[]  
 
 		String metrics[] = { 
-		"Number of Students Completed~students_completed~The total number of students in the study that have completed this problem",
+		"Number of Students Completed~completed~The total number of students in the study that have completed this problem",
 		"Completion (1 = Yes / 0 = No)~completed~The proportion of students who completed the problem by successfully reaching the goal state at least once",  
 		"Number of steps~num_steps~The number of steps that the students took for ALL attempts (both completions and non-completions)",
 		"Number of go-backs~num_gobacks~The number of re-attempts in addition to the initial completion (after successfully reaching the goal state)",
@@ -78,12 +80,12 @@ public class getProblemAvgs extends HttpServlet {
 		"Number of shaking errors~shaking_error~The number of errors that students made by attempting to incorrectly use existing operators",
 		"Number of snapping errors~snapping_error~The number of errors that students made by attempting to incorrectly reorder terms"
 		};
-		 
-
+		
 		
 		
 		// Warning: if you add elements to metric[] you must add them to avgs[]  
 		String avgs[] = { "","","","","","","","","","","","","","",""};
+		double totals[] = { 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 		  
 		String hdr = rb.getString("measures") + "~&nbsp;~ Average values for all students in the study who have completed the selected problem";
 		
@@ -107,23 +109,52 @@ public class getProblemAvgs extends HttpServlet {
 		logger.debug("User database=" + experimentDB.getName());
 
 
-		MongoCollection<Document> avgCollection = (MongoCollection <Document>) experimentDB.getCollection(averagesCollectionName);
+		MongoCollection<Document> avgCollection = (MongoCollection <Document>) experimentDB.getCollection(collectionName);
 		
+
+		ArrayList<String> projectionFields = new ArrayList<>();
+		
+		for (int i = 0; i < 15; i++) {
+			projectionFields.add(problemPrefix + metrics[i].split("~")[1]);
+		}
+
+		
+	    FindIterable<Document> avgIterable = (FindIterable<Document>) avgCollection.find().projection(Projections.include(projectionFields.toArray(new String[0])));
+
+	    Iterator<Document> iterator = avgIterable.iterator();
+	    System.out.println("Printing average metrics");
+	    
+	    
+	    int totalStudents = 0;
+	    while (iterator.hasNext()) {
+	    	Document avgMetric = (Document) iterator.next();
+	    	totalStudents++; // increment total number of students
+	    	if (avgMetric.getString(problemPrefix+metrics[0].split("~")[1]).equals("1")) {
+	    		totals[0]++; // update total number of students who completed
+	    		totals[1]++;
+	    	}
+	    	for (int i = 2; i < 15; i++) {
+	    		String tempVal = avgMetric.getString(problemPrefix+metrics[i].split("~")[1]);
+	    		tempVal = tempVal.equals("N/A")? "0.0" : tempVal;
+	    		totals[i] += Double.parseDouble(tempVal);
+	    	}
+	    }
 		boolean needsComma = false;
 		String str = "{";
-		int count = metrics.length;
-		String avgLookup = "";
-		for (int i = 0; i < count; i++) {		
-			BasicDBObject avgQuery = new BasicDBObject();			
-			String theMetric[] = metrics[i].split("~");
-			avgLookup = problemPrefix + theMetric[1];
-			avgQuery.put("field", avgLookup);
-			
-		    FindIterable<Document> avgIterable = (FindIterable<Document>) avgCollection.find(avgQuery);
-		    Iterator<Document> iterator = avgIterable.iterator();
-		    if (iterator.hasNext()) {
-		        Document avgMetric = (Document) iterator.next();
-		        avgs[i] = (String) avgMetric.get("values");
+	    if (totalStudents == 0) { // if no students attempted this problem
+	    	str += "\"Students\":\"0\"";
+	    } else {
+		    for (int i = 0; i < totals.length; i++) {
+		    	if (i==0) {
+		    		avgs[0] = Double.toString(totals[0]);
+		    	} else if (i==1) {
+		    		avgs[1] = Double.toString(totals[0]/totalStudents); // num_students_completed/total_students
+		    	}
+		    	else {
+			    	avgs[i] = Double.toString(totals[i]/totals[0]); // total/num_students_completed
+		    	}
+		    	
+		    	
 		        if (needsComma) { 
 		        	str += ", "; 
 		        }
@@ -131,22 +162,72 @@ public class getProblemAvgs extends HttpServlet {
 		        	needsComma = true; 
 		        }
 				str += "\"" + metrics[i] + "\":\"" + "unused" + "~" + avgs[i] + "\"";
-		    }else if(i == 0) {
-		    	str += "\"Students\":\"0\"";
-		    	break;
+				 if (i == 0) {
+			        	str += ", "; 
+						str += "\"" + "&nbsp;" + "\":\"" + "unused" + "~" + "&nbsp;" + "\"";		    	
+			        	str += ", "; 
+						str += "\"" + hdr + "\":\"" + "unused" + "~" + rb.getString("overall_average") + "\"";		    	
+				 }
 		    }
-		    if (i == 0) {
-	        	str += ", "; 
-				str += "\"" + "&nbsp;" + "\":\"" + "unused" + "~" + "&nbsp;" + "\"";		    	
-	        	str += ", "; 
-				str += "\"" + hdr + "\":\"" + "unused" + "~" + rb.getString("overall_average") + "\"";		    	
-		    }
-		}
+		   
+		    
+		    
+	    }
 	    str += "}";
 		mongoClient.close();
 		out.print(str);
 		logger.debug(str);
 		logger.debug("end getProblemAvgs()");
-				
+	    
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+//		boolean needsComma = false;
+//		String str = "{";
+//		int count = metrics.length;
+//		String avgLookup = "";
+//		for (int i = 0; i < count; i++) {		
+//			BasicDBObject avgQuery = new BasicDBObject();			
+//			String theMetric[] = metrics[i].split("~");
+//			avgLookup = problemPrefix + theMetric[1];
+//			avgQuery.put("field", avgLookup);
+//			
+//		    FindIterable<Document> avgIterable = (FindIterable<Document>) avgCollection.find(avgQuery);
+//		    Iterator<Document> iterator = avgIterable.iterator();
+//		    if (iterator.hasNext()) {
+//		        Document avgMetric = (Document) iterator.next();
+//		        avgs[i] = (String) avgMetric.get("values");
+//		        if (needsComma) { 
+//		        	str += ", "; 
+//		        }
+//		        else { 
+//		        	needsComma = true; 
+//		        }
+//				str += "\"" + metrics[i] + "\":\"" + "unused" + "~" + avgs[i] + "\"";
+//		    }else if(i == 0) {
+//		    	str += "\"Students\":\"0\"";
+//		    	break;
+//		    }
+//		    if (i == 0) {
+//	        	str += ", "; 
+//				str += "\"" + "&nbsp;" + "\":\"" + "unused" + "~" + "&nbsp;" + "\"";		    	
+//	        	str += ", "; 
+//				str += "\"" + hdr + "\":\"" + "unused" + "~" + rb.getString("overall_average") + "\"";		    	
+//		    }
+//		}
+//	    str += "}";
+//		mongoClient.close();
+//		out.print(str);
+//		logger.debug(str);
+//		logger.debug("end getProblemAvgs()");
+//				
 	}
 }

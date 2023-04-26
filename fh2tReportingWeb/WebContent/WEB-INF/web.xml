@@ -318,6 +318,15 @@
     <servlet-name>GetStudentData</servlet-name>
     <url-pattern>/GetStudentData</url-pattern>
   </servlet-mapping>
+    <servlet id="Servlet_34">
+    <description></description>
+    <servlet-name>GetProblemHdrs</servlet-name>
+    <servlet-class>edu.wpi.fh2t.servlets.getProblemHdrs</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetProblemHdrs</servlet-name>
+    <url-pattern>/GetProblemHdrs</url-pattern>
+  </servlet-mapping>
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
