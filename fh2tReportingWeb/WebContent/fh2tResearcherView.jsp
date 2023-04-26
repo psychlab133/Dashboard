@@ -39,7 +39,9 @@ logger.setLevel(Level.INFO);
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><%= rb.getString("title")%></title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
+   <link rel="stylesheet" href="css/bootstrap.min.css"> 
+  <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  -->
   <link rel="stylesheet" href="css/styles.css">
   <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
@@ -48,7 +50,9 @@ logger.setLevel(Level.INFO);
 
     <!-- jQuery (Bootstrap JS plugins depend on it) -->
     <script src="js/jquery-2.1.4.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <!-- <script src="js/bootstrap.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    
     <script src='js/plotly.min.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
     
@@ -414,6 +418,8 @@ logger.setLevel(Level.INFO);
        	xmlhttp.open("GET", cmd, true);
        	xmlhttp.send();
     }
+     
+     
 	function getProblemSan(){
 		if (experimentAbbr == 'F7S'){
 			drawSankey();
@@ -924,12 +930,14 @@ logger.setLevel(Level.INFO);
 
        	  
               var metrics = JSON.parse(xmlhttp.responseText);
+              console.log(metrics) //TODO remove
+
               //alert(xmlhttp.responseText);
  			if (metrics.Students == 0){
  				$('#studentModal').modal('toggle');
  			}else
  			{
-              var body = "";
+ 			var body = "";
               for (x in metrics) {
   		        
             	  var theMetric = x.split("~");
