@@ -50,9 +50,9 @@ logger.setLevel(Level.INFO);
 
     <!-- jQuery (Bootstrap JS plugins depend on it) -->
     <script src="js/jquery-2.1.4.min.js"></script>
-    <!-- <script src="js/bootstrap.min.js"></script>-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-    
+     <script src="js/bootstrap.min.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    -->
     <script src='js/plotly.min.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
     
@@ -929,9 +929,8 @@ logger.setLevel(Level.INFO);
           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 
        	  
-              var metrics = JSON.parse(xmlhttp.responseText);
-              console.log(metrics) //TODO remove
-
+           var metrics = JSON.parse(xmlhttp.responseText);
+			console.log(metrics)
               //alert(xmlhttp.responseText);
  			if (metrics.Students == 0){
  				$('#studentModal').modal('toggle');
@@ -939,9 +938,10 @@ logger.setLevel(Level.INFO);
  			{
  			var body = "";
               for (x in metrics) {
-  		        
+  		          console.log(x)
             	  var theMetric = x.split("~");
-            	  if (theMetric[1] == "time_interaction") {
+  		 	
+            	  if (theMetric[1] != undefined && theMetric[1].includes("time_interaction")) {
               		  var strMetric = metrics[x];
             		  var theValues = strMetric.split("~");
             		  
@@ -960,7 +960,7 @@ logger.setLevel(Level.INFO);
             		var theValues = strMetric.split("~");
             		body += "<tr><td class='metricCell'>" + theMetric[0] +  "<span class='metrictooltip'>" + theMetric[2] + "</span></td><td>" + theValues[1] + "</td></tr>" ;
             	  }
-            	  //alert(body);
+   
               }
       	  	  document.getElementById("problemMetricsTable").innerHTML = body;
               $("#problemMetricsGrid").show();
@@ -1204,8 +1204,8 @@ logger.setLevel(Level.INFO);
 			}
 //		}
 	}
- // TODO: all of the set function need working
-    function setSchool() {
+
+	function setSchool() {
     	var x = document.getElementById("schoolsSelections").value;
     	setFilter(x, SCHOOLS, false);
     	getStudentData(false)
