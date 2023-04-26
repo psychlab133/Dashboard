@@ -948,8 +948,8 @@ logger.setLevel(Level.INFO);
                       timeInteraction = parseFloat(theValues[1]);
                       whole = timeInteraction / 1000;
                       var avgTimeInteraction = "" + whole;
-                      if (avgTimeInteraction.length > 7) {
-                    	  avgTimeInteraction = avgTimeInteraction.substring(0,7)
+                      if (avgTimeInteraction.length > 5) {
+                    	  avgTimeInteraction = avgTimeInteraction.substring(0,5)
                       }
 
               		  body += "<tr><td class='metricCell'>" + theMetric[0] +  "<span class='metrictooltip'>" + theMetric[2] + "</span></td><td>" + avgTimeInteraction + "</td></tr>" ;
@@ -958,7 +958,11 @@ logger.setLevel(Level.INFO);
             	  else {
             		var strMetric = metrics[x];
             		var theValues = strMetric.split("~");
-            		body += "<tr><td class='metricCell'>" + theMetric[0] +  "<span class='metrictooltip'>" + theMetric[2] + "</span></td><td>" + theValues[1] + "</td></tr>" ;
+            		var strVal1 = "" + theValues[1];
+            		if (strVal1 != "Sample mean" && strVal1.length > 5) {
+            			strVal1 = strVal1.substring(0,5)
+                    }
+            		body += "<tr><td class='metricCell'>" + theMetric[0] +  "<span class='metrictooltip'>" + theMetric[2] + "</span></td><td>" + strVal1 + "</td></tr>" ;
             	  }
    
               }
@@ -1015,8 +1019,8 @@ logger.setLevel(Level.INFO);
                       timeInteraction = parseFloat(theValues[1]);
                       whole = timeInteraction / 1000;
                       var avgTimeInteraction = "" + whole;
-                      if (avgTimeInteraction.length > 7) {
-                    	  avgTimeInteraction = avgTimeInteraction.substring(0,7)
+                      if (avgTimeInteraction.length > 5) {
+                    	  avgTimeInteraction = avgTimeInteraction.substring(0,5)
                       }
 
               		  body += "<tr><td class='metricCell'>" + theMetric[0] + "<span class='metrictooltip'>" + theMetric[2] + "</span></td><td>" + strTimeInteraction + "</td><td>" + avgTimeInteraction + "</td></tr>" ;
@@ -1025,7 +1029,16 @@ logger.setLevel(Level.INFO);
             	  else {
             		var strMetric = metrics[x];
             		var theValues = strMetric.split("~");
-            		body += "<tr><td class='metricCell'>" + theMetric[0] + "<span class='metrictooltip'>" + theMetric[2] + "</span></td><td>" + theValues[0] + "</td><td>" + theValues[1] + "</td></tr>" ;
+            		var strVal1 = "" + theValues[0];
+            		if (strVal1.length > 5) {
+            			strVal1 = strVal1.substring(0,5)
+                    }
+            		var strVal2 = "" + theValues[1];
+            		if (strVal2.length > 5) {
+            			strVal2 = strVal2.substring(0,5)
+                      }
+            		body += "<tr><td class='metricCell'>" + theMetric[0] + "<span class='metrictooltip'>" + theMetric[2] + "</span></td><td>" + strVal1 + "</td><td>" + strVal2 + "</td></tr>" ;
+
             	  }
             	  //alert(body);
               }

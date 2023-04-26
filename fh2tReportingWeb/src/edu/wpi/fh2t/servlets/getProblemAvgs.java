@@ -147,8 +147,11 @@ public class getProblemAvgs extends HttpServlet {
 		    for (int i = 0; i < totals.length; i++) {
 		    	if (i==0) {
 		    		avgs[0] = Double.toString(totals[0]);
-		    	} else {
-			    	avgs[i] = Double.toString(totals[i]/totalStudents);
+		    	} else if (i==1) {
+		    		avgs[1] = Double.toString(totals[0]/totalStudents); // num_students_completed/total_students
+		    	}
+		    	else {
+			    	avgs[i] = Double.toString(totals[i]/totals[0]); // total/num_students_completed
 		    	}
 		    	
 		    	

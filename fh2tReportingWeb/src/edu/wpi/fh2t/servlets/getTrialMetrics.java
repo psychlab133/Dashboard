@@ -21,6 +21,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
+import com.mongodb.client.model.Projections;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient; 
 import com.mongodb.MongoCredential;
@@ -28,6 +29,7 @@ import com.mongodb.MongoCredential;
 import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
@@ -75,7 +77,7 @@ public class getTrialMetrics extends HttpServlet {
 		 
 		  
 		String avgs[] = { "","","","","","","","","","","","","",""};
-		  
+		double totals[] = { 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 		
 		String studentId = "";
 		if (request.getParameter("studentId") != null) {
@@ -90,11 +92,10 @@ public class getTrialMetrics extends HttpServlet {
 		logger.debug("problemPrefix=" + problemPrefix);
 		
 		Student student = new Student(studentId);
-		
+
 		String aggregationCollectionName = (String) session.getAttribute("expAggregation");
 		logger.debug("aggregation collection  = " + aggregationCollectionName);
-		String averagesCollectionName = (String) session.getAttribute("expAverages");
-		logger.debug("averages collection  = " + averagesCollectionName);		
+		
 		
 		logger.debug("getTrialMetrics servlet starting");			
 		
@@ -153,24 +154,41 @@ public class getTrialMetrics extends HttpServlet {
 		//logger.debug("First experimentDB collection=" + temp.first());
 	
 
-		MongoCollection<Document> avgCollection = (MongoCollection <Document>) experimentDB.getCollection(averagesCollectionName);
+		MongoCollection<Document> avgCollection = (MongoCollection <Document>) experimentDB.getCollection(aggregationCollectionName);
+		ArrayList<String> projectionFields = new ArrayList<>();
 		
-		int count = metrics.length;
-		String avgLookup = "";
-		for (int i = 0; i < count; i++) {		
-			BasicDBObject avgQuery = new BasicDBObject();			
-			String theMetric[] = metrics[i].split("~");
-			avgLookup = problemPrefix + theMetric[1];
-			avgQuery.put("field", avgLookup);
-			
-		    FindIterable<Document> avgIterable = (FindIterable<Document>) avgCollection.find(avgQuery);
-		    Iterator<Document> iterator = avgIterable.iterator();
-		    if (iterator.hasNext()) {
-		        Document avgMetric = (Document) iterator.next();
-		        avgs[i] = (String) avgMetric.get("values");
-		    }
+		for (int i = 0; i < avgs.length; i++) {
+			projectionFields.add(problemPrefix + metrics[i].split("~")[1]);
 		}
 
+		
+	    FindIterable<Document> avgIterable = (FindIterable<Document>) avgCollection.find().projection(Projections.include(projectionFields.toArray(new String[0])));
+
+	    Iterator<Document> iterator = avgIterable.iterator();
+	    
+	    
+	    int totalStudents = 0;
+	    while (iterator.hasNext()) {
+	    	Document avgMetric = (Document) iterator.next();
+	    	totalStudents++; // increment total number of students
+	    	if (avgMetric.getString(problemPrefix+metrics[0].split("~")[1]).equals("1")) {
+	    		totals[0]++; // update total number of students who completed
+	    		totals[1]++;
+	    	}
+	    	for (int i = 2; i < avgs.length; i++) {
+	    		String tempVal = avgMetric.getString(problemPrefix+metrics[i].split("~")[1]);
+	    		tempVal = tempVal.equals("N/A")? "0.0" : tempVal;
+	    		totals[i] += Double.parseDouble(tempVal);
+	    	}
+	    }
+
+	    for (int i = 0; i < totals.length; i++) {
+	    	if (i==0) {
+	    		avgs[0] = Double.toString(totals[0]/totalStudents);
+	    	} else {
+		    	avgs[i] = Double.toString(totals[i]/totals[0]);
+	    	}
+	    }
 
 		
 		MongoCollection<Document> collection = (MongoCollection <Document>) experimentDB.getCollection(aggregationCollectionName);
@@ -184,7 +202,7 @@ public class getTrialMetrics extends HttpServlet {
 		
 		boolean needsComma = false;
 	    FindIterable<Document> findIterable = (FindIterable<Document>) collection.find(searchQuery);
-	    Iterator<Document> iterator = findIterable.iterator();
+	    iterator = findIterable.iterator();
 	    while(iterator.hasNext()) {
 	        Document metric = (Document) iterator.next();
 	    	for (int n= 0; n < metrics.length; n++) {
