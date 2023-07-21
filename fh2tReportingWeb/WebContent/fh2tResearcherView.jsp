@@ -174,7 +174,7 @@ logger.setLevel(Level.INFO);
     	if (array_idx != -1){
     		filter_ar[array_idx] = filterVal;
     		filter = filter_ar.join('-');
-    		console.log(filter);
+    		// console.log(filter);
         	document.getElementById("selectStudent").value = filter;
     	}
     	if (updateData == true){
@@ -941,7 +941,7 @@ logger.setLevel(Level.INFO);
   		          console.log(x)
             	  var theMetric = x.split("~");
   		 	
-            	  if (theMetric[1] != undefined && theMetric[1].includes("time_interaction")) {
+            	  if (theMetric[1] != undefined && theMetric[1] === "time_interaction") {
               		  var strMetric = metrics[x];
             		  var theValues = strMetric.split("~");
             		  
@@ -1002,6 +1002,7 @@ logger.setLevel(Level.INFO);
           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
        	  
               var metrics = JSON.parse(xmlhttp.responseText);
+             
               //alert(xmlhttp.responseText);
  
               var body = "";
@@ -1011,7 +1012,7 @@ logger.setLevel(Level.INFO);
             	  if (theMetric[1] == "time_interaction") {
               		  var strMetric = metrics[x];
             		  var theValues = strMetric.split("~");
-            		  
+            		  console.log("Here", x)
                       var timeInteraction = parseFloat(theValues[0]);
                       var whole = timeInteraction / 1000;
                       var strTimeInteraction = "" + whole;
